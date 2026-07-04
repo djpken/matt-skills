@@ -10,6 +10,6 @@ disable-model-invocation: true
 
 定期執行型別檢查，定期執行單一測試檔案，最後執行一次完整測試套件。
 
-完成後，使用 /review 審查工作。
+完成後，使用 /code-review 審查工作。
 
 將工作提交到目前的分支。

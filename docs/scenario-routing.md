@@ -50,7 +50,7 @@
 | 程式碼庫越來越亂、架構開始腐敗 | [`/improve-codebase-architecture`](../skills/engineering/improve-codebase-architecture/SKILL.md) |
 | 要設計深層模組（小介面、乾淨接縫、可測試） | [`/codebase-design`](../skills/engineering/codebase-design/SKILL.md) |
 | 要建立 / 精煉專案的領域模型與術語 | [`/domain-modeling`](../skills/engineering/domain-modeling/SKILL.md) |
-| 要 review 某個 branch / PR 是否符合規格與慣例 | 🚧 [`/review`](../skills/in-progress/review/SKILL.md) |
+| 要 review 某個 branch / PR 是否符合規格與慣例 | [`/code-review`](../skills/engineering/code-review/SKILL.md) |
 | 想為 dangerous git 指令設防護網 | [`/git-guardrails-claude-code`](../skills/misc/git-guardrails-claude-code/SKILL.md) |
 | 要設定 pre-commit hooks（Prettier、型別、測試） | [`/setup-pre-commit`](../skills/misc/setup-pre-commit/SKILL.md) |
 
@@ -70,7 +70,7 @@
 |------|---------|
 | 想學某個新技術 / 概念（多 session 學習） | [`/teach`](../skills/productivity/teach/SKILL.md) |
 | 想自己寫一個新的 skill | [`/writing-great-skills`](../skills/productivity/writing-great-skills/SKILL.md) |
-| 想把一個鬆散的想法拆成可調查的票券並逐一推進 | 🚧 [`/decision-mapping`](../skills/in-progress/decision-mapping/SKILL.md) |
+| 想把一個鬆散的想法拆成可調查的票券並逐一推進 | 🚧 [`/wayfinder`](../skills/in-progress/wayfinder/SKILL.md) |
 
 ---
 
@@ -127,7 +127,7 @@
 │   ├─ 架構問題 → /improve-codebase-architecture
 │   ├─ 模組設計 → /codebase-design
 │   ├─ 領域模型 → /domain-modeling
-│   ├─ 要 review 變更 → /review 🚧
+│   ├─ 要 review 變更 → /code-review
 │   └─ merge 衝突 → /resolving-merge-conflicts
 │
 ├─ 管理工作流程
