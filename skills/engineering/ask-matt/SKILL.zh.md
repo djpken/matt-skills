@@ -20,14 +20,16 @@ disable-model-invocation: true
    - **`/prototype`** 用可拋棄的程式碼回答問題，
    - **`/handoff`** 帶著你學到的東西回來，並從原始想法 thread 中引用它。
 3. **分支——這是多 session 的建置嗎？**
-   - **是** → **`/to-prd`**（把這段對話轉成 PRD）→ **`/to-issues`**（把 PRD 拆成可獨立認領的 issues）。由於 issues 是獨立的，**每個 issue 之間清除 context**：每個 issue 開新 session，帶著 PRD 和單一 issue 啟動 **`/implement`**。
+   - **是** → **`/to-spec`**（把這段對話轉成 spec），再用 **`/to-tickets`** 拆成 tracer-bullet tickets，每張都宣告自己的 **blocking edges**。本地 tracker 上是照順序手動處理的 `tickets.md`；真正的 tracker 上這些 edges 會變成 native blocking links，任何 blockers 都完成的 ticket 就能被領走——每張 ticket 都啟動 **`/implement`**，**每張之間清除 context**。
    - **否** → 直接在這裡執行 **`/implement`**，在同一個 context 視窗中。
+
+   無論哪種，**`/implement`** 都在內部驅動 **`/tdd`** 建置每張 ticket——一次一個 red-green slice——再執行 **`/code-review`**（Standards + Spec 兩軸審查這份 diff）才 commit。想在沒有完整 spec 的情況下單獨 test-first 建置具體行為，用 **`/tdd`**；想針對固定基準點單獨 review branch 或 PR，用 **`/code-review`**。
 
 ### Context 衛生
 
-把步驟 1–3 保持在**一個不中斷的 context 視窗**中——在 `/to-issues` 完成之前不要 compact 或 clear——讓 grilling、PRD 和 issues 都建立在同樣的思考基礎上。每個 `/implement` 再從新 session 開始，從 issue 出發。
+把步驟 1–3 保持在**一個不中斷的 context 視窗**中——在 `/to-tickets` 完成之前不要 compact 或 clear——讓 grilling、spec 和 tickets 都建立在同樣的思考基礎上。每個 `/implement` 再從新 session 開始，從 ticket 出發。
 
-這個限制是 **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**：視窗（頂尖模型約 120k tokens）內模型仍能清晰推理的範圍。如果 session 在 `/to-issues` 之前接近上限，不要在退化狀態下硬撐；用 `/handoff` 後在新 thread 繼續。
+這個限制是 **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**：視窗（頂尖模型約 120k tokens）內模型仍能清晰推理的範圍。如果 session 在 `/to-tickets` 之前接近上限，不要在退化狀態下硬撐；用 `/handoff` 後在新 thread 繼續。
 
 ## 入口道
 
@@ -35,7 +37,9 @@ disable-model-invocation: true
 
 - **Bugs 和 requests 堆積** → **`/triage`**。它讓 issues 通過 triage roles 並產出 agent-ready issues，後續再由 **`/implement`** 接手。
 
-  Triage 只用於**你沒有建立的** issues：bug reports、incoming feature requests，任何 raw arrival。`/to-issues` 產出的 issues 已是 agent-ready，**不要對它們做 triage**。
+  Triage 只用於**你沒有建立的** issues：bug reports、incoming feature requests，任何 raw arrival。`/to-tickets` 產出的 tickets 已是 agent-ready，**不要對它們做 triage**。
+
+- **一個龐大、模糊的工作——greenfield 專案或巨大 feature build，大到一個 session 裝不下** → **`/wayfinder`**。當這裡到目的地的路還看不見時，它會在 issue tracker 上繪製一張**共享地圖（shared map）**，由調查 tickets 組成，逐一解決——產出**決策，而非交付物（decisions, not deliverables）**——直到迷霧散去、路徑清楚。之後匯回主流程進入 **`/to-spec`**（或者如果這件事其實不大，直接進 **`/implement`**）。**`/grill-with-docs`** 磨練的是一個 session 就能裝下的想法；wayfinder 則是給裝不下的那種。
 
 ## Codebase health
 

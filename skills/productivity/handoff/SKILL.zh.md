@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 在文件中包含「建議的 skills」部分，建議 agent 應該呼叫哪些 skills。
 
-不要複製已捕獲在其他成品中的內容（PRD、計畫、ADR、issues、commits、diffs）。改為用路徑或 URL 引用它們。
+不要複製已捕獲在其他成品中的內容（spec、計畫、ADR、issues、commits、diffs）。改為用路徑或 URL 引用它們。
 
 刪除任何敏感資訊，例如 API 金鑰、密碼或個人識別資訊。
 

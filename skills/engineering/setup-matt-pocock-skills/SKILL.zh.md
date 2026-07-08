@@ -35,7 +35,7 @@ disable-model-invocation: true
 
 **A 部分 — Issue 追蹤工具。**
 
-> 說明：「Issue 追蹤工具」是這個 repo 的 issues 所在的地方。像 `to-issues`、`triage`、`to-prd` 和 `qa` 這樣的 skills 從它讀取並寫入——它們需要知道是否要呼叫 `gh issue create`、在 `.scratch/` 下寫一個 markdown 檔案，或者遵循你描述的其他工作流程。選擇你實際為這個 repo 追蹤工作的地方。
+> 說明：「Issue 追蹤工具」是這個 repo 的 issues 所在的地方。像 `to-tickets`、`triage`、`to-spec` 和 `qa` 這樣的 skills 從它讀取並寫入——它們需要知道是否要呼叫 `gh issue create`、在 `.scratch/` 下寫一個 markdown 檔案，或者遵循你描述的其他工作流程。選擇你實際為這個 repo 追蹤工作的地方。
 
 預設立場：這些 skills 是為 GitHub 設計的。如果 `git remote` 指向 GitHub，提議那個。如果 `git remote` 指向 GitLab（`gitlab.com` 或自托管），提議 GitLab。否則（或如果使用者偏好），提供：
 

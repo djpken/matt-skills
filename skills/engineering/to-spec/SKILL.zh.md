@@ -1,24 +1,24 @@
 ---
-name: to-prd
-description: 將目前對話轉換成 PRD 並發布到專案 issue 追蹤工具——不做訪談，直接綜合你已討論的內容。
+name: to-spec
+description: 將目前對話轉換成 spec 並發布到專案 issue 追蹤工具——不做訪談，直接綜合你已討論的內容。
 disable-model-invocation: true
 ---
 
-這個 skill 取得目前對話 context 和程式碼庫理解，並產生 PRD。**不要**訪談使用者——只是綜合你已知道的東西。
+這個 skill 取得目前對話 context 和程式碼庫理解，並產生一份 spec（你可能認識這種文件叫做 PRD）。**不要**訪談使用者——只是綜合你已知道的東西。
 
 Issue 追蹤器和 triage 標籤詞彙應該已提供給你——如果沒有，執行 `/setup-matt-pocock-skills`。
 
 ## 流程
 
-1. 如果你還沒有，探索 repo 以了解程式碼庫的目前狀態。在整個 PRD 中使用專案的領域術語表詞彙，並遵循你正在觸碰的區域的任何 ADR。
+1. 如果你還沒有，探索 repo 以了解程式碼庫的目前狀態。在整份 spec 中使用專案的領域術語表詞彙，並遵循你正在觸碰的區域的任何 ADR。
 
 2. 勾勒出你要測試功能的接縫。應該優先使用現有接縫而不是新的。盡可能使用最高的接縫。如果需要新接縫，在你能做到的最高點提議它們。程式碼庫中的接縫越少越好——理想數量是一個。
 
    與使用者確認這些接縫符合他們的期望。
 
-3. 使用下面的模板寫 PRD，然後將其發布到專案 issue 追蹤器。應用 `ready-for-agent` triage 標籤——不需要額外的 triage。
+3. 使用下面的模板寫 spec，然後將其發布到專案 issue 追蹤器。應用 `ready-for-agent` triage 標籤——不需要額外的 triage。
 
-<prd-template>
+<spec-template>
 
 ## 問題陳述
 
@@ -66,10 +66,10 @@ Issue 追蹤器和 triage 標籤詞彙應該已提供給你——如果沒有，
 
 ## 範圍外
 
-對此 PRD 範圍外事項的描述。
+對此 spec 範圍外事項的描述。
 
 ## 進一步說明
 
 關於功能的任何進一步說明。
 
-</prd-template>
+</spec-template>

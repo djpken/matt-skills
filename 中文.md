@@ -123,7 +123,7 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 
 這個理念貫穿這些 skills 的每一層：
 
-- [`/to-prd`](./skills/engineering/to-prd/SKILL.zh.md) 在建立 PRD 之前，會先問你要動哪些模組
+- [`/to-spec`](./skills/engineering/to-spec/SKILL.zh.md) 在建立 spec 之前，會先問你要動哪些模組
 - [`/improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.zh.md) 幫助你拯救已經變成爛泥巴的程式碼庫。我建議每隔幾天執行一次。
 
 ### 總結
@@ -151,16 +151,20 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 - **[triage](./skills/engineering/triage/SKILL.zh.md)**：透過狀態機角色流程，對 issue 進行分類、驗證、必要時追問，並寫出 agent 可執行的 brief。
 - **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.zh.md)**：掃描程式碼庫尋找深化機會，以視覺化 HTML 報告呈現，再針對你選的項目深度訪談。
 - **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.zh.md)**：為本 repo 設定 engineering skills：issue 追蹤工具、triage 標籤和領域文件結構。使用其他 engineering skills 前，每個 repo 執行一次。
-- **[to-issues](./skills/engineering/to-issues/SKILL.zh.md)**：將任何計畫、spec 或 PRD 拆解成可獨立認領的 issues（垂直切片）。
-- **[to-prd](./skills/engineering/to-prd/SKILL.zh.md)**：將目前對話轉換成 PRD 並提交至 issue 追蹤工具。不做訪談，直接綜合你已討論的內容。
-- **[prototype](./skills/engineering/prototype/SKILL.zh.md)**：建立可拋棄的原型來釐清設計；可用於狀態／商業邏輯問題，也可建立同一路由下可切換的多個 UI 版本。
+- **[to-spec](./skills/engineering/to-spec/SKILL.zh.md)**：將目前對話轉換成 spec 並提交至 issue 追蹤工具。不做訪談，直接綜合你已討論的內容。
+- **[to-tickets](./skills/engineering/to-tickets/SKILL.zh.md)**：將任何計畫、spec 或對話拆成一組 tracer-bullet tickets，每張都宣告自己的 blocking edges——本地檔案用文字表示，真正的 tracker 則用 native blocking links。
+- **[implement](./skills/engineering/implement/SKILL.zh.md)**：根據 spec 或一組 tickets 建置工作，在預先商定的接縫處驅動 `/tdd`，commit 前用 `/code-review` 收尾。
+- **[wayfinder](./skills/engineering/wayfinder/SKILL.zh.md)**：規劃一大塊工作——大到超過一個 agent session 能裝下——把它變成 issue 追蹤工具上一張共享的調查 ticket 地圖，逐一解決，直到通往目的地的路徑清楚。
 
 **Model-invoked（模型呼叫）**
 
-- **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.zh.md)**：針對難搞 bug 和效能退化的診斷迴路：重現、最小化、假設、量測、修復、回歸測試。
+- **[prototype](./skills/engineering/prototype/SKILL.zh.md)**：建立可拋棄的原型來釐清設計問題——可用於狀態／邏輯問題的可執行終端機應用程式，或同一路由下可切換的多個截然不同的 UI 版本。
+- **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.zh.md)**：針對難搞 bug 和效能退化的紀律化診斷迴路：重現 → 最小化 → 假設 → 量測 → 修復 → 回歸測試。
+- **[research](./skills/engineering/research/SKILL.zh.md)**：針對高信度的第一手資料調查問題，並在 repo 中留下一份有引用的 Markdown 檔案，以背景 agent 執行。
 - **[tdd](./skills/engineering/tdd/SKILL.zh.md)**：測試驅動開發，採紅綠重構迴路。每次一個垂直切片地實作功能或修 bug。
 - **[domain-modeling](./skills/engineering/domain-modeling/SKILL.zh.md)**：主動建立並精煉專案的領域模型，挑戰術語、壓力測試邊界案例，並同步更新 `CONTEXT.md` 和 ADR。
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.zh.md)**：設計深層模組的共享紀律與詞彙：用小介面承載大量行為，放在乾淨的接縫處，並可透過介面測試。
+- **[code-review](./skills/engineering/code-review/SKILL.zh.md)**：對自固定基準點以來的 diff 做兩軸審查：**Standards**（是否遵循 repo 的程式碼標準，加上 Fowler smell baseline？）和 **Spec**（是否忠實實作了原始 issue／PRD？），以平行 sub-agents 執行，避免互相污染。
 
 ### Productivity（生產力）
 
@@ -176,12 +180,3 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 **Model-invoked（模型呼叫）**
 
 - **[grilling](./skills/productivity/grilling/SKILL.zh.md)**：針對計畫或設計進行無情訪談，直到每個決策分支都解決。這是 `grill-me` 與 `grill-with-docs` 背後可重複使用的迴路。
-
-### Misc（雜項）
-
-偶爾用到的工具。
-
-- **[git-guardrails-claude-code](./skills/misc/git-guardrails-claude-code/SKILL.zh.md)**：設定 Claude Code hooks，在危險 git 指令（push、reset --hard、clean 等）執行前攔截。
-- **[migrate-to-shoehorn](./skills/misc/migrate-to-shoehorn/SKILL.zh.md)**：將測試檔案從 `as` 型別斷言遷移至 @total-typescript/shoehorn。
-- **[scaffold-exercises](./skills/misc/scaffold-exercises/SKILL.zh.md)**：建立包含章節、題目、解答和解說的練習目錄結構。
-- **[setup-pre-commit](./skills/misc/setup-pre-commit/SKILL.zh.md)**：設定 Husky pre-commit hooks，整合 lint-staged、Prettier、型別檢查和測試。

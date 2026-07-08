@@ -15,11 +15,12 @@
 
 | 使用技能 | 情境 |
 | --- | --- |
-| [`/to-prd`](../skills/engineering/to-prd/SKILL.zh.md) | 已有足夠對話 context，要整理成 PRD |
-| [`/to-issues`](../skills/engineering/to-issues/SKILL.zh.md) | 要把計畫、spec 或 PRD 拆成可獨立認領的 issues |
-| [`/implement`](../skills/engineering/implement/SKILL.zh.md) | 已有 PRD 或 issues，要照著實作 |
+| [`/to-spec`](../skills/engineering/to-spec/SKILL.zh.md) | 已有足夠對話 context，要整理成 spec |
+| [`/to-tickets`](../skills/engineering/to-tickets/SKILL.zh.md) | 要把計畫、spec 或對話拆成宣告 blocking edges 的 tracer-bullet tickets |
+| [`/implement`](../skills/engineering/implement/SKILL.zh.md) | 已有 spec 或 tickets，要照著實作 |
 | [`/tdd`](../skills/engineering/tdd/SKILL.zh.md) | 要 test-first 實作功能或修 bug |
 | [`/prototype`](../skills/engineering/prototype/SKILL.zh.md) | 需要快速原型來驗證狀態模型、邏輯或 UI 方向 |
+| [`/wayfinder`](../skills/engineering/wayfinder/SKILL.zh.md) | 想法龐大又模糊，一個 session 裝不下（greenfield 專案、巨大 feature build），要先在 issue tracker 上繪製調查 ticket 地圖，逐一解決直到路徑清楚 |
 
 ## Debug、Review 與維護
 
