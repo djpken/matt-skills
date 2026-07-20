@@ -26,12 +26,14 @@ disable-model-invocation: true
 - `docs/adr/` 和任何 `src/*/docs/adr/` 目錄
 - `docs/agents/` — 這個 skill 的先前輸出是否已存在？
 - `.scratch/` — 表示本地 markdown issue 追蹤慣例已在使用中
+- `triage` skill 是否已安裝？（在這個 skill 旁邊有 `triage` skill 資料夾，或你的可用 skills 中有 `triage`。）這決定 B 部分是否會執行。
+- Monorepo 訊號 — `pnpm-workspace.yaml`、`package.json` 中的 `workspaces` 欄位，或有自己 `src/` 的 `packages/*`。只有在真正的大型多套件 repo 才會出現；沒有這些訊號就代表單一 context，幾乎每個 repo 都是這樣。
 
 ### 2. 呈現發現並詢問
 
-總結存在的和缺少的。然後**逐一**引導使用者做三個決策——呈現一個部分，得到使用者的答案，然後移到下一個。不要一次丟出全部三個。
+總結存在的和缺少的。然後依序處理各部分——一個部分、一個答案，再進到下一個。
 
-假設使用者不知道這些術語的意思。每個部分以簡短的說明開始（它是什麼、為什麼這些 skills 需要它、如果他們選擇不同會有什麼變化）。然後展示選項和預設。
+每個部分先給出建議答案，讓使用者一個字就能接受。只有在選擇真的會分岔時才給一行說明；如果探索階段已經確定答案，就整段跳過（`triage` 未安裝時跳過 B 部分，沒有 monorepo 時跳過 C 部分）。
 
 **A 部分 — Issue 追蹤工具。**
 
@@ -44,41 +46,26 @@ disable-model-invocation: true
 - **本地 markdown** — issues 以檔案存在於此 repo 的 `.scratch/<feature>/` 下（適合單人專案或沒有遠端的 repos）
 - **其他**（Jira、Linear 等）— 請使用者用一段話描述工作流程；skill 將以自由格式散文記錄它
 
-如果——且只有在——使用者選擇了 **GitHub** 或 **GitLab** 時，詢問一個後續問題：
+把選擇記錄在 `docs/agents/issue-tracker.md`。GitHub 和 GitLab 的範本帶有一個「PR 作為請求表面」旗標，預設為**關閉**——保持關閉、不要主動提起；想把外部 PR 納入 triage 佇列的使用者，之後可以自己在檔案裡把旗標打開。
 
-> 說明：開源 repos 通常以 pull requests 而非 issues 的形式收到功能請求——PR 是帶有附加程式碼的 issue。如果你開啟這個，`/triage` 會把*外部* PR 拉進同樣的佇列，並對它們執行和 issues 相同的標籤和狀態（協作者的進行中 PR 不受影響）。如果 PR 對你來說不是請求表面，就關閉它。
+**B 部分 — Triage 標籤詞彙。** 如果 `triage` skill 沒有安裝（探索階段已告訴你），整段跳過——沒安裝的 skill 不需要標籤。
 
-- **PR 作為請求表面** — 是 / 否（預設：否）。將答案記錄在 `docs/agents/issue-tracker.md`。對本地 markdown 和其他追蹤器，跳過這個問題——沒有 PR。
+如果已安裝，只問一個問題：
 
-**B 部分 — Triage 標籤詞彙。**
+> 你想保留預設的 triage 標籤嗎？（建議：**是**）
 
-> 說明：當 `triage` skill 處理傳入的 issue 時，它會通過狀態機移動——需要評估、等待報告者、準備好讓 AFK agent 接手、準備好給人類，或不會修復。要做到這點，它需要應用標籤（或你的 issue 追蹤器中的等效物），這些標籤匹配*你實際設定的*字串。如果你的 repo 已使用不同的標籤名稱（例如 `bug:triage` 而不是 `needs-triage`），在這裡映射它們，讓 skill 應用正確的標籤而不是建立重複的。
+預設是五個規範角色，每個標籤字串等於其名稱：`needs-triage`、`needs-info`、`ready-for-agent`、`ready-for-human`、`wontfix`。選**是**就原樣寫入。只有使用者選否時——通常是因為他們的追蹤器已經用了其他名稱（例如用 `bug:triage` 代替 `needs-triage`）——才收集覆蓋值，讓 `triage` 套用既有標籤而不是建立重複的。
 
-五個規範角色：
+**C 部分 — 領域文件。** 預設為**單一 context**——在 repo 根目錄有一個 `CONTEXT.md` + `docs/adr/`。這適合幾乎所有 repo；不用詢問直接寫入。
 
-- `needs-triage` — 維護者需要評估
-- `needs-info` — 等待報告者回應
-- `ready-for-agent` — 完全指定，AFK 就緒（agent 可以在沒有人類背景的情況下接手）
-- `ready-for-human` — 需要人類實作
-- `wontfix` — 不會被處理
-
-預設：每個角色的字串等於其名稱。詢問使用者是否想覆蓋任何一個。如果他們的 issue 追蹤器沒有現有標籤，預設就很好。
-
-**C 部分 — 領域文件。**
-
-> 說明：一些 skills（`improve-codebase-architecture`、`diagnosing-bugs`、`tdd`）讀取 `CONTEXT.md` 檔案來學習專案的領域語言，並從 `docs/adr/` 讀取過去的架構決策。它們需要知道 repo 是有一個全局 context 還是多個（例如，具有分離前端/後端 context 的 monorepo），以便在正確的地方查找。
-
-確認格局：
-
-- **單一 context** — 在 repo 根目錄有一個 `CONTEXT.md` + `docs/adr/`。大多數 repos 是這樣。
-- **多 context** — 根目錄有 `CONTEXT-MAP.md`，指向每個 context 的 `CONTEXT.md` 檔案（通常是 monorepo）。
+只有在探索階段發現 monorepo 訊號時，才提供**多 context**——根目錄的 `CONTEXT-MAP.md` 指向每個 context 各自的 `CONTEXT.md` 檔案。接著確認他們想要哪種格局。
 
 ### 3. 確認並編輯
 
 向使用者展示草稿：
 
 - 要添加到正在編輯的 `CLAUDE.md` / `AGENTS.md` 中的 `## Agent skills` 區塊（見步驟 4 的選擇規則）
-- `docs/agents/issue-tracker.md`、`docs/agents/triage-labels.md`、`docs/agents/domain.md` 的內容
+- `docs/agents/issue-tracker.md`、`docs/agents/domain.md`、`docs/agents/triage-labels.md`（只有在 `triage` 已安裝時才有最後一項）的內容
 
 在寫入前讓他們編輯。
 
@@ -101,7 +88,7 @@ disable-model-invocation: true
 
 ### Issue tracker
 
-[一行摘要說明 issues 在哪裡追蹤，以及外部 PR 是否是 triage 表面]。見 `docs/agents/issue-tracker.md`。
+[一行摘要說明 issues 在哪裡追蹤]。見 `docs/agents/issue-tracker.md`。
 
 ### Triage labels
 
@@ -112,12 +99,14 @@ disable-model-invocation: true
 [一行摘要說明格局——「單一 context」或「多 context」]。見 `docs/agents/domain.md`。
 ```
 
-然後使用此 skill 資料夾中的種子模板寫入三個 docs 檔案：
+只有在 `triage` 已安裝且 B 部分有執行時，才納入 `### Triage labels` 子區塊並寫入 `docs/agents/triage-labels.md`。沒有的話，兩者都省略。
+
+然後使用此 skill 資料夾中的種子模板寫入 docs 檔案：
 
 - [issue-tracker-github.md](./issue-tracker-github.md) — GitHub issue 追蹤器
 - [issue-tracker-gitlab.md](./issue-tracker-gitlab.md) — GitLab issue 追蹤器
 - [issue-tracker-local.md](./issue-tracker-local.md) — 本地 markdown issue 追蹤器
-- [triage-labels.md](./triage-labels.md) — 標籤映射
+- [triage-labels.md](./triage-labels.md) — 標籤映射（只有在 `triage` 已安裝時）
 - [domain.md](./domain.md) — 領域文件消費者規則 + 格局
 
 對於「其他」issue 追蹤器，使用使用者的描述從頭寫 `docs/agents/issue-tracker.md`。

@@ -1,6 +1,6 @@
 ---
 name: to-tickets
-description: 將計畫、spec 或目前對話拆成一組 tracer-bullet tickets，每張都宣告自己的 blocking edges，並發布到已設定的 tracker——本地檔案用文字表示，真正的 tracker 則用 native blocking links。
+description: 將計畫、spec 或目前對話拆成一組 tracer-bullet tickets，每張都宣告自己的 blocking edges，並發布到已設定的 tracker——本地是每張 ticket 一個檔案，真正的 tracker 則用 native blocking links。
 disable-model-invocation: true
 ---
 
@@ -59,33 +59,27 @@ Issue 追蹤器和 triage 標籤詞彙應該已提供給你——如果沒有，
 
 發布核准的 tickets。**怎麼發布**取決於 `/setup-matt-pocock-skills` 設定的 tracker——tickets 本身一樣，只有 blocking edges 的表達形式不同：
 
-- **本地檔案** → 在 repo 根目錄寫一份 `tickets.md`，所有 tickets 依相依順序排列（blocker 在前），每張都在「Blocked by」列出它依賴的標題。使用下方的檔案模板。
+- **本地檔案** → 在 `.scratch/<feature-slug>/issues/<NN>-<slug>.md` 下每張 ticket 寫一個檔案，從 `01` 開始依相依順序編號（blocker 在前）。每個檔案的「Blocked by」列出它依賴的編號／標題。使用下方的單張 ticket 檔案模板——一張 ticket 一個檔案，絕不合併成單一檔案。
 - **真正的 issue tracker（GitHub、Linear……）** → 依相依順序（blocker 在前）為每張 ticket 各發布一個 issue，讓每張 ticket 的 blocking edges 可以引用真實的識別碼。若 tracker 有 native 的 blocking／sub-issue 關係就用它；否則把每張 ticket 的「Blocked by」設成阻擋它的 issues。除非另有指示，套用 `ready-for-agent` triage 標籤——這些 tickets 天生就是 agent 可領取的。
-
-不要 close 或修改任何 parent issue。
-
-<tickets-file-template>
-
-# Tickets：<這份工作的簡短名稱>
-
-一行摘要，說明這些 tickets 要建構什麼。若有來源 spec，附上參考。
 
 處理 **frontier**：任何 blocker 都已完成的 ticket。對純線性鏈來說，就是由上到下。
 
-## <Ticket 標題>
+不要 close 或修改任何 parent issue。
+
+<local-ticket-template>
+
+# <NN> — <Ticket 標題>
 
 **要建構什麼：** 這張 ticket 從使用者角度讓什麼端對端行為可運作——不是逐層的實作清單。
 
-**Blocked by：** 阻擋這張的 tickets 標題，或「無——可以立即開始」。
+**Blocked by：** 阻擋這張的 tickets 編號／標題，或「無——可以立即開始」。
+
+**Status：** ready-for-agent
 
 - [ ] 驗收標準 1
 - [ ] 驗收標準 2
 
-## <Ticket 標題>
-
-……
-
-</tickets-file-template>
+</local-ticket-template>
 
 <issue-template>
 

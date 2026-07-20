@@ -20,7 +20,7 @@ disable-model-invocation: true
    - **`/prototype`** 用可拋棄的程式碼回答問題，
    - **`/handoff`** 帶著你學到的東西回來，並從原始想法 thread 中引用它。
 3. **分支——這是多 session 的建置嗎？**
-   - **是** → **`/to-spec`**（把這段對話轉成 spec），再用 **`/to-tickets`** 拆成 tracer-bullet tickets，每張都宣告自己的 **blocking edges**。本地 tracker 上是照順序手動處理的 `tickets.md`；真正的 tracker 上這些 edges 會變成 native blocking links，任何 blockers 都完成的 ticket 就能被領走——每張 ticket 都啟動 **`/implement`**，**每張之間清除 context**。
+   - **是** → **`/to-spec`**（把這段對話轉成 spec），再用 **`/to-tickets`** 拆成 tracer-bullet tickets，每張都宣告自己的 **blocking edges**。本地 tracker 上是 `.scratch/<feature>/issues/` 底下每張 ticket 一個檔案，依 blockers 優先順序手動處理；真正的 tracker 上這些 edges 會變成 native blocking links，任何 blockers 都完成的 ticket 就能被領走——每張 ticket 都啟動 **`/implement`**，**每張之間清除 context**。
    - **否** → 直接在這裡執行 **`/implement`**，在同一個 context 視窗中。
 
    無論哪種，**`/implement`** 都在內部驅動 **`/tdd`** 建置每張 ticket——一次一個 red-green slice——再執行 **`/code-review`**（Standards + Spec 兩軸審查這份 diff）才 commit。想在沒有完整 spec 的情況下單獨 test-first 建置具體行為，用 **`/tdd`**；想針對固定基準點單獨 review branch 或 PR，用 **`/code-review`**。
@@ -39,7 +39,9 @@ disable-model-invocation: true
 
   Triage 只用於**你沒有建立的** issues：bug reports、incoming feature requests，任何 raw arrival。`/to-tickets` 產出的 tickets 已是 agent-ready，**不要對它們做 triage**。
 
-- **一個龐大、模糊的工作——greenfield 專案或巨大 feature build，大到一個 session 裝不下** → **`/wayfinder`**。當這裡到目的地的路還看不見時，它會在 issue tracker 上繪製一張**共享地圖（shared map）**，由調查 tickets 組成，逐一解決——產出**決策，而非交付物（decisions, not deliverables）**——直到迷霧散去、路徑清楚。之後匯回主流程進入 **`/to-spec`**（或者如果這件事其實不大，直接進 **`/implement`**）。**`/grill-with-docs`** 磨練的是一個 session 就能裝下的想法；wayfinder 則是給裝不下的那種。
+- **一個龐大、模糊的工作——greenfield 專案或巨大 feature build，大到一個 session 裝不下** → **`/wayfinder`**，這裡認知負荷最重的流程。當這裡到目的地的路還看不見時，它會在 issue tracker 上繪製一張**共享地圖（shared map）**，由**決策 tickets（decision tickets）**組成，逐一解決——產出**決策，而非交付物（decisions, not deliverables）**——直到迷霧散去、路徑清楚。**`/grill-with-docs`** 磨練的是一個 session 就能裝下的想法；wayfinder 則是給裝不下的那種——而且更慢、更密集，只留給真正需要它的情況，絕不用在範圍明確的 feature 上。
+
+  地圖清楚之後，**它是交接，不是建置**：匯回主流程進入 **`/to-spec`**，把地圖上互相關聯的決策收斂成可建置的計畫，接著照常跑 `/to-tickets` 和 `/implement`。如果直接把地圖丟進 `/implement` 迴圈，會跳過那次收斂、丟掉關聯細節——只有在這件事其實真的不大時，才直接進 `/implement`。
 
 ## Codebase health
 
