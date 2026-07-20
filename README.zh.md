@@ -39,6 +39,33 @@ npx skills@latest add mattpocock/skills
    - 你想把產出的文件存在哪裡
 4. 完成，可以開始使用。
 
+## 以 Claude Code plugin 安裝
+
+想要不用手動維護、即插即用的安裝方式？這些 skills 也以原生 [Claude Code plugin](https://code.claude.com/docs/en/plugins) 形式發布。跟複製可編輯檔案到你的 repo 不同，plugin 會把整組 skill 安裝成一個受管理的套件，隨我釋出新版本自動更新——你是訂閱，而不是 fork。
+
+在 Claude Code 內：
+
+```
+/plugin marketplace add mattpocock/skills
+/plugin install mattpocock-skills@mattpocock
+```
+
+或從你的 shell：
+
+```bash
+claude plugin marketplace add mattpocock/skills
+claude plugin install mattpocock-skills@mattpocock
+```
+
+接著跟上面快速開始一樣，在每個 repo 執行一次 `/setup-matt-pocock-skills`。
+
+兩種安裝方式，兩種哲學：
+
+- **[skills.sh](https://skills.sh/mattpocock/skills)** 把 skills 複製進你的專案，讓你可以自行修改、變成自己的東西。
+- **Plugin** 讓它們保持唯讀、隨時最新的套件，你不需要編輯——如果你只想讓我的這組 skills 能用、並隨著它演進，這是最佳選擇。
+
+> 使用 Codex 或其他 agent？[skills.sh 安裝工具](https://skills.sh/mattpocock/skills)目前已經可以把這些 skills 安裝進 Codex 和其他符合 Agent-Skills 標準的 harness。原生 Codex plugin 已在規劃中——詳見 [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md)。
+
 ## 為什麼需要這些 Skills
 
 我建立這些 skills，是為了解決我在 Claude Code、Codex 和其他 coding agent 上觀察到的常見失敗模式。
@@ -165,6 +192,7 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 - **[domain-modeling](./skills/engineering/domain-modeling/SKILL.zh.md)**：主動建立並精煉專案的領域模型，挑戰術語、壓力測試邊界案例，並同步更新 `CONTEXT.md` 和 ADR。
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.zh.md)**：設計深層模組的共享紀律與詞彙：用小介面承載大量行為，放在乾淨的接縫處，並可透過介面測試。
 - **[code-review](./skills/engineering/code-review/SKILL.zh.md)**：對自固定基準點以來的 diff 做兩軸審查：**Standards**（是否遵循 repo 的程式碼標準，加上 Fowler smell baseline？）和 **Spec**（是否忠實實作了原始 issue／PRD？），以平行 sub-agents 執行，避免互相污染。
+- **[resolving-merge-conflicts](./skills/engineering/resolving-merge-conflicts/SKILL.zh.md)**：逐個 hunk 處理進行中的 git merge 或 rebase 衝突，依循每一方的主要來源追溯意圖來解決，完成後結束該操作——絕不使用 `--abort`。
 
 ### Productivity（生產力）
 
@@ -179,4 +207,4 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 
 **Model-invoked（模型呼叫）**
 
-- **[grilling](./skills/productivity/grilling/SKILL.zh.md)**：針對計畫或設計進行無情訪談，直到每個決策分支都解決。這是 `grill-me` 與 `grill-with-docs` 背後可重複使用的迴路。
+- **[grilling](./skills/productivity/grilling/SKILL.zh.md)**：針對計畫、決策或想法進行無情訪談，直到每個決策分支都解決。這是 `grill-me` 與 `grill-with-docs` 背後可重複使用的迴路。

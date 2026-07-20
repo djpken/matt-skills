@@ -1,10 +1,10 @@
 ---
 name: wayfinder
-description: 規劃一大塊工作——大到超過一個 agent session 能裝下——把它變成 issue tracker 上一張共享的調查 ticket 地圖，逐一解決，直到通往目的地的路徑清楚為止。
+description: 規劃一大塊工作——大到超過一個 agent session 能裝下——把它變成 issue tracker 上一張共享的決策 ticket 地圖，逐一解決，直到通往目的地的路徑清楚為止。
 disable-model-invocation: true
 ---
 
-一個鬆散的想法出現了——大到一個 agent session 裝不下，而且被迷霧包住：從這裡到**目的地（destination）**的路還看不見。Wayfinding 是要找出那條路，而不是直接衝向目的地。這個 skill 會在 repo 的 issue tracker 上把路徑繪成一張**共享地圖（shared map）**，然後一次處理一張 ticket，直到路線清楚。
+一個鬆散的想法出現了——大到一個 agent session 裝不下，而且被迷霧包住：從這裡到**目的地（destination）**的路還看不見。Wayfinding 是要找出那條路，而不是直接衝向目的地。這個 skill 會在 repo 的 issue tracker 上把路徑繪成一張**共享地圖（shared map）**，然後一次處理一張**決策 ticket（decision ticket）**——這些是「解決方式是一個決策」的問題，而不是要執行的建置切片——直到路線清楚。
 
 每次的目的地都不同，把它命名出來就是繪圖的第一步——它會塑造每一張 ticket。目的地可能是要交出去反覆迭代的一份 spec、開工前要鎖定的一個決策，或是像資料結構遷移那樣就地完成的改動。地圖與領域無關——engineering work、course content，任何符合這個形狀的工作都適用。
 
@@ -74,7 +74,7 @@ Blocking 使用 tracker 的 **native** dependency 關係——這很關鍵，因
 
 每張 ticket 不是 **HITL**——human in the loop，和一個為自己發聲的人一起處理——就是 **AFK**，由 agent 單獨驅動。HITL ticket 只能透過那次真人互動來解決；agent 絕不能替人類那一側發言（一個自問自答的 grilling agent 就是破壞了這一點）。
 
-- **Research**（AFK）：閱讀文件、第三方 API 或 knowledge base 之類的本地資源。產出一份 linked 的 markdown 摘要作為 asset。當需要目前工作目錄之外的知識時使用。
+- **Research**（AFK）：閱讀文件、第三方 API 或 knowledge base 之類的本地資源，浮現某個決策正在等待的事實。由 `/research` **subagent** 解決。當需要目前工作目錄之外的知識時使用。
 - **Prototype**（HITL）：用便宜、粗糙、具體、可反應的 artifact 提高討論的 fidelity——outline、粗略草案、stub，或透過 /prototype skill 寫的 UI／邏輯程式碼。把 prototype 連結為 asset。當關鍵問題是「看起來該長怎樣」或「行為該怎樣」時使用。
 - **Grilling**（HITL）：透過 /grilling 和 /domain-modeling skills 進行對話，一次一個問題。這是預設情況。
 - **Task**（HITL 或 AFK）：在能做出*決策*之前必須完成的人工作業——沒有東西要決定、原型化或研究，但討論會卡住直到它完成。例如：註冊某個服務以便評估它的 API、provisioning access、搬動資料以便看清它的形狀。這是唯一*動手做*而非*決定*的類型——它靠解除某個決策的阻擋來取得存在的理由，而不是靠交付目的地本身。Agent 能自己驅動的就自己驅動（AFK）；否則交給人類一張精確的 checklist（HITL）。工作完成時 resolved；answer 記錄做了什麼，以及後續 tickets 依賴的事實（credentials 位置、新的 URL、row counts）。
@@ -102,7 +102,7 @@ Blocking 使用 tracker 的 **native** dependency 關係——這很關鍵，因
 
 ## Invocation
 
-兩種模式。無論哪種，**每個 session 永遠不要解決超過一張 ticket。**
+兩種模式。無論哪種，**每個 session 永遠不要解決超過一張 ticket**——research ticket 例外。
 
 ### 繪製地圖
 
@@ -112,7 +112,8 @@ Blocking 使用 tracker 的 **native** dependency 關係——這很關鍵，因
 2. **繪製 frontier。** 再 grill 一次，這次**廣度優先**：在整個空間裡展開，而不是深挖某一條 thread，浮現出 open 的決策，以及現在就能踏出的第一步。**如果這一步沒有浮出任何迷霧**——通往目的地的路已經清楚，整趟旅程小到一個 session 就裝得下——你不需要地圖。停下來，問使用者接下來想怎麼進行。
 3. **建立地圖**（標籤 `wayfinder:map`）：填好 Destination 和 Notes，Decisions-so-far 留空，把迷霧勾勒進 **Not yet specified**。
 4. **建立現在就能具體化的 tickets**，作為地圖的 child issues——然後在**第二輪**接上 blocking edges（issues 要先有 id 才能互相引用）。接線會把它們分成 frontier 和 blocked；任何你還無法具體化的東西留在迷霧裡——也就是 **Not yet specified** 段落。
-5. 停下來——繪製地圖是一個 session 的工作；不要同時解決 tickets。
+5. **啟動 research subagents。** 對每一張你剛建立的 `research` ticket，各自啟動一個 `/research` subagent 平行解決它，把發現記錄到一個可拋棄的 `research/<name>` 分支，並在 ticket 上留一個指向該分支的 context pointer。
+6. 停下來——繪製地圖是一個 session 的工作；它不會親手解決任何 ticket。
 
 ### 處理地圖
 
