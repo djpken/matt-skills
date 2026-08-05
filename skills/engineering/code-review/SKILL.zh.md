@@ -1,12 +1,12 @@
 ---
 name: code-review
-description: 從固定點（commit、branch、tag 或 merge-base）以兩個軸線 review 變更：Standards（程式碼是否遵守 repo 文件化標準）與 Spec（是否符合來源 issue/PRD）。並行執行兩個 sub-agents，並並列回報。用於 review branch、PR、WIP 變更，或使用者要求「review since X」時。
+description: 從固定點（commit、branch、tag 或 merge-base）以兩個軸線 review 變更：Standards（程式碼是否遵守 repo 文件化標準）與 Spec（是否符合來源 issue/spec）。並行執行兩個 sub-agents，並並列回報。用於 review branch、PR、WIP 變更，或使用者要求「review since X」時。
 ---
 
 對使用者提供的固定點與 `HEAD` 之間的 diff 做雙軸 review：
 
 - **Standards**：程式碼是否符合 repo 文件化的 coding standards？
-- **Spec**：程式碼是否忠實實作來源 issue / PRD / spec？
+- **Spec**：程式碼是否忠實實作來源 issue / spec？
 
 兩個軸線用**並行 sub-agents**執行，避免污染彼此 context，然後由這個 skill 彙整 findings。
 
@@ -28,7 +28,7 @@ Issue tracker 應該已提供；如果缺少 `docs/agents/issue-tracker.md`，�
 
 1. Commit messages 中的 issue references（`#123`、`Closes #45`、GitLab `!67` 等）：依 `docs/agents/issue-tracker.md` 的 workflow 取得。
 2. 使用者以 argument 傳入的 path。
-3. `docs/`、`specs/` 或 `.scratch/` 下符合 branch name / feature 的 PRD/spec file。
+3. `docs/`、`specs/` 或 `.scratch/` 下符合 branch name / feature 的 spec file。
 4. 如果找不到，問使用者 spec 在哪裡。如果使用者說沒有，**Spec** sub-agent 會跳過並回報「no spec available」。
 
 ### 3. Identify standards sources
