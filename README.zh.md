@@ -24,47 +24,64 @@
 
 [訂閱電子報](https://www.aihero.dev/s/skills-newsletter)
 
-## 快速開始（30 秒設定）
+## 安裝（30 秒設定）
 
-1. 執行 skills.sh 安裝工具：
+兩種入口，兩種哲學。**[Claude Code plugin](https://code.claude.com/docs/en/plugins)** 把整組 skills 安裝成一個受管理、唯讀的套件，隨我釋出新版本自動更新——你是訂閱，而不是 fork。**[skills.sh](https://skills.sh/mattpocock/skills)** 把可編輯的 skill 檔案複製進你的專案，讓你可以自行修改、變成自己的東西。挑一種——兩種都裝只會讓你每個 skill 都重複一份。
+
+### 1. 取得 skills
+
+<details>
+<summary><strong>Claude Code</strong></summary>
+
+```bash
+claude plugins install mattpocock-skills
+```
+
+或者，在 session 裡直接執行：
+
+```
+/plugin install mattpocock-skills
+```
+
+它已經在 Claude Code 的官方 marketplace 裡，所以不用先新增任何東西，更新也會自動送達。
+
+</details>
+
+<details>
+<summary><strong>Codex 及其他 agent</strong></summary>
 
 ```bash
 npx skills@latest add mattpocock/skills
 ```
 
-2. 選擇你要的 skills，以及想安裝到哪些 coding agent 上。**記得選取 `/setup-matt-pocock-skills`**。
-3. 在你的 agent 中執行 `/setup-matt-pocock-skills`。它會詢問：
-   - 你使用哪個 issue 追蹤工具（GitHub、Linear 或本地檔案）
-   - 你在 triage 票據時套用哪些標籤（`/triage` 會使用）
-   - 你想把產出的文件存在哪裡
-4. 完成，可以開始使用。
+選擇你要的 skills，以及想安裝到哪些 coding agent 上。**安裝工具會讓你挑選要拿哪些 skills——記得把 `setup-matt-pocock-skills` 也選進去。**
 
-## 以 Claude Code plugin 安裝
+原生 Codex plugin 已在規劃中——詳見 [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md)。
 
-想要不用手動維護、即插即用的安裝方式？這些 skills 也以原生 [Claude Code plugin](https://code.claude.com/docs/en/plugins) 形式發布。跟複製可編輯檔案到你的 repo 不同，plugin 會把整組 skill 安裝成一個受管理的套件，隨我釋出新版本自動更新——你是訂閱，而不是 fork。
+</details>
 
-在 Claude Code 內：
+<details>
+<summary><strong>給喜歡動手改的人</strong></summary>
 
-```
-/plugin marketplace add mattpocock/skills
-/plugin install mattpocock-skills@mattpocock
-```
-
-或從你的 shell：
+在任何 agent 上（包括 Claude Code）都可以用同一個安裝工具：
 
 ```bash
-claude plugin marketplace add mattpocock/skills
-claude plugin install mattpocock-skills@mattpocock
+npx skills@latest add mattpocock/skills
 ```
 
-接著跟上面快速開始一樣，在每個 repo 執行一次 `/setup-matt-pocock-skills`。
+它會把 skills 寫進你的 repo，變成你擁有、可以編輯的一般檔案。不會有任何東西在背後偷偷更新；想拿到我最新的變更時，自己執行 `npx skills update`。
 
-兩種安裝方式，兩種哲學：
+</details>
 
-- **[skills.sh](https://skills.sh/mattpocock/skills)** 把 skills 複製進你的專案，讓你可以自行修改、變成自己的東西。
-- **Plugin** 讓它們保持唯讀、隨時最新的套件，你不需要編輯——如果你只想讓我的這組 skills 能用、並隨著它演進，這是最佳選擇。
+### 2. 執行 `/setup-matt-pocock-skills`
 
-> 使用 Codex 或其他 agent？[skills.sh 安裝工具](https://skills.sh/mattpocock/skills)目前已經可以把這些 skills 安裝進 Codex 和其他符合 Agent-Skills 標準的 harness。原生 Codex plugin 已在規劃中——詳見 [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md)。
+在你的 agent 中，每個 repo 執行一次。它會詢問：
+
+- 你使用哪個 issue 追蹤工具（GitHub、Linear 或本地檔案）
+- 你在 triage 票據時套用哪些標籤（`/triage` 會使用）
+- 你想把產出的文件存在哪裡
+
+### 3. 完成，可以開始使用。
 
 ## 為什麼需要這些 Skills
 
@@ -132,7 +149,7 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 
 我建了 [`/tdd`](./skills/engineering/tdd/SKILL.zh.md) skill，可插入任何專案使用。它鼓勵紅綠重構，並給 agent 充分的測試好壞指引。
 
-對於 debug，我也建了 [`/diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.zh.md) skill，將最佳 debug 實踐包裝成一個簡單的迴路。
+對於 debug，我也建了 [`/diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.zh.md) skill，將最佳 debug 實踐包裝成一個紀律化的迴路，一個階段一個階段設檻通過。
 
 ### 失敗模式 #4：我們蓋出了一堆爛泥巴
 
@@ -151,7 +168,7 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 這個理念貫穿這些 skills 的每一層：
 
 - [`/to-spec`](./skills/engineering/to-spec/SKILL.zh.md) 在建立 spec 之前，會先問你要動哪些模組
-- [`/improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.zh.md) 幫助你拯救已經變成爛泥巴的程式碼庫。我建議每隔幾天執行一次。
+- [`/improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.zh.md) 掃描程式碼庫尋找深化機會，並把候選項目交給你。我建議每隔幾天執行一次。它是一次 survey，不是一次拯救行動：在一個真的老舊的程式碼庫上，它會找到真正的候選項目，但不會幫你把爛泥巴解開。
 
 ### 總結
 
@@ -181,18 +198,19 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 - **[to-spec](./skills/engineering/to-spec/SKILL.zh.md)**：將目前對話轉換成 spec 並提交至 issue 追蹤工具。不做訪談，直接綜合你已討論的內容。
 - **[to-tickets](./skills/engineering/to-tickets/SKILL.zh.md)**：將任何計畫、spec 或對話拆成一組 tracer-bullet tickets，每張都宣告自己的 blocking edges——本地檔案用文字表示，真正的 tracker 則用 native blocking links。
 - **[implement](./skills/engineering/implement/SKILL.zh.md)**：根據 spec 或一組 tickets 建置工作，在預先商定的接縫處驅動 `/tdd`，commit 前用 `/code-review` 收尾。
-- **[wayfinder](./skills/engineering/wayfinder/SKILL.zh.md)**：規劃一大塊工作——大到超過一個 agent session 能裝下——把它變成 issue 追蹤工具上一張共享的調查 ticket 地圖，逐一解決，直到通往目的地的路徑清楚。
+- **[wayfinder](./skills/engineering/wayfinder/SKILL.zh.md)**：規劃一大塊工作——大到超過一個 agent session 能裝下——把它變成 issue 追蹤工具上一張共享的決策 ticket 地圖，逐一解決，直到通往目的地的路徑清楚。
 
 **Model-invoked（模型呼叫）**
 
-- **[prototype](./skills/engineering/prototype/SKILL.zh.md)**：建立可拋棄的原型來釐清設計問題——可用於狀態／邏輯問題的可執行終端機應用程式，或同一路由下可切換的多個截然不同的 UI 版本。
-- **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.zh.md)**：針對難搞 bug 和效能退化的紀律化診斷迴路：重現 → 最小化 → 假設 → 量測 → 修復 → 回歸測試。
+- **[prototype](./skills/engineering/prototype/SKILL.zh.md)**：建立可拋棄的原型來釐清設計問題——可用於狀態／邏輯問題的單一可分享 HTML 檔案，或同一路由下可切換的多個截然不同的 UI 版本。
+- **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.zh.md)**：針對難搞 bug 和效能退化的紀律化診斷迴路：建一個對這個 bug 會亮紅燈的回饋迴路 → 最小化 → 假設 → 量測 → 修復 → 回歸測試。
 - **[research](./skills/engineering/research/SKILL.zh.md)**：針對高信度的第一手資料調查問題，並在 repo 中留下一份有引用的 Markdown 檔案，以背景 agent 執行。
 - **[tdd](./skills/engineering/tdd/SKILL.zh.md)**：測試驅動開發，採紅綠重構迴路。每次一個垂直切片地實作功能或修 bug。
 - **[domain-modeling](./skills/engineering/domain-modeling/SKILL.zh.md)**：主動建立並精煉專案的領域模型，挑戰術語、壓力測試邊界案例，並同步更新 `CONTEXT.md` 和 ADR。
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.zh.md)**：設計深層模組的共享紀律與詞彙：用小介面承載大量行為，放在乾淨的接縫處，並可透過介面測試。
-- **[code-review](./skills/engineering/code-review/SKILL.zh.md)**：對自固定基準點以來的 diff 做兩軸審查：**Standards**（是否遵循 repo 的程式碼標準，加上 Fowler smell baseline？）和 **Spec**（是否忠實實作了原始 issue／PRD？），以平行 sub-agents 執行，避免互相污染。
+- **[code-review](./skills/engineering/code-review/SKILL.zh.md)**：對自固定基準點以來的 diff 做兩軸審查：**Standards**（是否遵循 repo 的程式碼標準，加上 Fowler smell baseline？）和 **Spec**（是否忠實實作了原始 issue／spec？），以平行 sub-agents 執行，避免互相污染。
 - **[resolving-merge-conflicts](./skills/engineering/resolving-merge-conflicts/SKILL.zh.md)**：逐個 hunk 處理進行中的 git merge 或 rebase 衝突，依循每一方的主要來源追溯意圖來解決，完成後結束該操作——絕不使用 `--abort`。
+- **[wizard](./skills/engineering/wizard/SKILL.zh.md)**：產生一支互動式 bash wizard，帶著人類走過只有他們能執行的步驟：佈建基礎設施、設定憑證或 CI secrets、點過一個陌生的第三方 dashboard，或跑一次性的 migration／cutover。
 
 ### Productivity（生產力）
 
@@ -200,11 +218,13 @@ AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**�
 
 **User-invoked（使用者呼叫）**
 
-- **[grill-me](./skills/productivity/grill-me/SKILL.zh.md)**：針對計畫或設計進行無情訪談，直到每個決策分支都解決為止。
+- **[grill-me](./skills/productivity/grill-me/SKILL.zh.md)**：針對計畫或設計進行無情訪談，直到每個設計樹分支都解決為止。
 - **[handoff](./skills/productivity/handoff/SKILL.zh.md)**：將目前對話壓縮成交接文件，讓另一個 agent 可以接續工作。
 - **[teach](./skills/productivity/teach/SKILL.zh.md)**：在多個 session 中教導使用者新技能或概念，以目前目錄作為有狀態的教學工作區。
-- **[writing-great-skills](./skills/productivity/writing-great-skills/SKILL.zh.md)**：寫好與編輯 skill 的參考，說明讓 skill 行為可預測的詞彙與原則。
+- **[to-questionnaire](./skills/productivity/to-questionnaire/SKILL.zh.md)**：把一個你自己回答不了的決策，變成一份給唯一能回答的那個人的 Markdown 問卷——可以非同步填寫，也可以在會議中一起填。它訪談的是**發送**這件事本身（要寄給誰、你需要拿回什麼），而不是主題。
+- **[wait-what](./skills/productivity/wait-what/SKILL.zh.md)**：在訊息沒說到位的那一刻立刻觸發。Agent 會用你缺少的 context 重新表達一次，講白話，並使用你 `CONTEXT.md` 裡的詞彙。
+- **[writing-for-agents](./skills/productivity/writing-for-agents/SKILL.zh.md)**：撰寫給 agent 消費的文件：skill、AGENTS.md／CLAUDE.md，以及任何 agent 透過指針觸及的文件。
 
 **Model-invoked（模型呼叫）**
 
-- **[grilling](./skills/productivity/grilling/SKILL.zh.md)**：針對計畫、決策或想法進行無情訪談，直到每個決策分支都解決。這是 `grill-me` 與 `grill-with-docs` 背後可重複使用的迴路。
+- **[grilling](./skills/productivity/grilling/SKILL.zh.md)**：針對計畫、決策或想法進行無情訪談，直到每個設計樹分支都解決。這是 `grill-me`、`grill-with-docs`、`triage`、`wayfinder` 與 `improve-codebase-architecture` 背後可重複使用的訪談原語。

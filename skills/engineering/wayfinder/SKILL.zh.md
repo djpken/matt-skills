@@ -76,7 +76,7 @@ Blocking 使用 tracker 的 **native** dependency 關係——這很關鍵，因
 
 - **Research**（AFK）：閱讀文件、第三方 API 或 knowledge base 之類的本地資源，浮現某個決策正在等待的事實。由 `/research` **subagent** 解決。當需要目前工作目錄之外的知識時使用。
 - **Prototype**（HITL）：用便宜、粗糙、具體、可反應的 artifact 提高討論的 fidelity——outline、粗略草案、stub，或透過 /prototype skill 寫的 UI／邏輯程式碼。把 prototype 連結為 asset。當關鍵問題是「看起來該長怎樣」或「行為該怎樣」時使用。
-- **Grilling**（HITL）：透過 /grilling 和 /domain-modeling skills 進行對話，一次一個問題。這是預設情況。
+- **Grilling**（HITL）：對話。這是預設情況。永遠呼叫 /grilling 和 /domain-modeling skills。
 - **Task**（HITL 或 AFK）：在能做出*決策*之前必須完成的人工作業——沒有東西要決定、原型化或研究，但討論會卡住直到它完成。例如：註冊某個服務以便評估它的 API、provisioning access、搬動資料以便看清它的形狀。這是唯一*動手做*而非*決定*的類型——它靠解除某個決策的阻擋來取得存在的理由，而不是靠交付目的地本身。Agent 能自己驅動的就自己驅動（AFK）；否則交給人類一張精確的 checklist（HITL）。工作完成時 resolved；answer 記錄做了什麼，以及後續 tickets 依賴的事實（credentials 位置、新的 URL、row counts）。
 
 ## Fog of war
