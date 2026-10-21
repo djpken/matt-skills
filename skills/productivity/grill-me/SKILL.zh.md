@@ -1,7 +1,7 @@
 ---
 name: grill-me
-description: 針對計畫或設計進行無情訪談，使其更加完善。
+description: "一場嚴格的訪談，用以精煉計畫或設計。"
 disable-model-invocation: true
 ---
 
-執行一個 `/grilling` session。
+呼叫 Skill 工具並輸入 "grilling"。

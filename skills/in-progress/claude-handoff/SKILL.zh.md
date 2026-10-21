@@ -1,18 +1,18 @@
 ---
 name: claude-handoff
-description: 將目前對話交接給一個新的背景 agent，讓它立即接手工作。
-argument-hint: "下一個 session 將用來做什麼？"
+description: "將目前的對話移交給一個全新的背景 agent，該 agent 會立即接手工作。"
+argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
 ---
 
-撰寫目前對話的 handoff summary，讓新的 agent 可以繼續工作。不要把它存成檔案；改成啟動一個以 summary 作為 prompt 的背景 agent：`claude --bg --name "<descriptive name>" "<handoff summary>"`。它會從目前 working directory 開始並立即返回；使用者用 `claude agents` 管理它。
+撰寫目前對話的交接摘要，以便新的 agent 能繼續工作。將其儲存至使用者作業系統的暫存目錄，然後啟動一個背景 agent，並以該摘要作為其提示詞：`claude --bg --name "<descriptive name>" -- "$(cat <summary file>)"`。傳遞檔案可避免 shell 執行摘要中的反引號或展開 `$`。它會在目前的工作目錄中啟動並立即返回；使用者使用 `claude agents` 來管理它。
 
-一定要傳入 `-n`/`--name` 並使用描述性名稱（例如 `--name "Fix login bug"`），這會設定 job list、session picker 和 terminal title 中顯示的名稱。
+傳遞 `-n`/`--name` 時，務必使用描述性的名稱（例如 `--name "Fix login bug"`）；這會設定在任務清單、工作區選擇器以及終端機標題中顯示的名稱。
 
-在 summary 中包含 "suggested skills" section，建議該 agent 應呼叫哪些 skills。
+在摘要中包含「建議的 skills」章節，指明下一個 agent 應該為哪些 skills 呼叫 Skill 工具。
 
-不要複製已捕捉在其他 artifacts 中的內容（PRDs、plans、ADRs、issues、commits、diffs）。改用 path 或 URL 引用它們。
+不要重複其他產出物（規格、計畫、ADR、問題、commit、diff）中已記錄的內容。請改用路徑或 URL 來引用它們。
 
-遮蔽任何敏感資訊，例如 API keys、passwords 或 personally identifiable information；summary 會變成 agent 的 prompt。
+移除任何敏感資訊，例如 API 金鑰、密碼或個人識別資訊，因為該摘要將成為 agent 的提示詞。
 
-如果使用者傳入 arguments，把它們視為下一個 session 會聚焦的內容描述，並據此調整 summary。
+如果使用者傳遞了引數，請將其視為對下一個工作區將專注內容的描述，並據此調整摘要。

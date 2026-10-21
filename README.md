@@ -1,4 +1,4 @@
-> **[繁體中文 README](./README.zh.md) · [中文文件索引](./TRANSLATIONS.zh.md)**
+> **[繁體中文 README](./README.zh.md) · [完整中文文件索引](./TRANSLATIONS.zh.md)**
 
 <p>
   <a href="https://www.aihero.dev/s/skills-newsletter">

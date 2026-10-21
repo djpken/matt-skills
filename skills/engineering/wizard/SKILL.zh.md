@@ -1,45 +1,56 @@
 ---
 name: wizard
-description: 產生互動式 bash wizard，引導 human 走過手動流程——第三方設定、一次性 migration、A→B 狀態轉換——開啟 URLs、捕捉 values、確認每一步，並寫入 .env files 和 GitHub Actions secrets。
-disable-model-invocation: true
+description: "產生一個互動式 bash 精靈，引導使用者逐步完成只有他們才能執行的步驟。適用於設定基礎設施、設定憑證或 CI 機密、導覽不熟悉的第三方儀錶板，或執行一次性遷移或切換。不要用於 agent 可自行執行的步驟。"
 ---
 
-# Wizard
+<a id="wizard"></a>
 
-**Wizard** 是一個 bash script，逐步引導 human 完成手動流程：這種流程手做很煩，每次重新向 AI 解釋也很煩。它會開啟每個 URL、精確說明要點什麼和複製什麼、捕捉 values、寫到正確位置（`.env`、GitHub secrets）、每階段確認，並顯示剩下多少。它可能設定 third-party services、執行一次性 migration，或把專案從一個狀態移到另一個狀態。
+# 精靈
 
-愉快的 UX 已由 [template.sh](template.sh) 解決：進度與剩餘時間、confirmation gates、跨平台 URL opening（含 WSL）、隱藏 secret 輸入、idempotent `.env` upserts、`gh secret`/`gh variable` writes，以及 closing summary。**你的工作只是界定流程範圍並撰寫 stages。** `STAGES` marker 以上的 library 在每個 wizard 都相同；一致性就是重點，永遠不要手動編輯它。
+**精靈** 是一個 bash 指令碼，逐步引導使用者完成手動程式。這些程式若純靠手動執行會很繁瑣，若每次都要向 AI 重新解釋也會很繁瑣。它會開啟每個 URL，明確說明要點選和複製什麼，擷取數值，將它們寫入正確的位置（`.env`、GitHub secrets），在每個階段進行確認，並顯示還剩多少階段。它可能用於設定第三方服務、執行一次性遷移，或將專案從一種狀態轉換到另一種狀態。
 
-Wizard 預設是 ephemeral：為一次執行而建，存到 scratch 或 `scripts/` path，工作完成後刪除。只有當使用者想要一條 repeatable setup path 且它應該留在 repo 時，才 commit 它。
+令人愉悅的使用者體驗已由 [template.sh](template.sh) 解決：逐階段進度、確認閘門、跨平臺 URL 開啟（包括 WSL）、隱藏機密輸入、冪等 `.env` upserts、`gh secret`/`gh variable` 寫入，以及結尾摘要。**你的工作僅限於界定程式範圍並撰寫其階段。** `STAGES` 標記上方的函式庫在所有精靈中皆相同；這種一致性正是重點：切勿手動編輯它。
 
-## Process
+精靈預設為短暫存在：為單次執行而建，儲存至暫存或 `scripts/` 路徑，工作完成後刪除。僅當使用者希望保留可重複執行的設定路徑且該路徑應存在於儲存庫中時，才將其提交。
 
-### 1. Scope the procedure
+<a id="process"></a>
 
-弄清楚 human 必須採取的每個手動步驟，以及沿途捕捉的每個 value。先讀 repo，不要冷問：
+## 流程
 
-- 設定流程：`.env`、`.env.example`、`.env.*`、`README`、`docker-compose*`、framework config、`.github/workflows/*`（每個 `secrets.*` / `vars.*` reference 都是 wizard 必須產出的 value）。
-- Migration 或 transition：目前狀態、目標狀態，以及中間不可逆的 actions。
+<a id="1-scope-the-procedure"></a>
 
-然後向使用者展示 ordered stages 清單和每個 stage 產生的 values，並確認；他們可能新增、刪除或重排。
+### 1. 界定程式範圍
 
-**Done when:** 每個 stage 都已依序命名，而且對每個 captured value，你知道：(a) human 從哪裡取得，(b) 寫到哪裡（`.env`、GitHub secret、兩者，或不寫入；有些 stages 是 pure actions），(c) 它是 secret（hidden entry）還是 public。
+釐清使用者必須執行的所有手動步驟，以及過程中擷取的每個數值。先閱讀儲存庫，不要直接詢問：
 
-### 2. Map each stage's journey
+- 對於設定：`.env`、`.env.example`、`.env.*`、`README`、`docker-compose*`、框架設定，以及 `.github/workflows/*`（每個 `secrets.*` / `vars.*` 參考都是精靈必須產生的數值）。
+- 對於遷移或轉換：目前狀態、目標狀態，以及兩者之間不可逆的操作。
 
-為每個 stage 寫出 human 會走的精確路徑：要開哪個 URL、在那裡做什麼、value 顯示在哪裡、填入哪個 variable。例如 "Dashboard → Developers → API keys → Reveal test key → copy"。如果你其實不知道目前 UI 或精確 command，就明說並問使用者或查 docs；永遠不要捏造可能不存在的步驟。
+然後向使用者顯示階段的有序清單及各階段產生的數值，並進行確認：他們可以新增、移除或重新排序。
 
-**Done when:** 每個 stage 都能追到陌生人也可照做的具體 instructions。
+**完成標準：** 每個階段皆依序命名，且對於每個擷取的數值，你都知道 (a) 使用者從哪裡取得它，(b) 它寫入哪裡（`.env`、GitHub secret、兩者皆有，或無處寫入；某些階段純為操作），以及 (c) 它是機密（隱藏輸入）還是公開。
 
-### 3. Author the wizard
+<a id="2-map-each-stages-journey"></a>
 
-將 `template.sh` 複製到 target path。把 example stage 替換成每個 step 一個 `stage`，依 dependency order 排列。使用 library helpers：`stage`、`say`/`step`、`open_url`、`ask`/`ask_secret`、`write_env`、`set_secret`/`set_var`、`pause`/`confirm`，並把 `TOTAL_STAGES` 和 `TOTAL_MINUTES` 設成誠實估計（這會驅動 remaining-time display）。
+### 2. 對映每個階段的流程
 
-維持 template 設下的標準：先開 URL 再要求 value；任何 secret 都用 `ask_secret`；每個 persisted value 都 `write_env`；只有 CI 真正需要的 values 才 `set_secret`；任何 irreversible action 前都 `confirm`。每個 `stage` 會清空畫面，所以只有目前 step 可見；讓每個 stage 聚焦在一件事，避免 human 需要的東西被捲走。不要碰 marker 以上的 library。
+對於每個階段，撰寫使用者遵循的精確路徑：開啟哪個 URL、在那裡做什麼、數值顯示在哪裡、填入哪個變數：例如「儀錶板 → 開發者 → API 金鑰 → 顯示測試金鑰 → 複製」。若你實際不知道目前的 UI 或確切指令，請說明並詢問使用者或查閱檔案：切勿捏造可能不存在的步驟。
 
-### 4. Verify and hand off
+**完成標準：** 每個階段都能追蹤到陌生人也能遵循的具體指令。
 
-- `bash -n <script>`；如果有 `shellcheck`，也執行。
-- `chmod +x <script>`。
-- 不要自己 end-to-end 執行；它會開瀏覽器並卡在人類輸入。改用靜態 trace：步驟 1 的每個 value 都被捕捉，並落到步驟 1 說的位置；每個 `set_secret` name 都精確符合 CI 中的 `secrets.*` reference。
-- 告訴使用者如何執行它。如果它是 repeatable setup path，commit 它並從 README link，讓下一個人執行 script，而不是問 AI。
+<a id="3-author-the-wizard"></a>
+
+### 3. 撰寫精靈
+
+將 `template.sh` 複製到目標路徑。將範例階段替換為每個步驟一個 `stage`，依相依順序排列。使用函式庫輔助函式：`stage`、`say`/`step`、`open_url`、`ask`/`ask_secret`、`write_env`、`set_secret`/`set_var`、`pause`/`confirm`。將 `TOTAL_STAGES` 設為你撰寫的階段數。
+
+維持範本設定的標準：在要求數值前先開啟 URL，對任何機密使用 `ask_secret`，對每個持久化數值使用 `write_env`，僅對 CI 實際需要的數值使用 `set_secret`，並在任何不可逆操作前使用 `confirm`。每個 `stage` 會清除螢幕，使僅當前步驟可見：將每個階段限制為一個專注的任務，以免使用者需要的內容捲動消失。不要觸碰標記上方的函式庫。
+
+<a id="4-verify-and-hand-off"></a>
+
+### 4. 驗證並交付
+
+- `bash -n <script>`；若可用，執行 `shellcheck`。
+- `chmod +x <script>`.
+- 不要自行端到端執行：它會開啟瀏覽器並阻塞等待使用者輸入。改為靜態追蹤：步驟 1 中的每個數值都被擷取並落在步驟 1 指定的位置，且每個 `set_secret` 名稱都與 CI 中的 `secrets.*` 參考完全匹配。
+- 告知使用者如何執行它。若這是可重複執行的設定路徑，請提交它並從 README 連結，以便下個人執行指令碼而非詢問 AI。

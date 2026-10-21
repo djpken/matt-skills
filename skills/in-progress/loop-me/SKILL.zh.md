@@ -1,32 +1,40 @@
 ---
 name: loop-me
-description: 在這個 workspace 中，針對我想建立的 workflows 規格進行深度訪談。
+description: "針對我想在這個工作區中建立的 workflow，就其規格向我提出嚴格的追問。"
 disable-model-invocation: true
-argument-hint: "要設計的 workflow，或留空讓 agent 找一個"
+argument-hint: "A workflow to design, or nothing to go find one"
 ---
 
-執行一個有狀態的 `/grilling` session，唯一輸出是 **workflow** specs。使用 grilling 紀律：無情、一次一題、每題都附推薦答案；問題應對準下面的詞彙與目標。隨著 grilling 釐清內容，建立、編輯、刪除 specs。
+執行一個有狀態的 `/grilling` 工作階段，其唯一輸出為 **workflow** 規格。運用嚴格的追問紀律（毫不妥協、一次只問一輪問題、每個問題都附上建議答案），針對下方的詞彙與目標進行追問。隨著追問逐步釐清，建立、編輯並刪除規格。
 
-## The loop lens
+<a id="the-loop-lens"></a>
 
-**Loop** 是使用者生活中的重複模式：職涯、每週、早晨，或單一重複活動。把人生看成 loops within loops，會看見活動其實多可預測，也因此值得**委派**。用這個 lens 找出值得規格化的 loops，並提出使用者尚未注意到的 loops。
+## 迴圈透鏡
 
-**Workflow** 是某個 loop 的 spec，讓 loop 變得具體。你在 loop 上執行 workflow；loop 是它正在運行的實例。Workflows 存在 `workflows/*.md`，並且是真相來源。
+**迴圈** 是使用者生活中反覆出現的模式：他們的職業生涯、每週行程、早晨例程，或單一重複的活動。將生活想像為迴圈中的迴圈，能揭示其活動究竟有多可預測，這正是它們值得 **委派** 的原因。使用此透鏡找出值得規範化的迴圈，並提出使用者尚未察覺的迴圈。
 
-## Vocabulary
+**Workflow** 是單一迴圈的規格，使其具體化。你在迴圈上執行 workflow：該迴圈即為其執行中的例項。Workflow 存放於 `workflows/*.md`，並為唯一事實來源。
 
-共享語言只有在 workflow 需要時才取用，永遠不是 checklist。**不要強制任何結構**：workflow 不需要 AI、不需要 checkpoint、不需要排程，除非 grilling 顯示它需要。
+<a id="vocabulary"></a>
 
-- **Trigger**：每次執行由什麼觸發：**event**（新 email、新 issue）或 **schedule**（每天早上）。Event-triggering 通常更有效率。
-- **Checkpoint**：human-in-the-loop 的點，使用者在這裡被要求驗證或決定。有些 workflows 沒有 checkpoint 並自主執行；有些完全不用 AI。
-- **Push right**：把 checkpoint 盡量往後推。先做最多工作，再讓人介入，讓他們只在很晚、準備充分時被問一次。
-- **Brief**：checkpoint 呈現的內容：緊湊、可決策的摘要，包含產出、原因，以及指向資產本身的連結；永遠不要是 raw output。使用者讀 brief，不讀草稿。審閱速度是硬需求。
+## 詞彙
 
-## Definition of done
+一套共享語言，僅在 workflow 需要時才使用：絕非檢查清單。 **不強制任何結構性要求**：除非追問顯示確有需求，否則 workflow 不需要 AI、不需要檢查點，也不需要排程。
 
-當 implementer agent 可以在不問任何問題的情況下建出 workflow spec，這份 spec 才算完成。Grill 到這個程度；只要還有問題，就還沒完成。
+- **觸發器**：每次執行時觸發的條件，可以是 **事件**（新郵件、新問題）或 **排程**（每天早上）。事件觸發通常效率更高。
+- **檢查點**：人機協作的節點，在此處要求使用者驗證或做出決定。某些 workflow 沒有檢查點，可自主執行；某些 workflow 則完全不使用 AI。
+- **盡力延後**：將檢查點延後到最遠的可行位置。在涉及人類之前完成最大量的工作，讓使用者只需在最後階段被詢問一次，且所有準備工作均已就緒。
+- **簡報**：檢查點所呈現的內容，一份緊湊、可直接決策的摘要（產出了什麼、為什麼、以及指向資產本身的連結），絕非原始輸出。使用者閱讀的是簡報，而非草稿。審查速度至關重要。
 
-## The workspace
+<a id="definition-of-done"></a>
 
-- `workflows/*.md`：每個 workflow 一份 spec。
-- `NOTES.md`：使用者世界的原始筆記：他們使用的工具、處理的 channels，以及他們自己的術語。如果它是空的或很薄，先訪談他們的世界，再規格化任何東西。當模糊術語浮現時，將它們磨成 canonical terms 並記錄在這裡。
+## 完成定義
+
+當實作 agent 能夠在不提出任何問題的情況下建立該 workflow 時，其規格即告完成。持續追問直到達到此狀態；只要還有問題存在，就尚未完成。
+
+<a id="the-workspace"></a>
+
+## 工作區
+
+- `workflows/*.md`：每個 workflow 對應一份規格。
+- `NOTES.md`：關於使用者世界的原始筆記，包括他們使用的工具、處理的管道，以及他們對這兩者的自訂術語。當此處內容為空或稀疏時，在規範化任何內容之前，先就其世界進行訪談。當模糊術語出現時，將其精確化為標準術語，並記錄於此。

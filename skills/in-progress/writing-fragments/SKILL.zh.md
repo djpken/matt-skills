@@ -1,52 +1,56 @@
 ---
 name: writing-fragments
-description: 寫作 explore：挖出原始 fragments，先不套結構。
+description: "寫作，探索：挖掘原始片段，尚未建立結構。"
 disable-model-invocation: true
 ---
 
 <what-to-do>
 
-這是純粹的 **explore**：擴大可能被寫出的空間，不承諾結構；承諾結構是 _exploit_，屬於另一個 skill。執行 grilling session，無情訪談使用者想寫的主題，產出 fragments。強加階段、outline 或文章結構都超出此處範圍。
+這是純粹的**探索**：在不承諾結構的情況下，擴充套件可書寫的空間。承諾結構是_利用_，那是另一項技能的工作。執行一場嚴格的審問會談，產出片段，就使用者想要書寫的主題對其進行不懈的訪談。在此階段，強加階段、大綱或文章結構均不在範圍內。
 
-當 fragments 從對話任一方浮現時，append 到單一 Markdown 檔。
+當片段從對話的兩端浮現時，將它們附加到單一 Markdown 檔案中。
 
-如果使用者沒有傳路徑，問一次文件要存在哪裡，然後在 session 剩餘時間記住它。
+如果使用者未提供路徑，請詢問一次檔案儲存位置，然後在該會話的剩餘時間內記住該路徑。
 
-從使用者說的第一件事開始捕捉 fragments，包含初始 prompt。
+從使用者說的第一句話開始捕捉片段，包括初始提示詞。
 
-第一次寫入時，在頂部放一個 H1 working title（之後可改），除此之外不要放任何東西：沒有 metadata、沒有 TOC、沒有日期。
+首次寫入時，在頂部放置一個 H1 標題，使用一個暫定標題（之後可以更改），除此之外不放置任何其他內容：不要金元資料、不要目錄、不要日期。
 
 </what-to-do>
 
 <supporting-info>
 
-## What is a fragment
+<a id="what-is-a-fragment"></a>
 
-Fragment 是任何可能存活到最終文章裡的文字片段。它必須能被**作者讀懂**：作者知道它是什麼意思；但它不需要定義術語，也不需要讓冷讀者理解。標準是「這是不是一段好文字？」，不是「這是不是自成一體的論證？」
+## 什麼是片段
 
-Fragments 刻意異質。可能成為 fragment 的例子：
+片段是任何可能保留到最終文章中的文字片段。它必須是_作者可讀的_（作者能理解其含義），但不需要定義術語或讓陌生讀者完全理解。標準是「這是否是一段好的寫作？」，而不是「這是否是一個自足的論證？」
 
-- 一句你想在某處使用但還不知道放哪裡的 sharp sentence。
-- 一個 claim 加上一行 justification。
-- 一段 vignette：發生過的事、code snippet、scenario、analogy。
-- 半個想法：「something about how X feels like Y, work this out later.」
-- 一段 quote、dialogue、overheard line。
-- 一組感覺上相關的 observations。
-- 一段 complaint、confession、punchline。
-- 一個 **leading word**：整篇文章可以掛在上面的緊湊比喻或造詞（一個命名該想法的 term，就像 _tracer bullets_ 或 _fog of war_ 命名整個 pattern）。
+片段刻意保持異質性。可以是片段的範例包括：
 
-其中，leading word 是最有價值的 fragment。它承重：在 explore 階段命名對了，之後會塑造結構、轉場和標題，在整個 exploit phase 產生回報。當對話繞著一個反覆出現的想法打轉時，推動使用者為它鑄造一個詞。
+- 一句你想在某處使用但還不知道用在哪裡的犀利句子。
+- 一個帶有單行理由的論點。
+- 一個小場景：發生的一件事、一段程式碼片段、一個情境、一個類比。
+- 一個未完成的想法：「關於 X 感覺像 Y 的某些東西，之後再整理。」
+- 一句引文、一段對話、一句偶然聽到的話。
+- 一組憑感覺聯絡在一起的相關觀察。
+- 一個抱怨、一個坦白、一個笑點。
+- 一個**主導詞**：一個緊湊的隱喻或新造詞，整篇文章可以懸掛其上（一個為想法命名的詞，就像 _tracer bullets_ 或 _fog of war_ 為整個模式命名那樣）。
 
-小說家的日記是模型：多年無結構的 noticings，之後被挖掘為原始素材。Fragments 就是 noticings。
+在這些之中，主導詞是最有價值的片段。它是承重的：在探索階段命名正確的主導詞，它將塑造後續的結構、過渡和標題，並在整個利用階段帶來回報。當對話圍繞一個反覆出現的想法轉圈時，推動為其造一個詞。
 
-## File format
+小說家的日記是模型：多年未結構化的觀察，之後被挖掘為原始素材。片段就是觀察。
+
+<a id="file-format"></a>
+
+## 檔案格式
 
 ```markdown
 # Working title
 
 A first fragment lives here.
 
-It can be multiple paragraphs. It can include lists, code, quotes — whatever
+It can be multiple paragraphs. It can include lists, code, quotes: whatever
 shape the fragment naturally takes.
 
 ---
@@ -66,14 +70,16 @@ A reaction to it.
 - And want to be near each other
 ```
 
-Fragments 以 horizontal rule（`\n---\n`）分隔。Body 內不要 headings。不要 tags。除了加入順序外不要排序。
+片段之間以水平線（`\n---\n`）分隔。正文內不要標題。不要標籤。除了新增順序外，不要有其他順序。
 
-## Writing rhythm
+<a id="writing-rhythm"></a>
 
-安靜地 append。不要每個 fragment 都問 permission。順口提到你加了什麼（「adding that」），但不要用 save dialogs 打斷對話。
+## 寫作節奏
 
-每次寫入前：從磁碟重新讀取檔案。使用者可能在 turns 之間編輯、重排或刪除 fragments；保留他們的改動。永遠不要覆寫檔案；只 append（或在使用者要求時，原地編輯特定 fragment）。
+靜默地附加。不要為每個片段請求許可。順帶提及你新增的內容（「加上那個」），但不要以儲存對話中斷對話。
 
-使用者可以隨時說「cut the last one」、「rewrite that one sharper」、「merge those two」。把這些視為一等指令。
+每次寫入前：從磁碟重新讀取檔案。使用者可能在回合之間編輯、重新排序或刪除了片段，因此保留他們的更改。永遠不要覆蓋檔案；只附加（或者，如果使用者要求，就地編輯特定片段）。
+
+使用者隨時可以說「刪掉最後一個」、「把那個改得更犀利」、「合併那兩個」。將這些視為一級指令。
 
 </supporting-info>

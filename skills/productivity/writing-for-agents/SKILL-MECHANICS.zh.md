@@ -1,22 +1,28 @@
+<a id="skill-mechanics"></a>
+
 # Skill 機制
 
-[`writing-for-agents`](SKILL.md) 裡 skill 特有的分支：當文件是一個 skill 時，什麼會不一樣——frontmatter、呼叫方式的選擇，以及路由器 skill。撰寫這份文件的其他部分，全都是 `SKILL.md` 裡那份通用參考。
+針對 skill 的特定分支 [`writing-for-agents`](SKILL.md): 當檔案是 skill 時有何變化（frontmatter、呼叫選擇，以及 router skills）。關於撰寫的其他所有內容，請參閱 `SKILL.md` 中的通用參考。
 
-## 呼叫方式
+<a id="invocation"></a>
 
-兩個選擇，各自換取兩種負載中的一種：
+## 呼叫
 
-- **模型呼叫（model-invoked）**的 skill 保留一個 `description`，讓 agent 可以自主觸發它——而且其他 skill 也能觸及它。你仍然可以手動輸入它的名字：模型呼叫永遠*包含*使用者觸及；一個 description 只會增加 agent 的可發現性，永遠不會拿走人類的觸及方式。這個 description 是這個 skill 的頂層 context 指針，被強制常駐載入——用永久的 context 負載，換取可發現性。一個內容全是參考的模型呼叫 skill，同時也是共享參考的一個家：其他 skill 可以呼叫它，所以幾個 skill 都需要的參考就能住在同一個地方。機制：省略 `disable-model-invocation`，寫一個面向模型的 description，帶著觸發分支（`SKILL.md` 裡寫指針的規則在這裡完整適用）。
-- **使用者呼叫（user-invoked）**的 skill 把 description 從 agent 的觸及範圍裡剝離：只有人類輸入它的名字才能呼叫它，其他 skill 也不行。零 context 負載，但要花認知負載——你是那個必須記得它存在的索引。機制：設定 `disable-model-invocation: true`；`description` 變成面向人類的——一行摘要，去掉觸發清單。
+兩種選擇，取捨兩種負載：
 
-只有當 agent 必須自己觸及這個 skill，或另一個 skill 必須觸及它時，才選模型呼叫。如果它只會被手動觸發，讓它是使用者呼叫，不付 context 負載。
+- **model-invoked** skill 保留 `description`，因此 agent 可以自主觸發它，其他 skill 也能夠存取它。您仍然可以輸入其名稱：model-invocation 永遠_包含_使用者存取；描述只會增加 agent 的發現能力，絕不會移除人類的存取許可權。描述是 skill 的頂層上下文指標，強制在所有時間保持載入：以永久上下文負載換取可發現性。如果 model-invoked skill 的內容全是參考資料，它也可以作為共享參考的存放處：另一個 skill 可以呼叫它，因此多個 skill 所需的參考資料可以集中在一個地方。機制：省略 `disable-model-invocation`，並撰寫面向 model 的描述，其中包含觸發分支（`SKILL.md` 中的指標撰寫規則完全適用）。
+- **user-invoked** skill 會將描述從 agent 的存取範圍中移除：只有輸入其名稱的人類才能呼叫它，其他 skill 無法呼叫。零上下文負載，但會消耗認知負載：您就是必須記住其存在的索引。機制：設定 `disable-model-invocation: true`；`description` 變為面向人類：一行摘要，移除觸發清單。
 
-兩個使用者呼叫 skill 都需要的共享參考，不能住在其中任何一個裡——沒有 description，誰也無法觸發誰。把它推到 skill 系統之外的一份普通檔案：任何 skill 都可以指向的外部參考。
+僅當 agent 必須自行存取該 skill，或另一個 skill 必須存取它時，才選擇 model-invocation。如果它永遠只由手動觸發，請將其設為 user-invoked，以節省上下文負載。
+
+兩個 user-invoked skills 都需要的共享參考資料無法存放在任何一個之中：由於沒有描述，兩者都無法觸發對方。將其移至 skill 系統之外的普通檔案：任何 skill 都可以指向的外部參考。
+
+<a id="splitting-by-invocation"></a>
 
 ## 依呼叫方式拆分
 
-拆分裡「依呼叫方式」的那一刀（依序拆分那一刀在 `SKILL.md` 裡）：當你有一個明確的主導詞、應該自己單獨觸發時，或另一個 skill 必須觸及它時，就拆出一個模型呼叫的 skill。你會為那個新的、常駐載入的 description 付出 context 負載，所以那份獨立的可觸及性必須值得。
+拆分的呼叫切分（序列切分位於 `SKILL.md`）：當您擁有一個獨特的開頭詞，應該單獨觸發該 skill（一個您在提示詞中實際使用的觸發詞），或另一個 skill 必須存取它時，請拆分出一個 model-invoked skill。您必須為新的永遠載入的描述支付上下文負載，因此這種獨立存取必須值得。
 
-## 路由器 skill
+## Router skills
 
-當使用者呼叫的 skill 多到你記不住時，那份堆積起來的認知負載，可以用一個**路由器 skill（router skill）**來治好：一個使用者呼叫的 skill，列出其他所有 skill 以及什麼時候該去用哪一個，讓人類只要記得一個 skill，不用記一堆。它只能提示，不能觸發它們：使用者呼叫的 skill 沒有 description，除了人類，誰都觸及不到它們。
+當 user-invoked skills 多到超出您的記憶範圍時，這種累積的認知負載可以透過 **router skill** 來緩解：一個 user-invoked skill，列出其他 skill 的名稱以及何時應使用每個 skill，使人類只需記住一個 skill 而非多個。它只能提供提示，永遠無法觸發它們：user-invoked skills 沒有描述，因此除了人類之外，沒有人能存取它們。

@@ -1,90 +1,115 @@
 ---
 name: ask-matt
-description: 詢問哪個 skill 或流程適合你的情況。本 repo 中所有使用者呼叫 skill 的路由器。
+description: "詢問哪項 skill 或 flow 適合您的情況。這是針對此儲存庫中各項 skill 的路由器。"
 disable-model-invocation: true
 ---
 
-# Ask Matt
+<a id="ask-matt"></a>
 
-你不會記住所有 skill，所以就問吧。
+# 詢問 Matt
 
-**流程（flow）** 是穿越各 skill 的路徑。大多數路徑沿著一條**主流程**前進，兩條**入口道**匯入其中。其他的都是獨立 skill，或是在底下運作的詞彙層。
+您不可能記得每一項 skill，所以請提出詢問。
 
-## 主流程：想法 → 出貨
+在陳述某項 skill 的功能或建議跳過某個步驟之前，請先閱讀該 skill 的 SKILL.md：此處的摘要僅供方向參考。
 
-大多數工作走的路線。你有一個想法，想把它做出來。
+**flow** 是穿過各項 skill 的路徑。大多數路徑沿著一條**主要 flow** 執行，且有兩條**入口匝道**匯入其中。其餘皆為獨立專案，或是在底層運作的詞彙層。
 
-1. **`/grill-with-docs`** — 透過訪談磨練想法。只要你**在一個工作目錄裡**，就從這裡開始：它有狀態，會把學到的東西保留在 `CONTEXT.md` 和 ADR 中。（沒有工作目錄？用 `/grill-me`——見獨立項目。兩者跑的是同一個 `/grilling` 原語；`grill-with-docs` 會留下書面紀錄，所以只要有 repo 可以留，它就是比較好的那一個。）
-2. **分支——你能在對話中解決所有問題嗎？** 如果某個問題需要可執行的答案（狀態、商業邏輯、必須親眼看到的 UI），透過原型繞道，用 **`/handoff`** 作為雙向橋樑（原型活在自己的目錄裡，這正是 `/handoff` 的用途——見 Phase boundaries）：
-   - **`/handoff`** 出去，再針對那個檔案開一個新 session，
-   - **`/prototype`** 用可拋棄的程式碼回答問題，
-   - **`/handoff`** 帶著你學到的東西回來，並從原始想法 thread 中引用它。
-3. **分支——這是多 session 的建置嗎？**
-   - **是** → **`/to-spec`**（把這段對話轉成 spec），再用 **`/to-tickets`** 拆成 tracer-bullet tickets，每張都宣告自己的 **blocking edges**。本地 tracker 上是 `.scratch/<feature>/issues/` 底下每張 ticket 一個檔案，依 blockers 優先順序手動處理；真正的 tracker 上這些 edges 會變成 native blocking links，任何 blockers 都完成的 ticket 就能被領走——每張 ticket 都啟動 **`/implement`**，**每張之間清除 context**。每張 ticket 都是自成一體的，所以上一張的 context 是可拋棄的。
-   - **否** → 直接在這裡執行 **`/implement`**，在同一個 context 視窗中。
+<a id="the-main-flow-idea--ship"></a>
 
-   無論哪種，**`/implement`** 都在內部驅動 **`/tdd`** 建置每張 issue——一次一個 red-green slice——再執行 **`/code-review`**（Standards + Spec 兩軸審查這份 diff）才 commit。想在沒有完整 spec 的情況下單獨 test-first 建置具體行為，用 **`/tdd`**；想針對固定基準點單獨 review branch 或 PR，用 **`/code-review`**。
+## 主要 flow：構想 → 發布
+
+大多數工作所走的路線。您有一個構想，並希望將其建置完成。
+
+1. **`/grill-with-docs`** 透過訪談來釐清構想。只要您**正在工作目錄中作業**，請從此處開始：它是狀態化的，會將所學內容保留在 `GLOSSARY.md` 和 ADR 中。（沒有工作目錄？請改用 `/grill-me`，該專案歸類於獨立專案。兩者執行相同的 `/grilling` 原語；`grill-with-docs` 會留下書面記錄，因此只要存在可存放記錄的儲存庫，它就是兩者中較佳的選擇。）
+2. **分支：您能否在對話中解決所有問題？** 如果某個問題需要可執行的答案（狀態、商業邏輯、必須親眼看到的 UI），請繞道透過原型來處理，並由 **`/handoff`** 在雙向進行橋接（原型位於其專屬目錄中，這正是 `/handoff` 的用途；請參閱階段邊界）：
+   - **`/handoff`** 輸出，然後針對該檔案開啟一個新的 session，
+   - **`/prototype`** 使用一次性程式碼來回答問題，
+   - **`/handoff`** 回饋您所學到的內容，並從原始構想執行緒中引用它。
+3. **分支：這是否為多 session 建置？**
+   - **是** → **`/to-spec`**（將執行緒轉為規格），然後使用 **`/to-tickets`** 將其拆分為 tracer-bullet 工單，每個工單皆宣告其**阻擋邊**。接著以兩種方式之一處理工單：
+     - **`/implement`** 每張工單，**`/clear`ing context between each one**。在本地追蹤器中，`.scratch/<feature>/issues/` 下每張工單對應一個檔案，並由人工依阻擋項優先順序處理；在正式追蹤器中，這些關聯會變成原生的阻擋連結，因此任何阻擋項已完成的工單都可以被領取。每張工單都是自包含的，因此最後一張工單的上下文可以丟棄。
+     - **`/implement-spec`** 在單次執行中處理整個規格。它將工單讀取為**任務圖**，在就緒的**前沿**上並行執行 implementer subagents，並將所有內容落地到一個**整合分支**。當您希望編排建置流程，而非親自驅動每個工單時，請使用此選項。
+   - **否** → 在此處直接執行 **`/implement`**，使用相同的 context window。
+
+   無論如何，程式碼都是透過驅動 **`/tdd`**（一次一個紅綠切片）來建置，並以 **`/code-review`** 收尾，這是一項針對 diff 的雙軸審查（標準 + 規格）。`/implement` 對每個工單執行這兩項；`/implement-spec` 的 implementers 各自驅動 `/tdd`，並對整合分支執行一次 `/code-review`。當您只想以測試優先的方式建置具體行為，而不需要完整規格時，請單獨使用 **`/tdd`**；當您想針對固定點審查分支或 PR 時，請單獨使用 **`/code-review`**。
+
+   當工作以 pull request 形式提交時，**`/pr`** 會塑造其內容：展示變更的最小視覺呈現、證明其運作的前後證據，以及單向或雙向門的判斷。它是由模型呼叫的，因此 agent 在撰寫 PR 時會隨時使用它。
+
+4. **`/retro`** 閉合迴圈。在建置之後，特別是當建置出錯時，它會回顧該 session 並建議對 agent 的**環境**進行變更，而非程式碼：導覽指標、自動化檢查、`/code-review` 強制執行的編碼標準、引導檔案、工具。機械性錯誤會變成確定性檢查；判斷性決策會變成編碼標準。下一次建置便能從更好的環境開始。
+
+<a id="context-hygiene"></a>
 
 ### Context 衛生
 
-把步驟 1–3 保持在**一個不中斷的 context 視窗**中——在 `/to-tickets` 完成之前不要 compact 或 clear——讓 grilling、spec 和 tickets 都建立在同樣的思考基礎上。每個 `/implement` 再從頭開始，從 ticket 出發。
+將步驟 1 至 3 保持在**一個未中斷的 context window** 中（在 `/to-tickets` 之後再進行壓縮或清除），以便審問、規格和工單都能建立在相同的思考之上。每個 `/implement` 隨後皆從頭開始，依據工單進行作業。在清除之前，於其回顧的 session 中執行 `/retro`；清除後，請將其指向該 session 的紀錄。
 
-這個限制是 **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**：視窗（頂尖模型約 150k tokens）內模型仍能清晰推理的範圍。如果 session 在 `/to-tickets` 之前接近上限，不要在退化狀態下硬撐——在最近的 phase boundary `/compact`，然後繼續（見 Phase boundaries）。
+此處的限制是 **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)：模型仍能銳利推理的視窗（在最先進模型上約為 150k tokens）。如果 session 在 `/to-tickets` 之前接近此限制，請勿在效能下降時繼續推進；請在最近的階段邊界執行 `/compact` 並繼續（請參閱階段邊界）。
 
-## 入口道
+<a id="on-ramps"></a>
 
-產生工作後匯入主流程的起始情況。
+## 入口匝道
 
-- **Bugs 和 requests 堆積** → **`/triage`**。它讓 issues 通過 triage roles 並產出 agent-ready issues，後續再由 **`/implement`** 接手。
+一種產生工作，然後匯入主要 flow 的起始情境。
 
-  Triage 只用於**你沒有建立的** issues：bug reports、incoming feature requests，任何 raw arrival。`/to-tickets` 產出的 tickets 已是 agent-ready，**不要對它們做 triage**。
+- **錯誤和請求不斷累積** → **`/triage`**。它將問題透過分診角色進行處理，並產生可供 agent 使用的問題，這些問題稍後會由 **`/implement`** 接手。
 
-- **有東西壞了** → **`/diagnosing-bugs`**。給難搞的那種用：第一眼看不出所以然的 bug、間歇性的 flake、在兩個已知良好狀態之間悄悄爬進來的 regression。它拒絕在有一個**緊密回饋迴圈**——一個已經對*這個* bug 亮紅燈的指令——之前先理論化，然後用一個 regression test 修復。它的事後檢討會在真正的發現是「沒有好的接縫可以鎖住這個 bug」時，交接給 **`/improve-codebase-architecture`**。
+  分診僅適用於**您未建立**的問題：錯誤報告、傳入的功能請求、任何原始到達的內容。由 `/to-tickets` 產生的工單已可供 agent 使用，因此**請勿對其進行分診**。
 
-- **一個龐大、模糊的工作——greenfield 專案或巨大 feature build，大到一個 session 裝不下** → **`/wayfinder`**，這裡認知負荷最重的流程。當這裡到目的地的路還看不見時，它會在 issue tracker 上繪製一張**共享地圖（shared map）**，由**決策 tickets（decision tickets）**組成，逐一解決——產出**決策，而非交付物（decisions, not deliverables）**——直到迷霧散去、路徑清楚。**`/grill-with-docs`** 磨練的是一個 session 就能裝下的想法；wayfinder 則是給裝不下的那種——而且更慢、更密集，只留給真正需要它的情況，絕不用在範圍明確的 feature 上。
+- **某處壞掉了** → **`/diagnosing-bugs`**。適用於困難案例：第一眼看不出的錯誤、間歇性不穩定問題、在兩個已知良好狀態之間潛入的回歸問題。在擁有**緊密回饋迴圈**（一條已針對*此*錯誤變紅的命令）之前，它拒絕進行理論推測，然後使用回歸測試進行修復。修復完成後，在同一 session 中執行 **`/retro`** 以詢問何者能預防此錯誤；若真正的發現是沒有好的縫隙來鎖定它，那就是 **`/improve-codebase-architecture`** 的工作。
 
-  地圖清楚之後，**它是交接，不是建置**：匯回主流程進入 **`/to-spec`**，把地圖上互相關聯的決策收斂成可建置的計畫，接著照常跑 `/to-tickets` 和 `/implement`。如果直接把地圖丟進 `/implement` 迴圈，會跳過那次收斂、丟掉關聯細節——只有在這件事其實真的不大時，才直接進 `/implement`。
+- **一個巨大且模糊的任務：全新專案或巨大的功能建置，大到無法在單一 session 中完成** → **`/wayfinder`**，這是此處認知需求最高的 flow。當從這裡到目的地的路徑尚未可見時，它會在問題追蹤器上繪製一張由**決策工單**組成的**共享地圖**，並逐一解決它們，產生**決策而非交付物**，直到霧氣散去、道路清晰。若 **`/grill-with-docs`** 是釐清您能在單一 session 中掌握的構想，wayfinder 則是針對您無法掌握的構想，它更慢且更密集，因此請僅用於此類情境，絕不適用於範圍明確的功能。
 
-## Codebase health
+  當地圖清晰時，**它會交接，而非建置**：在 **`/to-spec`** 處匯入主要 flow，該步驟會將地圖中連結的決策收斂為可建置的計畫，然後照常執行 `/to-tickets` 和 `/implement`。若將地圖直接迴圈至 `/implement`，會跳過該收斂步驟並丟棄連結的細節，因此僅當任務確實變得非常小時，才直接前往 `/implement`。
 
-不是 feature work，而是 upkeep。
+<a id="codebase-health"></a>
 
-- **`/improve-codebase-architecture`** — 有空時隨時執行，讓 codebase 保持適合 agents 操作。它會浮出 **deepening opportunities**；選一個就會*產生一個 idea*，可帶進 `/grill-with-docs` 進入主流程。它是找出 candidates 的 survey；**`/codebase-design`**（見下方）則是設計所選項目的 bench。
+## 程式碼庫健康
 
-## Vocabulary underneath
+非功能工作，僅為維護。
 
-兩個 model-invoked references 會在其他 skills **底下**運作，各自是自身 vocabulary 的 single source of truth。當問題是**詞語**而不是流程時，可以直接取用它們；也可以讓上面的 skills 自行拉進來。
+- **`/improve-codebase-architecture`** 會在您有空閒時間時執行，以確保程式碼庫對 agent 而言是良好且可操作的。它會呈現**深化機會**；選擇其中一項會_產生一個想法_，您可以將其帶入 `/grill-with-docs` 的主要流程中。它是用來尋找候選項的調查；**`/codebase-design`**（如下）則是您設計所選專案時的工作臺。
 
-- **`/domain-modeling`** — 磨利專案的 *domain* language：挑戰模糊 term、解決 overloaded word（例如 "account" 同時做三件事）、把難以逆轉的決策記錄成 ADR。這是 `/grill-with-docs` 用來保持 `CONTEXT.md` 乾淨 glossary 的 active discipline。
-- **`/codebase-design`** — 設計 module *shape* 的 deep-module vocabulary（module、interface、depth、seam、adapter、leverage、locality）：用小 interface 承載大量 behaviour，放在乾淨 seam 上。`/tdd` 和 `/improve-codebase-architecture` 都使用這套語言。
+<a id="vocabulary-underneath"></a>
 
-## Phase boundaries
+## 底層詞彙
 
-**階段（phase）**是一個 session 裡的一塊工作——grilling、implementation、QA。在兩個階段的**邊界**上你有五個選項，而在它們之間做選擇是這整張地圖裡最模糊的決策：
+兩個由模型呼叫的參考，執行在其他 skill 的*下方*，各自是其詞彙的唯一真實來源。當問題在於**詞彙**而非流程時，請直接參考它們；或者讓上述 skill 自動引入它們。
 
-- **Continue** — 留在原地。不花代價，也不損失任何東西。
-- **`/clear`** — 清空視窗，當這裡的一切都與接下來無關時用。
-- **`/handoff`** — 寫一個可攜的 Markdown 檔案。範圍很窄：只用於**換一個 harness**、**換一個目錄**、**交給同事**，或在**階段中途**分支出一個附帶任務。它買到的是可攜性。
-- **Subagent** — 把一個範圍明確的任務送進它自己的視窗，拿回一份報告。
-- **`/compact`** — 壓縮這段 context，用它播種一個新 session。**預設選項**，排在樹的最底層，而不是第一個該伸手拿的。
+- **`/domain-modeling`**：精煉專案的*領域*語言：挑戰模糊的術語，解決過度載入的詞彙（例如「account」承擔三種功能），並將難以反轉的決策記錄為 ADR。這是 `/grill-with-docs` 驅動的積極紀律，旨在保持 `GLOSSARY.md` 為一份乾淨的術語表。
+- **`/codebase-design`** 是深模組詞彙（module、interface、depth、seam、adapter、leverage、locality），用於設計模組的*形狀*：在乾淨的 seam 後方，透過小型介面隱藏大量行為。`/tdd` 和 `/improve-codebase-architecture` 都使用這套詞彙。
 
-讀 [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) 了解完整的決策樹——五個問題、每個分支背後的理由，以及為什麼 primary-source 的代價讓 **Continue** 成為第一個該排除的選項。在**邊界**上做這個決定；階段中途，就繼續，或把剩下的工作拆給 subagents。
+<a id="phase-boundaries"></a>
 
-## 獨立項目
+## 階段邊界
 
-完全脫離主流程。
+**Phase** 是 session 內的一塊工作：審問、實作、QA。在兩個 phase 之間的**邊界**，您有五個選項，而在這些選項之間做出選擇是這張地圖中最模糊的決策：
 
-- **`/grill-me`** — 與 `/grill-with-docs` 相同的無情訪談，但是**無狀態**的：不在本地保存任何東西，不建立 `CONTEXT.md`。當你**不在工作目錄裡**時用它——磨練一個計畫、一個設計、一段文字，任何底下沒有 repo 的東西。如果你在工作目錄裡，改用 `/grill-with-docs`：它跑同一場訪談還會留下書面紀錄，所以絕對是比較好的選擇。
-- **`/grilling`** — 訪談本身的原語：rounds、frontier，事實是 agent 的工作，決策是你的。`/grill-me` 和 `/grill-with-docs` 是進入它的兩個命名入口，`/triage`、`/wayfinder` 和 `/improve-codebase-architecture` 內部都在跑它。只有在你想要不帶任何包裝的訪談時，才直接用它。
-- **`/resolving-merge-conflicts`** — 逐個 hunk 處理進行中的 merge 或 rebase 衝突，依**意圖**（追溯到雙方的 primary source）而非挑行來解決，然後完成這次操作。它絕不執行 `--abort`。完全獨立，不在任何流程上：當你已經卡在衝突中時才用它。
-- **`/prototype`** — 一個小型、可拋棄的程式，用來回答一個設計問題：這個 state model 感覺對嗎，或這個 UI 應該長什麼樣子。Throwaway 限制的是程式碼怎麼寫，不是承諾要銷毀它：答案會收進正式程式碼，原型本身則作為 **primary source** 保留在 main 分出的 `prototype/<name>` 分支上，並從 implementation issue 指向它。它是主流程步驟 2 的 detour，但任何難以在紙上決定的設計問題都可以用。
-- **`/research`** — 將閱讀 legwork 委派給**背景 agent**：它用 **primary sources** 調查問題，然後在 repo 留下一份有引用的 Markdown 檔。它閱讀時你可以繼續工作。它產生的檔案是要帶**進**主流程 `/grill-with-docs` 的材料——research 餵養思考，不取代思考。
-- **`/to-questionnaire`** — 當卡住你的東西不在你腦中或 codebase 裡，而是在**別人腦中**時，這會寫一份問卷讓對方填。它是 `/grill-me` 的反面：不是就主題訪談你，而是就**發送**這件事訪談你——要寄給誰、你需要拿回什麼——並把問題對準那個缺口。拿回來的東西是 `/grill-with-docs` 或 `/to-spec` 的材料。
-- **`/wizard`** — 給只有**人類**才能做的步驟：佈建基礎設施、設定憑證或 CI secrets、點過一個陌生的第三方 dashboard、跑一次性的 migration 或 cutover。它會產生一支互動式 bash script，開啟每個 URL、擷取每個值，並寫進 `.env` 和 GitHub secrets——讓這個流程不再是每次都要向 agent 重新解釋一遍的東西。Model-invoked，所以 agent 一撞到只有人類能跨過的牆就會伸手拿它。如果 agent 自己就能做，它就該自己做；這是給人類真的在迴路中的情況用的。
-- **`/wait-what`** — 給沒說到位的訊息用的修正。在對話中途、在任何其他 skill 裡面用它，agent 會用你缺少的 context 重新表達剛才說的話，講白話、用 `CONTEXT.md` 的詞彙。它是事後補救；`/grill-with-docs` 是事前的解方，因為早早談定的共同語言，才是讓術語一開始就不會冒出來的原因。
-- **`/teach`** — 在多個 sessions 中學習一個概念，以目前目錄作為有狀態的工作區。
-- **`/writing-for-agents`** — 寫給 agent 消費的文件的參考：skill、AGENTS.md、被指向的文件。
+- **Continue**：保持原狀。不花費任何成本，也不損失任何東西。
+- **`/clear`**：清空視窗，當這裡的內容對接下來的工作無關緊要時。
+- **`/handoff`** 會寫入一個可攜式的 markdown 檔案。範圍狹窄：僅適用於**新的 harness**、**新的目錄**、**同事**，或在 phase 中途分叉一個側邊任務。它提供的是可攜性。
+- **Subagent**：將一個範圍緊密的任務傳送到其自己的視窗，並接收一份報告。
+- **`/compact`** 會壓縮此上下文，並以此初始化一個新的 session。這是**預設**選項，位於樹狀結構的底部，而非首選。
 
-## 前提條件
+閱讀 [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) 以檢視有序樹狀結構：五個問題、每個分支背後的推理，以及為什麼原始資料成本使 **Continue** 成為首先要排除的選項。請在邊界**處**做出決策；在 phase 中途，請繼續或將剩餘部分拆分給 subagent。
 
-**`/setup-matt-pocock-skills`** — 在第一次使用 engineering flow 前執行，設定其他 skills 所需的 issue tracker、triage labels 和 doc layout。Custom issue trackers 也可使用。
+<a id="standalone"></a>
+
+## 獨立
+
+完全脫離主要流程。
+
+- **`/grill-me`**：與 `/grill-with-docs` 相同的不懈審問，但為**無狀態**：它不在本地儲存任何內容，也不建立 `GLOSSARY.md`。當您**不在工作目錄中工作**時（例如精煉計畫、設計、寫作，或任何沒有儲存庫支撐的內容），請使用它。如果您在工作目錄中，請改用 `/grill-with-docs`：它執行相同的審問並留下紙本軌跡，因此嚴格來說更好。
+- **`/grilling`** 是審問原語本身：輪次、前沿、事實是 agent 的工作，決策是您的。`/grill-me` 和 `/grill-with-docs` 是兩種具名的進入方式，而 `/triage`、`/wayfinder` 和 `/improve-codebase-architecture` 都在內部執行它。僅當您想要沒有包裝器的審問時，才直接參考它。
+- **`/prototype`** 是一個小型、一次性的程式，用於回答一個設計問題：這個狀態模型感覺是否正確，或者這個 UI 應該長什麼樣子。「一次性」是對程式碼撰寫方式的限制，而非銷毀它的承諾：答案會融入真實程式碼，而原型本身會作為**原始資料**保留在 `prototype/<name>` 分支上（從 main 分出），並由實作 issue 指向。這是主要流程步驟 2 中的繞道，但當設計問題難以在紙上解決時，隨時可以使用它。
+- **`/research`**：將閱讀跑腿工作委派給**背景 agent**：它針對**原始資料**調查一個問題，然後在儲存庫中留下一份帶引用的 Markdown 檔案。當它閱讀時，您可以繼續工作。它產生的檔案是帶入 `/grill-with-docs` 主要流程的素材，因為研究是為思考提供養分，而非取代思考。
+- **`/to-questionnaire`** 適用於阻礙您的事物不在您頭腦或程式碼庫中，而在**其他人**那裡的情況，並為他們撰寫一份問卷以填寫。它是 `/grill-me` 的反向操作：不是就主題審問您，而是就**傳送**（發給誰、需要什麼回饋）審問您，並將問題指向缺口。回饋的內容是 `/grill-with-docs` 或 `/to-spec` 的素材。
+- **`/wizard`** 適用於只有**人類**才能執行的步驟：設定基礎設施、設定憑證或 CI 金鑰、點選陌生的第三方儀錶板、執行一次性遷移或切換。它會產生一個互動式 bash 指令碼，開啟每個 URL、捕獲每個值，並將其寫入 `.env` 和 GitHub secrets，使該程式不再需要每次向 agent 重新解釋。由模型呼叫，因此 agent 在遇到只有您才能透過的障礙時會立即使用它。如果 agent 可以自己完成，它應該這樣做；這適用於人類真正在迴圈中的情況。
+- **`/wait-what`** 是針對未傳達清楚訊息的修正。在對話中途、在任何其他 skill 內部使用它，agent 會用您缺少的上下文、以簡潔的英文、使用 `GLOSSARY.md` 詞彙重新陳述它剛說的話。它在事後有效；`/grill-with-docs` 是事前的預防，因為早期達成共識的共同語言才能阻止術語的出現。
+- **`/teach`**：跨多個 session 學習一個概念，使用當前目錄作為有狀態的工作區。
+- **`/writing-for-agents`** 是撰寫 agent 消費檔案的參考：skills、AGENTS.md、指向的檔案。
+
+<a id="precondition"></a>
+
+## 前置條件
+
+**`/setup-matt-pocock-skills`**：在您的第一個工程流程之前執行，以設定其他 skill 假設的 issue tracker、分級標籤和檔案佈局。自訂 issue tracker 也可用。
