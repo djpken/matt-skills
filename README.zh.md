@@ -1,3 +1,5 @@
+> [English](./README.md) · [中文文件索引](./TRANSLATIONS.zh.md)
+
 <p>
   <a href="https://www.aihero.dev/s/skills-newsletter">
     <picture>
@@ -8,25 +10,31 @@
   </a>
 </p>
 
-# 真正工程師的 Skills
+<a id="skills-for-real-engineers"></a>
+
+# 給真正工程師的 Skills
 
 [![skills.sh](https://skills.sh/b/mattpocock/skills)](https://skills.sh/mattpocock/skills)
 
-> [English](./README.md) · 繁體中文 · [情境技能路由 →](./docs/scenario-routing.md)
+English · [繁體中文](./README.zh.md) · [Scenario routing →](./docs/scenario-routing.md)
 
-我每天用來做真正工程的 agent skills，不是 vibe coding。
+我每天都在用的 agent skills，用來做真正的工程，而不是 vibe coding。
 
-開發真實應用程式很難。GSD、BMAD、Spec-Kit 等方法試圖透過接管整個流程來幫你，但也會拿走你的控制權，讓流程裡的 bug 更難追查。
+開發真正的應用程式很困難。GSD、BMAD 和 Spec-Kit 等方法試圖透過掌控流程來協助。但這麼做的同時，它們奪走了你的控制權，並讓流程中的 bug 難以解決。
 
-這些 skills 設計得小巧、容易調整，而且可以組合使用。它們適用於任何模型，來自多年工程經驗的萃取。你可以自由改造，讓它們成為自己的工具。
+這些 skills 設計得小巧、易於調整且可組合。它們適用於任何 model。它們基於數十年的工程經驗。隨意改造它們。讓它們成為你自己的。享受吧。
 
-如果你想追蹤這些 skills 的更新，歡迎訂閱電子報，已有約 60,000 位開發者加入：
+如果你想追蹤這些 skills 的變更，以及我建立的任何新 skills，你可以加入我的 newsletter，那裡有約 60,000 名其他開發者：
 
-[訂閱電子報](https://www.aihero.dev/s/skills-newsletter)
+[Sign Up To The Newsletter](https://www.aihero.dev/s/skills-newsletter)
+
+<a id="installation-30-second-setup"></a>
 
 ## 安裝（30 秒設定）
 
-兩種入口，兩種哲學。**[Claude Code plugin](https://code.claude.com/docs/en/plugins)** 把整組 skills 安裝成一個受管理、唯讀的套件，隨我釋出新版本自動更新——你是訂閱，而不是 fork。**[skills.sh](https://skills.sh/mattpocock/skills)** 把可編輯的 skill 檔案複製進你的專案，讓你可以自行修改、變成自己的東西。挑一種——兩種都裝只會讓你每個 skill 都重複一份。
+Plugin 會自我更新。[skills.sh](https://skills.sh/mattpocock/skills) 會將可編輯的檔案複製到你的專案中，你需要手動更新它們。每個 agent 只選一個，因為同時安裝兩者會讓你擁有兩倍的 skills。
+
+<a id="1-get-the-skills"></a>
 
 ### 1. 取得 skills
 
@@ -34,197 +42,249 @@
 <summary><strong>Claude Code</strong></summary>
 
 ```bash
-claude plugins install mattpocock-skills
+claude plugin install mattpocock-skills@claude-plugins-official
 ```
 
-或者，在 session 裡直接執行：
-
-```
-/plugin install mattpocock-skills
-```
-
-它已經在 Claude Code 的官方 marketplace 裡，所以不用先新增任何東西，更新也會自動送達。
+預設會自我更新。
 
 </details>
 
 <details>
-<summary><strong>Codex 及其他 agent</strong></summary>
+<summary><strong>Codex</strong></summary>
 
 ```bash
-npx skills@latest add mattpocock/skills
+codex plugin marketplace add mattpocock/skills
+codex plugin add mattpocock-skills@mattpocock
 ```
 
-選擇你要的 skills，以及想安裝到哪些 coding agent 上。**安裝工具會讓你挑選要拿哪些 skills——記得把 `setup-matt-pocock-skills` 也選進去。**
-
-原生 Codex plugin 已在規劃中——詳見 [`.agents/adr/0002-ship-as-a-claude-code-plugin.md`](./.agents/adr/0002-ship-as-a-claude-code-plugin.md)。
+啟動時會自我更新。
 
 </details>
 
 <details>
-<summary><strong>給喜歡動手改的人</strong></summary>
-
-在任何 agent 上（包括 Claude Code）都可以用同一個安裝工具：
+<summary><strong>GitHub Copilot</strong> (CLI and VS Code)</summary>
 
 ```bash
-npx skills@latest add mattpocock/skills
+copilot plugin marketplace add mattpocock/skills
+copilot plugin install mattpocock-skills@mattpocock
 ```
 
-它會把 skills 寫進你的 repo，變成你擁有、可以編輯的一般檔案。不會有任何東西在背後偷偷更新；想拿到我最新的變更時，自己執行 `npx skills update`。
+然後，只需一次，加入 `~/.copilot/settings.json`：
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "mattpocock": { "source": { "source": "github", "repo": "mattpocock/skills" }, "autoUpdate": true }
+  }
+}
+```
+
+在 VS Code 中，執行 **Chat: Install Plugin From Source** 並輸入 `https://github.com/mattpocock/skills`。它每天更新。
 
 </details>
+
+<details>
+<summary><strong>Gemini CLI</strong> (manual updates)</summary>
+
+```bash
+gemini skills install https://github.com/mattpocock/skills.git --path skills/engineering
+gemini skills install https://github.com/mattpocock/skills.git --path skills/productivity
+```
+
+重新執行這兩個指令以更新。
+
+</details>
+
+<details>
+<summary><strong>Any other agent, or editable files</strong> (manual updates)</summary>
+
+```bash
+npx skills@latest add mattpocock/skills -a <agent>  # cursor, opencode, devin, windsurf, amp, pi; omit -a to choose
+```
+
+當安裝程式詢問要採用哪些 skills 時，請包含 `setup-matt-pocock-skills`。若要更新，請執行 `npx skills@latest update`，並重新執行 `add` 以獲取新的 skills。
+
+</details>
+
+<a id="2-run-setup-matt-pocock-skills"></a>
 
 ### 2. 執行 `/setup-matt-pocock-skills`
 
-在你的 agent 中，每個 repo 執行一次。它會詢問：
+在你的 agent 中，每個 repo 執行一次。它會：
 
-- 你使用哪個 issue 追蹤工具（GitHub、Linear 或本地檔案）
-- 你在 triage 票據時套用哪些標籤（`/triage` 會使用）
-- 你想把產出的文件存在哪裡
+- 詢問你想使用哪個 issue tracker（GitHub、GitLab、本地檔案，或你描述的任何其他工具）
+- 詢問你在 triage tickets 時會套用哪些 labels（`/triage` 使用 labels）
+- 詢問你想將我們建立的任何 docs 儲存在哪裡
 
-### 3. 完成，可以開始使用。
+<a id="3-bam---youre-ready-to-go"></a>
 
-## 為什麼需要這些 Skills
+### 3. 完成，你準備好了。
 
-我建立這些 skills，是為了解決我在 Claude Code、Codex 和其他 coding agent 上觀察到的常見失敗模式。
+<a id="why-these-skills-exist"></a>
 
-### 失敗模式 #1：Agent 沒做我要的東西
+## 為什麼這些 Skills 存在
 
-> 「沒有人確切知道自己想要什麼。」
+我建立這些 skills 是為了修正我在 Claude Code、Codex 和其他 coding agents 中看到的常見失敗模式。
+
+<a id="1-the-agent-didnt-do-what-i-want"></a>
+
+### #1: Agent 沒有做我想要的事
+
+> 「沒有人完全知道他們想要什麼」
 >
-> David Thomas & Andrew Hunt，[《The Pragmatic Programmer》](https://www.amazon.co.uk/Pragmatic-Programmer-Anniversary-Journey-Mastery/dp/B0833F1T3V)
+> David Thomas & Andrew Hunt, [The Pragmatic Programmer](https://www.amazon.co.uk/Pragmatic-Programmer-Anniversary-Journey-Mastery/dp/B0833F1T3V)
 
-**問題**：軟體開發中最常見的失敗模式是**對齊失敗**。你以為 dev 知道你要什麼，結果看到成品才發現完全不是那回事。
+**問題**。軟體開發中最常見的失敗模式是認知不一致。你以為開發者知道你想要什麼。然後你看到他們建好的東西，你意識到他們完全沒有理解你。
 
-AI 時代也一樣。你和 agent 之間存在溝通落差。解法是一場**深度訪談（grilling session）**，讓 agent 主動問你大量細節問題。
+在 AI 時代也是如此。你與 agent 之間存在溝通落差。解決這個問題的方法是進行一次**嚴謹的問答 session**，讓 agent 向你詢問關於你要建置內容的詳細問題。
 
-**解法**：
+**解決方案**是使用：
 
-- [`/grill-me`](./skills/productivity/grill-me/SKILL.zh.md)：適用於非程式碼場景
-- [`/grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.zh.md)：同上，但會額外建立文件
+- [`/grill-me`](./skills/productivity/grill-me/SKILL.md) - 用於非程式碼用途
+- [`/grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md) - 與 [`/grill-me`](./skills/productivity/grill-me/SKILL.md) 相同，但增加了更多額外功能（見下文）
 
-這是我最常用的兩個 skills。它們幫助你在動手前先和 agent 對齊，並深入思考要做的改動。每次要做改動前都應該用一次。
+這些是我最受歡迎的 skills。它們幫助你在開始之前與 agent 達成共識，並深入思考你要進行的變更。每次你想進行變更時，都要使用它們。
 
-### 失敗模式 #2：Agent 說話太囉唆
+<a id="2-the-agent-is-way-too-verbose"></a>
 
-> 在通用語言（ubiquitous language）下，開發者的對話和程式碼的表達都從同一個領域模型衍生出來。
+### #2: Agent 過於冗長
+
+> 透過通用語言，開發者之間的對話以及程式碼的表達都源自同一個 domain model。
 >
-> Eric Evans，[《Domain-Driven Design》](https://www.amazon.co.uk/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)
+> Eric Evans, [Domain-Driven-Design](https://www.amazon.co.uk/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)
 
-**問題**：一開始，開發者和領域專家通常說的是不同語言。Agent 被丟進一個專案，要自己摸索術語，結果用 20 個字說一個字就能講清楚的事。
+**問題**：在專案初期，開發者與他們為之建置軟體的人（domain experts）通常使用不同的語言。
 
-**解法**：建立一套共同語言，也就是一份幫助 agent 解碼專案術語的文件。
+我與我的 agents 之間也感受到同樣的張力。Agents 通常被丟進專案中，並被要求邊做邊摸索術語。因此，它們在一個字就夠用的地方使用了 20 個字。
+
+**解決方案**是建立共享語言。這是一份檔案，幫助 agents 解讀專案中使用的術語。
 
 <details>
-<summary>範例</summary>
+<summary>
+範例
+</summary>
 
-以下是 `course-video-manager` 的 [`CONTEXT.md`](https://github.com/mattpocock/course-video-manager/blob/076a5a7a182db0fe1e62971dd7a68bcadf010f1c/CONTEXT.md) 範例。哪一句比較容易讀？
+這裡是一個 [glossary](https://github.com/mattpocock/course-video-manager/blob/076a5a7a182db0fe1e62971dd7a68bcadf010f1c/CONTEXT.md) 的範例（在該 pinned commit 時仍名為 `CONTEXT.md`，來自 skills 重新命名慣例之前），來自我的 `course-video-manager` repo。哪一個比較容易閱讀？
 
-- **之前**：「在課程某個章節裡的課程被『實體化』（也就是在檔案系統中分配位置）時出現問題」
+- **之前**：「當課程中某個 section 內的 lesson 被設為『真實』時（即在檔案系統中佔有一個位置），會出現問題」
 - **之後**：「materialization cascade 有問題」
 
-這種精確性在每次 session 都能持續節省 token。
+這種簡潔性在 session 中不斷帶來回報。
 
 </details>
 
-這個功能內建在 [`/grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.zh.md) 裡。它是一個 grilling session，同時幫你和 AI 建立共同語言，並以 ADR 格式記錄難以解釋的決策。
+這已內建於 [`/grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md)。這是一次嚴謹的問答 session，但它幫助你與 AI 建立共享語言，並用 ADR 記錄難以解釋的決策。
+
+很難解釋這有多強大。它可能是這個 repo 中最酷的技巧。試試看，你會明白。
 
 > [!TIP]
-> 共同語言除了減少囉唆之外，還有許多好處：
+> 共享語言除了減少冗長之外，還有許多其他好處：
 >
-> - **變數、函式和檔案命名一致**，都使用共同語言
-> - **程式碼庫更容易被 agent 導覽**
-> - Agent **思考時消耗更少 token**，因為有更精準的語言可用
+> - **變數、函式和檔案的命名保持一致**，使用共享語言
+> - 因此，**codebase 對 agent 來說更容易導航**
+> - Agent 也**在思考上花費更少的 tokens**，因為它可以使用更簡潔的語言
 
-### 失敗模式 #3：程式碼就是跑不起來
+<a id="3-the-code-doesnt-work"></a>
 
-> 「永遠採取小而謹慎的步驟。反饋速率就是你的速度上限。永遠不要接下太大的任務。」
+### #3: 程式碼無法運作
+
+> 「始終採取小而謹慎的步驟。回饋的速率是你的速度限制。永遠不要承擔太大的任務。」
 >
-> David Thomas & Andrew Hunt，[《The Pragmatic Programmer》](https://www.amazon.co.uk/Pragmatic-Programmer-Anniversary-Journey-Mastery/dp/B0833F1T3V)
+> David Thomas & Andrew Hunt, [The Pragmatic Programmer](https://www.amazon.co.uk/Pragmatic-Programmer-Anniversary-Journey-Mastery/dp/B0833F1T3V)
 
-**問題**：假設你和 agent 已經對齊要建什麼，但 agent 產出的東西還是不能用。問題在於反饋迴路：沒有對程式碼實際執行情況的回饋，agent 就是在瞎飛。
+**問題**：假設你和 agent 在要建置什麼上已經達成共識。當 agent _仍然_ 產出垃圾時，會發生什麼事？
 
-**解法**：你需要完整的反饋迴路：靜態型別、瀏覽器存取、自動化測試。
+該檢視你的回饋迴路了。如果沒有關於程式碼實際執行方式的回饋，agent 就是在盲目飛行。
 
-對於自動化測試，紅綠重構迴路（red-green-refactor）至關重要。讓 agent 先寫一個失敗的測試，再修到通過。這能給 agent 穩定的反饋，大幅提升程式碼品質。
+**解決方案**：你需要一組標準的回饋迴路：靜態型別、瀏覽器存取，以及自動化測試。
 
-我建了 [`/tdd`](./skills/engineering/tdd/SKILL.zh.md) skill，可插入任何專案使用。它鼓勵紅綠重構，並給 agent 充分的測試好壞指引。
+對於自動化測試，red-green-refactor 迴路至關重要。這是 agent 先寫一個失敗的測試，然後修復測試的過程。這有助於為 agent 提供一致的回饋水平，從而產生好得多的程式碼。
 
-對於 debug，我也建了 [`/diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.zh.md) skill，將最佳 debug 實踐包裝成一個紀律化的迴路，一個階段一個階段設檻通過。
+我建立了一個 **[`/tdd`](./skills/engineering/tdd/SKILL.md) skill**，你可以將其嵌入任何專案。它鼓勵 red-green-refactor，並為 agent 提供關於什麼是好測試和壞測試的大量指導。
 
-### 失敗模式 #4：我們蓋出了一堆爛泥巴
+對於除錯，我也建立了一個 **[`/diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.md)** skill，將最佳除錯實務包裝成一個有紀律的迴路，並按階段進行閘控。
 
-> 「每天都要投資系統的設計。」
+<a id="4-we-built-a-ball-of-mud"></a>
+
+### #4: 我們建了一個泥球
+
+> 「_每天_ 投資於系統的設計。」
 >
-> Kent Beck，[《Extreme Programming Explained》](https://www.amazon.co.uk/Extreme-Programming-Explained-Embrace-Change/dp/0321278658)
+> Kent Beck, [Extreme Programming Explained](https://www.amazon.co.uk/Extreme-Programming-Explained-Embrace-Change/dp/0321278658)
 
-> 「最好的模組是深層的。它們讓大量功能可以透過簡單的介面存取。」
+> 「最好的模組是深的。它們允許透過簡單的介面存取大量功能。」
 >
-> John Ousterhout，[《A Philosophy Of Software Design》](https://www.amazon.co.uk/Philosophy-Software-Design-2nd/dp/173210221X)
+> John Ousterhout, [A Philosophy Of Software Design](https://www.amazon.co.uk/Philosophy-Software-Design-2nd/dp/173210221X)
 
-**問題**：大多數用 agent 建出的應用程式都很複雜、難以修改。因為 agent 大幅加速了寫程式的速度，同時也加速了軟體熵的增長。程式碼庫以前所未有的速度變得越來越複雜。
+**問題**：大多數使用 agents 建置的應用程式都很複雜且難以變更。因為 agents 可以極大地加速編碼，它們也加速了軟體熵。Codebases 以前所未有的速度變得更加複雜。
 
-**解法**：一個全新的 AI 開發方法：在意程式碼的設計。
+**解決方案** 是採用一種全新的激進方法來進行 AI 驅動的開發：重視程式碼的設計。
 
-這個理念貫穿這些 skills 的每一層：
+這已內建於這些 skill 的每一個層級中：
 
-- [`/to-spec`](./skills/engineering/to-spec/SKILL.zh.md) 在建立 spec 之前，會先問你要動哪些模組
-- [`/improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.zh.md) 掃描程式碼庫尋找深化機會，並把候選項目交給你。我建議每隔幾天執行一次。它是一次 survey，不是一次拯救行動：在一個真的老舊的程式碼庫上，它會找到真正的候選項目，但不會幫你把爛泥巴解開。
+- [`/to-spec`](./skills/engineering/to-spec/SKILL.md) 會在建立規格前，詢問您即將修改哪些模組
 
-### 總結
+而且關鍵在於，[`/improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.md) 會掃描程式碼庫以尋找深化機會，並提供候選專案。我建議每隔幾天就在您的程式碼庫上執行一次。這是一項調查，而非救援：在真正陳舊的程式碼庫上，它會找到真正的候選專案，但不會替您理清混亂。
 
-軟體工程的基本功比以往任何時候都更重要。這些 skills 是我將基本功濃縮成可重複實踐的最佳嘗試，幫助你在職涯中交出更好的作品。
+<a id="summary"></a>
 
----
+### 摘要
 
-不確定該用哪個 skill？請看 [情境技能路由](./docs/scenario-routing.md)。
+軟體工程基礎比以往任何時候都更重要。這些 skill 是我將這些基礎精簡為可重複執行的實務的最佳努力，以協助您推出職業生涯中最好的應用程式。祝您使用愉快。
 
----
+<a id="reference"></a>
 
-## 技能總覽
+## 參考
 
-這些 skills 以一個軸線區分：**由誰呼叫**。**User-invoked（使用者呼叫）** 只有在你輸入時才會觸發（例如 `/grill-me`），任務是負責編排流程。**Model-invoked（模型呼叫）** 則可由你呼叫，也可在情境符合時由 agent 自動觸發，負責承載可重複使用的紀律。一個 user-invoked skill 可以呼叫 model-invoked skills，但不能呼叫另一個 user-invoked skill。
+這些 skill 依一個軸線分類：誰可以呼叫它們。**使用者呼叫** 的 skill 僅在您輸入時才可觸及（例如 `/grill-me`）；其職責是進行協調。**模型呼叫** 的 skill 可由您呼叫，或在任務符合時由 agent 自動觸及；它們承載可重複使用的紀律。使用者呼叫的 skill 可以呼叫模型呼叫的 skill，但絕不能呼叫另一個使用者呼叫的 skill。
 
-### Engineering（工程）
+<a id="engineering"></a>
 
-我每天寫程式時使用的 skills。
+### 工程
 
-**User-invoked（使用者呼叫）**
+我日常用於程式碼工作的 skill。
 
-- **[ask-matt](./skills/engineering/ask-matt/SKILL.zh.md)**：詢問目前情境該用哪個 skill 或流程。一個涵蓋本 repo 所有 user-invoked skills 的路由器。
-- **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.zh.md)**：深度訪談 session，同時建立專案的領域模型，精煉術語並同步更新 `CONTEXT.md` 和 ADR。
-- **[triage](./skills/engineering/triage/SKILL.zh.md)**：透過狀態機角色流程，對 issue 進行分類、驗證、必要時追問，並寫出 agent 可執行的 brief。
-- **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.zh.md)**：掃描程式碼庫尋找深化機會，以視覺化 HTML 報告呈現，再針對你選的項目深度訪談。
-- **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.zh.md)**：為本 repo 設定 engineering skills：issue 追蹤工具、triage 標籤和領域文件結構。使用其他 engineering skills 前，每個 repo 執行一次。
-- **[to-spec](./skills/engineering/to-spec/SKILL.zh.md)**：將目前對話轉換成 spec 並提交至 issue 追蹤工具。不做訪談，直接綜合你已討論的內容。
-- **[to-tickets](./skills/engineering/to-tickets/SKILL.zh.md)**：將任何計畫、spec 或對話拆成一組 tracer-bullet tickets，每張都宣告自己的 blocking edges——本地檔案用文字表示，真正的 tracker 則用 native blocking links。
-- **[implement](./skills/engineering/implement/SKILL.zh.md)**：根據 spec 或一組 tickets 建置工作，在預先商定的接縫處驅動 `/tdd`，commit 前用 `/code-review` 收尾。
-- **[wayfinder](./skills/engineering/wayfinder/SKILL.zh.md)**：規劃一大塊工作——大到超過一個 agent session 能裝下——把它變成 issue 追蹤工具上一張共享的決策 ticket 地圖，逐一解決，直到通往目的地的路徑清楚。
+**使用者呼叫**
 
-**Model-invoked（模型呼叫）**
+- **[ask-matt](./skills/engineering/ask-matt/SKILL.md)**：詢問哪種 skill 或流程適合您的情況。這是本儲存庫中使用者呼叫 skill 的路由器。
+- **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)**：一場嚴格的審問會議，同時建立您專案的領域模型，精煉術語並即時更新 `GLOSSARY.md` 和 ADR。
+- **[triage](./skills/engineering/triage/SKILL.md)**：透過分級角色的狀態機來處理 issue。
+- **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.md)**：掃描程式碼庫以尋找深化機會，將其呈現為視覺化 HTML 報告，然後針對您選擇的專案進行嚴格的審問。
+- **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.md)**：為工程 skill 設定此儲存庫（issue 追蹤器、分級標籤、領域檔案佈局）。在使用其他工程 skill 前，請在每個儲存庫上執行一次。
+- **[to-spec](./skills/engineering/to-spec/SKILL.md)**：將目前的對話轉為規格並發布到 issue 追蹤器。沒有訪談，僅綜合您已討論的內容。
+- **[to-tickets](./skills/engineering/to-tickets/SKILL.md)**：將任何計畫、規格或對話拆解為一組曳光彈 ticket，每個 ticket 都宣告其阻擋邊界，以文字形式寫入本地檔案，或在真實追蹤器上建立原生阻擋連結。
+- **[implement](./skills/engineering/implement/SKILL.md)**：建立由規格或 ticket 集合所描述的工作，在預先協定的接縫處驅動 `/tdd`，並在 commit 前以 `/code-review` 收尾。
+- **[implement-spec](./skills/engineering/implement-spec/SKILL.md)**：在單一整合分支上實作整個規格。將 ticket 視為任務圖，在就緒前沿執行 implementer subagent 以達到最大並行度，然後以 `/code-review` 收尾。
+- **[wayfinder](./skills/engineering/wayfinder/SKILL.md)**：規劃一大塊工作，其規模超過單一 agent 會話所能容納，將其作為 issue 追蹤器上的決策 ticket 共享地圖，並逐一解決，直到通往目的地的路徑清晰為止。
+- **[retro](./skills/engineering/retro/SKILL.md)**：在會話結束後，建議改進 coding agent 的環境（導航、自動化檢查、編碼標準、引導檔案、工具），最嚴重的問題優先。
 
-- **[prototype](./skills/engineering/prototype/SKILL.zh.md)**：建立可拋棄的原型來釐清設計問題——可用於狀態／邏輯問題的單一可分享 HTML 檔案，或同一路由下可切換的多個截然不同的 UI 版本。
-- **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.zh.md)**：針對難搞 bug 和效能退化的紀律化診斷迴路：建一個對這個 bug 會亮紅燈的回饋迴路 → 最小化 → 假設 → 量測 → 修復 → 回歸測試。
-- **[research](./skills/engineering/research/SKILL.zh.md)**：針對高信度的第一手資料調查問題，並在 repo 中留下一份有引用的 Markdown 檔案，以背景 agent 執行。
-- **[tdd](./skills/engineering/tdd/SKILL.zh.md)**：測試驅動開發，採紅綠重構迴路。每次一個垂直切片地實作功能或修 bug。
-- **[domain-modeling](./skills/engineering/domain-modeling/SKILL.zh.md)**：主動建立並精煉專案的領域模型，挑戰術語、壓力測試邊界案例，並同步更新 `CONTEXT.md` 和 ADR。
-- **[codebase-design](./skills/engineering/codebase-design/SKILL.zh.md)**：設計深層模組的共享紀律與詞彙：用小介面承載大量行為，放在乾淨的接縫處，並可透過介面測試。
-- **[code-review](./skills/engineering/code-review/SKILL.zh.md)**：對自固定基準點以來的 diff 做兩軸審查：**Standards**（是否遵循 repo 的程式碼標準，加上 Fowler smell baseline？）和 **Spec**（是否忠實實作了原始 issue／spec？），以平行 sub-agents 執行，避免互相污染。
-- **[resolving-merge-conflicts](./skills/engineering/resolving-merge-conflicts/SKILL.zh.md)**：逐個 hunk 處理進行中的 git merge 或 rebase 衝突，依循每一方的主要來源追溯意圖來解決，完成後結束該操作——絕不使用 `--abort`。
-- **[wizard](./skills/engineering/wizard/SKILL.zh.md)**：產生一支互動式 bash wizard，帶著人類走過只有他們能執行的步驟：佈建基礎設施、設定憑證或 CI secrets、點過一個陌生的第三方 dashboard，或跑一次性的 migration／cutover。
+**模型呼叫**
 
-### Productivity（生產力）
+- **[prototype](./skills/engineering/prototype/SKILL.md)**：建立一次性原型以回答設計問題，可以是單一可分享的 HTML 檔案用於狀態或邏輯問題，或是多個截然不同的 UI 變體，可從單一路由切換。
+- **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.md)**：針對困難 bug 和效能退化的紀律性診斷迴圈：建立一個在此 bug 上變紅的回饋迴圈 → 最小化 → 假設 → 插樁 → 修復 → 回歸測試。
+- **[research](./skills/engineering/research/SKILL.md)**：針對高信任度的主要來源調查問題，並將發現作為帶引用的 Markdown 檔案記錄在儲存庫中，作為背景 agent 執行。
+- **[tdd](./skills/engineering/tdd/SKILL.md)**：採用紅綠重構迴圈的測試驅動開發。一次建立一個垂直切片的功能或修復一個 bug。
+- **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)**：積極建立並精煉專案的領域模型：挑戰術語是否符合詞彙表，以邊界情況場景進行壓力測試，並即時更新 `GLOSSARY.md` 和 ADR。
+- **[codebase-design](./skills/engineering/codebase-design/SKILL.md)**：設計深度模組的共享紀律和詞彙：在小型介面背後隱藏大量行為，放置在乾淨的接縫處，並可透過該介面進行測試。
+- **[code-review](./skills/engineering/code-review/SKILL.md)**：對自固定點以來的 diff 進行雙軸審查：**標準**（是否遵循儲存庫的編碼標準，加上 Fowler 異味基準？）和**規格**（是否忠實實作來源 issue/規格？），作為並行 sub-agent 執行，以免彼此汙染。
+- **[pr](./skills/engineering/pr/SKILL.md)**：pull request 主體應具備的形狀：摘要作為使變更清晰的最小視覺元素，證明其運作的前後證據，以及合併風險評估（單向門或雙向門，加上影響範圍）。
+- **[wizard](./skills/engineering/wizard/SKILL.md)**：產生一個互動式 bash wizard，引導人類完成只有他們才能執行的步驟：設定基礎設施、設定憑證或 CI 金鑰、導覽不熟悉的新第三方儀錶板，或執行一次性遷移或切換。
 
-通用工作流程工具，不限於寫程式。
+<a id="productivity"></a>
 
-**User-invoked（使用者呼叫）**
+### 生產力
 
-- **[grill-me](./skills/productivity/grill-me/SKILL.zh.md)**：針對計畫或設計進行無情訪談，直到每個設計樹分支都解決為止。
-- **[handoff](./skills/productivity/handoff/SKILL.zh.md)**：將目前對話壓縮成交接文件，讓另一個 agent 可以接續工作。
-- **[teach](./skills/productivity/teach/SKILL.zh.md)**：在多個 session 中教導使用者新技能或概念，以目前目錄作為有狀態的教學工作區。
-- **[to-questionnaire](./skills/productivity/to-questionnaire/SKILL.zh.md)**：把一個你自己回答不了的決策，變成一份給唯一能回答的那個人的 Markdown 問卷——可以非同步填寫，也可以在會議中一起填。它訪談的是**發送**這件事本身（要寄給誰、你需要拿回什麼），而不是主題。
-- **[wait-what](./skills/productivity/wait-what/SKILL.zh.md)**：在訊息沒說到位的那一刻立刻觸發。Agent 會用你缺少的 context 重新表達一次，講白話，並使用你 `CONTEXT.md` 裡的詞彙。
-- **[writing-for-agents](./skills/productivity/writing-for-agents/SKILL.zh.md)**：撰寫給 agent 消費的文件：skill、AGENTS.md／CLAUDE.md，以及任何 agent 透過指針觸及的文件。
+一般工作流程工具，非特定於程式碼。
 
-**Model-invoked（模型呼叫）**
+**使用者呼叫**
 
-- **[grilling](./skills/productivity/grilling/SKILL.zh.md)**：針對計畫、決策或想法進行無情訪談，直到每個設計樹分支都解決。這是 `grill-me`、`grill-with-docs`、`triage`、`wayfinder` 與 `improve-codebase-architecture` 背後可重複使用的訪談原語。
+- **[grill-me](./skills/productivity/grill-me/SKILL.md)**：針對計畫或設計進行嚴格的訪談，直到設計樹的每個分支都解決為止。
+- **[handoff](./skills/productivity/handoff/SKILL.md)**：將目前的對話壓縮為交接檔案，以便另一個 agent 可以繼續工作。
+- **[teach](./skills/productivity/teach/SKILL.md)**：透過多個會話教導使用者新的 skill 或概念，使用目前目錄作為有狀態的教學工作區。
+- **[to-questionnaire](./skills/productivity/to-questionnaire/SKILL.md)**：將您無法獨自回答的決策轉為 Markdown 問卷，交給唯一能回答的人，可非同步填寫，或在會議中一起完成。它會就傳送物件（給誰、需要什麼回饋）向您提出嚴格的審問，而非就主題本身。
+- **[wait-what](./skills/productivity/wait-what/SKILL.md)**：當訊息未能傳達時立即觸發此 skill。Agent 會用您缺少的背景資訊，以簡潔的英文重新陳述，並使用您的 `GLOSSARY.md` 詞彙。
+
+**模型呼叫**
+
+- **[grilling](./skills/productivity/grilling/SKILL.md)**：針對計畫、決策或想法對使用者進行嚴格的訪談，直到設計樹的每個分支都解決為止。這是 `grill-me`、`grill-with-docs`、`triage`、`wayfinder` 和 `improve-codebase-architecture` 背後的可重用訪談原語。
+- **[writing-for-agents](./skills/productivity/writing-for-agents/SKILL.md)**：為 agent 撰寫檔案：skill、AGENTS.md/CLAUDE.md，以及任何 agent 透過指標觸及的檔案。
