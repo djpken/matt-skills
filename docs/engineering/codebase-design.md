@@ -1,88 +1,102 @@
-## What it does
+<a id="what-it-does"></a>
 
-`codebase-design` fixes the words you use to design a module: **module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**. It defines each one precisely, bans the loose substitutes ("component", "service", "API", "boundary"), and states the handful of principles that follow from them.
+## 功能說明
 
-It is a reference, not a process. It runs no loop, produces no artifact, and never stops to ask you a question. Every other skill that touches design uses its vocabulary. On its own, it gives you the words and stops. Know this before you invoke it. If you point a [session](https://www.aihero.dev/ai-coding-dictionary/session) at a skill with no process and no stopping rule and say "go", the agent invents a process. The questions below show what that looks like.
+`codebase-design` 修正了用於設計模組的詞彙：**module**、**interface**、**depth**、**seam**、**adapter**、**leverage**、**locality**。它精確地定義了每一個詞彙，禁止使用模糊的替代詞（如 "component"、"service"、"API"、"boundary"），並闡述了由此衍生出的少數幾項原則。
 
-## When to reach for it
+這是一份參考資料，而非流程。它不執行任何迴圈，不產生任何產出物，也從不會停下來向你提問。其他所有涉及設計的 skill 都會使用它的詞彙。單獨使用時，它只提供詞彙便停止。在呼叫它之前請瞭解這一點。如果你將 [session](https://www.aihero.dev/ai-coding-dictionary/session) 指向一個沒有流程且沒有停止規則的 skill 並說 "go"，agent 就會自行發明一個流程。以下問題展示了這種情況的樣貌。
 
-Type `/codebase-design`, or the agent reaches for it automatically when a design task fits.
+<a id="when-to-reach-for-it"></a>
 
-Reach for it when you already know which code you're redesigning and you need to think about its shape: where the seam goes, how small the interface can get, whether an extraction removes complexity from its callers. Also use it to settle an argument about what a design word means.
+## 何時使用
 
-Several skills are close to it. Pick by the problem you have:
+輸入 `/codebase-design`，或者當設計任務符合條件時，agent 會自動使用它。
 
-| The problem | The skill |
+當你已經知道要重新設計哪些程式碼，且需要思考其結構時，請使用它：seam 放在哪裡、interface 可以有多小、抽取是否移除了呼叫端的複雜度。也使用它來解決關於設計詞彙含義的爭論。
+
+有幾個 skill 與它相近。請根據你面臨的問題來選擇：
+
+| 問題 | Skill |
 |---|---|
-| The shape of one module: its interface, its seam, its depth | `codebase-design` |
-| The *words of the domain*: "account" means three things, two people mean different things by "cancellation" | [domain-modeling](https://aihero.dev/skills-domain-modeling) |
-| You don't yet know *which* module to redesign | [improve-codebase-architecture](https://aihero.dev/skills-improve-codebase-architecture) (the survey that finds candidates) |
-| You want the design argued with, not just named | [grilling](https://aihero.dev/skills-grilling) |
-| There's a concrete behaviour to build and you want tests that survive a refactor | [tdd](https://aihero.dev/skills-tdd) |
+| 單一模組的結構：其 interface、seam、depth | `codebase-design` |
+| *領域的詞彙*："account" 有三種含義，兩個人對 "cancellation" 的理解不同 | [domain-modeling](https://aihero.dev/skills-domain-modeling) |
+| 你還不知道*要重新設計哪個*模組 | [improve-codebase-architecture](https://aihero.dev/skills-improve-codebase-architecture)（用於尋找候選項的調查） |
+| 你希望設計經過辯論，而不僅僅是命名 | [grilling](https://aihero.dev/skills-grilling) |
+| 有具體的行為需要建置，且你希望測試在重構後仍能存活 | [tdd](https://aihero.dev/skills-tdd) |
 
-## The vocabulary
+<a id="the-vocabulary"></a>
 
-The glossary is the skill. The skill defines every term against the others, and gives each one the word it replaces.
+## 詞彙表
 
-| Term | What it means | Don't say |
+詞彙表即是該 skill。該 skill 將每個術語與其他術語相對照進行定義，並為每個術語提供它所取代的詞彙。
+
+| 術語 | 含義 | 不要說 |
 |---|---|---|
-| **Module** | Anything with an interface and an implementation. Deliberately scale-agnostic: a function, a class, a package, a slice spanning tiers. | unit, component, service |
-| **Interface** | Everything a caller must know to use it correctly: the type signature, plus invariants, ordering constraints, error modes, required config, performance characteristics. | API, signature |
-| **Depth** | Leverage at the interface: how much behaviour a caller or a test can exercise per unit of interface they have to learn. **Deep**: a lot of behaviour behind a small interface. **Shallow**: the interface is nearly as complex as the implementation. | none |
-| **Seam** | Michael Feathers' term: a place you can alter behaviour without editing in that place. It is the *location* of an interface, and where to put it is its own decision, separate from what goes behind it. | boundary |
-| **Adapter** | A concrete thing satisfying an interface at a seam. It names a role, not a kind of thing: an in-memory fake and a Postgres repo are both adapters. | none |
-| **Leverage** | What callers get from depth: more capability per unit of interface learned. | none |
-| **Locality** | What maintainers get from depth: changes, bugs and verification stay in one place, so one fix covers every caller. | none |
+| **Module** | 任何具有 interface 和 implementation 的事物。刻意不區分規模：可以是函式、類別、套件，或是跨層次的切片。 | unit, component, service |
+| **Interface** | 呼叫端必須知道才能正確使用的一切：型別簽名，加上不變數、順序約束、錯誤模式、必要設定、效能特性。 | API, signature |
+| **Depth** | Interface 上的 leverage：呼叫端或測試每學習一個單位 interface 所能執行的行為量。**Deep**：小 interface 背後有大量行為。**Shallow**：interface 的複雜度幾乎與 implementation 相同。 | none |
+| **Seam** | Michael Feathers 的術語：一個可以在不編輯該處的情況下改變行為的位置。它是 interface 的*位置*，而將其放在哪裡是一個獨立的決策，與背後放置什麼內容分開。 | boundary |
+| **Adapter** | 在 seam 處滿足 interface 的具體事物。它命名的是角色，而非事物種類：記憶體 fake 和 Postgres repo 都是 adapters。 | none |
+| **Leverage** | 呼叫端從 depth 獲得的東西：每學習一個單位 interface 獲得更多能力。 | none |
+| **Locality** | 維護者從 depth 獲得的東西：變更、bug 和驗證都保持在同一個地方，因此一次修復即可涵蓋所有呼叫端。 | none |
 
-The skill does *not* define depth as the ratio of implementation lines to interface lines, which is Ousterhout's own definition. That metric rewards padding the implementation, so the skill uses depth-as-leverage instead.
+該 skill *不*將 depth 定義為 implementation 行數與 interface 行數的比率，這是 Ousterhout 自己的定義。該指標獎勵填充 implementation，因此該 skill 改用 depth-as-leverage。
 
-## The four principles
+<a id="the-four-principles"></a>
 
-- **Depth is a property of the interface, not the implementation.** A deep module can be built internally from small swappable parts. Callers just don't see them. A module can have internal seams its own tests use, and one external seam at its interface.
-- **The deletion test.** Imagine deleting the module. If complexity disappears, the module was a pass-through. If it reappears across N callers, the module was hiding real complexity.
-- **The interface is the test surface.** Callers and tests cross the same seam. If you want to test *past* the interface, the module is the wrong shape.
-- **One adapter means a hypothetical seam. Two adapters means a real one.** Don't cut a seam until something varies across it. A single-adapter seam is just indirection.
+## 四項原則
 
-Two supporting files go further, and the skill reads them on demand rather than up front. [DEEPENING.md](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/DEEPENING.md) classifies a candidate's dependencies into four categories (in-process, local-substitutable, remote-but-owned, true-external), because the category decides how you test the deepened module across its seam. [DESIGN-IT-TWICE.md](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/DESIGN-IT-TWICE.md) starts parallel [sub-agents](https://www.aihero.dev/ai-coding-dictionary/subagent) to produce three or more radically different interfaces for the same module, then compares them on depth, locality and seam placement.
+- **Depth 是 interface 的特性，而非 implementation 的特性。** 一個 deep module 內部可以由小的可替換部分建置而成。呼叫端只是看不到它們。一個 module 可以擁有供其自身測試使用的內部 seams，以及在其 interface 上的一個外部 seam。
+- **刪除測試。** 想像刪除該 module。如果複雜度消失了，該 module 就是一個透傳（pass-through）。如果複雜度在 N 個呼叫端中重新出現，該 module 就隱藏了真實的複雜度。
+- **Interface 是測試表面。** 呼叫端和測試跨越同一個 seam。如果你想測試*超過* interface 的部分，該 module 的形狀就是錯誤的。
+- **一個 adapter 意味著假設性的 seam。兩個 adapters 意味著真實的 seam。** 在沒有東西在其上變化之前，不要切開 seam。單一 adapter 的 seam 只是間接性（indirection）。
 
-## Common questions
+兩個支援檔案走得更遠，該 skill 會按需讀取它們，而非預先讀取。[DEEPENING.md](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/DEEPENING.md) 將候選項的依賴關係分為四類（in-process、local-substitutable、remote-but-owned、true-external），因為類別決定了你如何跨 seam 測試深化後的 module。[DESIGN-IT-TWICE.md](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/DESIGN-IT-TWICE.md) 啟動並行的 [sub-agents](https://www.aihero.dev/ai-coding-dictionary/subagent) 為同一個 module 產生三個或更多截然不同的 interface，然後根據 depth、locality 和 seam 放置位置進行比較。
 
-**How do I actually build a deep module in TypeScript?**
+<a id="common-questions"></a>
 
-This is the most-asked question about the skill and the skill does not answer it. It defines what a deep module *is*; it says nothing about how to stop a stray import from reaching past the interface. [Issue #458](https://github.com/mattpocock/skills/issues/458) put it plainly: "let's say we're happy with the interface, it hides the details, etc. But how do we enforce it? I think without linting or clear guardrails, humans and LLMs alike will start making it messy over time." The answer in that thread gave three options: wrap it in a class or IIFE and accept that the class gets enormous; make it a package in a monorepo and accept the monorepo tooling; or use a linter like [dependency-cruiser](https://github.com/sverweij/dependency-cruiser) to forbid imports that bypass the interface. Of these mechanisms, Effect is the best and dependency-cruiser the second-best. There is a `setup-ts-deep-modules` skill in the repo's `in-progress/` bucket that lays down a `src/packages/<name>/index.ts` convention, but it is a beta-channel skill with no docs page, and it ships no lint rule.
+## 常見問題
 
-**I pointed a session at it and it burned 100k [tokens](https://www.aihero.dev/ai-coding-dictionary/token) redesigning things I never asked about.**
+**我實際上如何在 TypeScript 中建置一個 deep module？**
 
-This is a known problem, filed as [issue #449](https://github.com/mattpocock/skills/issues/449). The skill is model-invoked and describes itself as vocabulary, but nothing in it hard-stops an agent from treating it as a runnable process. Told to "resume in /codebase-design and drive the open decisions", an agent picked the part of the skill closest to a process: the parallel sub-agents in `DESIGN-IT-TWICE.md`. It re-explored code a previous session had already mapped, and worked for a long time before it asked anything. This skill has none of the guardrails a driver skill has (checkpoints, one question at a time, no auto-advance), because it is a reference. The workaround is to invoke a driver skill (`/grill-with-docs`, `/improve-codebase-architecture` or `/tdd`) and use `codebase-design` as its vocabulary. The issue is open.
+這是關於該 skill 最常被問到的問題，而該 skill 並不回答它。它定義了 deep module *是什麼*；它沒有說明如何阻止雜散的 import 到達 interface 之外。[Issue #458](https://github.com/mattpocock/skills/issues/458) 直言不諱地說："假設我們對 interface 感到滿意，它隱藏了細節等等。但我們如何強制執行它？我認為沒有 linting 或明確的護欄，人類和 LLM 都會隨著時間推移開始讓它變得混亂。" 該討論串中的答案提供了三個選項：將其包裝在類別或 IIFE 中，並接受類別變得巨大；將其作為 monorepo 中的套件，並接受 monorepo 工具鏈；或使用像 [dependency-cruiser](https://github.com/sverweij/dependency-cruiser) 這樣的 linter 來禁止繞過 interface 的 imports。在這些機制中，Effect 是最好的，dependency-cruiser 是第二好的。儲存庫的 `in-progress/` 桶中有一個 `setup-ts-deep-modules` skill，它制定了 `src/packages/<name>/index.ts` 慣例，但它是一個 beta 頻道的 skill，沒有檔案頁面，且不提供 lint 規則。
 
-**Where did `design-an-interface` go? And is there an `/interface-design` skill?**
+**我將一個 session 指向它，它燒掉了 100k [tokens](https://www.aihero.dev/ai-coding-dictionary/token) 重新設計我從未要求過的事情。**
 
-This skill replaced `design-an-interface` and took over its content. Nothing is missing. Its "design it twice" technique (parallel sub-agents generating radically different designs, from Ousterhout) ships here as `DESIGN-IT-TWICE.md`. Separately, several people have asked for a dedicated `/interface-design` skill for the deep-module/thin-interface philosophy; this skill already covers that philosophy, and no separate skill is planned. If you came looking for either name, this is the page.
+這是一個已知問題，已提交為 [issue #449](https://github.com/mattpocock/skills/issues/449)。該 skill 由模型呼叫，並自我描述為詞彙，但其中沒有任何內容能硬性阻止 agent 將其視為可執行的流程。當被指示「在 /codebase-design 中恢復並推動未決定的事項」時，agent 選擇了該 skill 中最接近流程的部分：`DESIGN-IT-TWICE.md` 中的平行 sub-agents。它重新探索了先前 session 已經對映的程式碼，並在詢問任何問題之前工作了很長時間。這個 skill 沒有 driver skill 所具備的任何護欄（檢查點、一次只問一個問題、不自動推進），因為它是一個參考。變通方法是呼叫一個 driver skill（`/grill-with-docs`、`/improve-codebase-architecture` 或 `/tdd`），並使用 `codebase-design` 作為其詞彙。該 issue 目前仍為開啟狀態。
 
-**Isn't this a file-structure convention, such as folders, barrel files, feature slices?**
+**`design-an-interface` 去哪了？是否有 `/interface-design` skill？**
 
-No. People have pushed back on this many times, and the skill has not changed. [Issue #95](https://github.com/mattpocock/skills/issues/95) proposed a formalised fractal-tree file structure as the concrete implementation of deep modules; the reply was that the two are independent: "deep modules are about the design of the interface and accessing through a strict interface, no matter what the file system looks like. It seems perfectly possible that you could have shallow modules with this approach." The same came up in #458: "I think you might be tying the concept of modules too closely to the file system. The file system can certainly be a useful hint to the shape of modules, but there's no need to use the file system in the construction of deep modules." The glossary defines **module** as scale-agnostic on purpose.
+這個 skill 取代了 `design-an-interface` 並接管了其內容。沒有遺失任何東西。它的「設計兩次」技術（平行 sub-agents 產生截然不同的設計，源自 Ousterhout）在此以 `DESIGN-IT-TWICE.md` 的形式提供。另外，許多人要求一個專門針對深模組/薄介面哲學的 `/interface-design` skill；這個 skill 已經涵蓋了該哲學，且沒有計劃建立獨立的 skill。如果你是在尋找這兩個名稱中的任何一個，這就是該頁面。
 
-**Does `tdd` actually use this vocabulary?**
+**這不是一種檔案結構慣例，例如資料夾、barrel files、feature slices 嗎？**
 
-It does now, but for a long time it did not. v1.0 removed the inline deep-module notes from `tdd` in favour of this shared skill, but nobody added a pointer to replace them, so `tdd` defined "seam" for itself and referenced nothing. The pointer is now in `tdd`, and the agent follows it when the open question is the shape of the interface, not the tests. `tdd` still owns "seam" as the boundary you *test* at; this skill owns the module shape behind it.
+不是。人們多次對此提出異議，但該 skill 並未改變。[Issue #95](https://github.com/mattpocock/skills/issues/95) 提出將正式的 fractal-tree 檔案結構作為深模組的具體實現；回覆指出兩者相互獨立：「深模組關於介面的設計以及透過嚴格介面進行存取，無論檔案系統看起來如何。採用這種方法擁有淺模組是完全可能的。」在 #458 中也出現了相同的觀點：「我認為你可能將模組的概念與檔案系統繫結得太緊了。檔案系統當然可以作為模組形狀的有用提示，但在建構深模組時，沒有必要使用檔案系統。」詞彙表刻意將 **module** 定義為與規模無關。
 
-**Does the design-it-twice pattern work outside Claude Code?**
+**`tdd` 實際上有使用這個詞彙嗎？**
 
-Not cleanly. `DESIGN-IT-TWICE.md` says "spawn 3+ sub-agents in parallel using the Agent tool", and "Agent" is the name of a Claude Code [tool](https://www.aihero.dev/ai-coding-dictionary/tool). The repo ships metadata for other [harnesses](https://www.aihero.dev/ai-coding-dictionary/harness), including Codex, and those may have no tool with that name. So the parallel-design phase is less portable than the skill's metadata suggests. [Issue #564](https://github.com/mattpocock/skills/issues/564) tracks this, and it is open.
+現在有，但有很長一段時間沒有。v1.0 從 `tdd` 中移除了內嵌的深模組註解，改以這個共用 skill 取代，但沒有人新增指標來取代它們，因此 `tdd` 自行定義了「seam」且未參考任何內容。指標現在位於 `tdd` 中，當未決定的問題是介面的形狀而非測試時，agent 會遵循它。`tdd` 仍然擁有「seam」作為你*測試*的邊界；這個 skill 擁有其背後的模組形狀。
 
-**Can I add my own concepts to the glossary, such as connascence, module secrets, [progressive disclosure](https://www.aihero.dev/ai-coding-dictionary/progressive-disclosure)?**
+**design-it-twice 模式在 Claude Code 之外有效嗎？**
 
-People have proposed those. [Issue #180](https://github.com/mattpocock/skills/issues/180) adds Parnas's module secrets and Page-Jones's connascence as a naming layer for *what* is leaking across a seam, with a working diff attached; [issue #303](https://github.com/mattpocock/skills/issues/303) proposes progressive disclosure inside the implementation, so a module that is deep at its public interface also has structure inside it. Both are open and unmerged. The shipped glossary is small on purpose, and the skill itself gives the reason: consistent language is the whole point, and a term nobody uses consistently is worse than no term.
+不完全是。`DESIGN-IT-TWICE.md` 說「使用 Agent 工具平行生成 3 個以上的 sub-agents」，而「Agent」是 Claude Code [tool](https://www.aihero.dev/ai-coding-dictionary/tool) 的名稱。該儲存庫為其他 [harnesses](https://www.aihero.dev/ai-coding-dictionary/harness) 提供了元資料，包括 Codex，而這些可能沒有該名稱的工具。因此，平行設計階段的可攜性不如該 skill 的元資料所暗示的那樣。[Issue #564](https://github.com/mattpocock/skills/issues/564) 追蹤此問題，且目前仍為開啟狀態。
 
-## It's working if
+**我可以將自己的概念新增到詞彙表中，例如 connascence、module secrets、[progressive disclosure](https://www.aihero.dev/ai-coding-dictionary/progressive-disclosure) 嗎？**
 
-- The design conversation stops producing the words "component", "service" and "boundary", and starts producing "module", "interface" and "seam".
-- Someone can point at a proposed extraction and say whether it passes the deletion test, without hedging.
-- A proposed seam comes with a second adapter named, not just the first one.
-- Discussion of an interface covers invariants, ordering and error modes, not only the type signature.
-- Invoking it does not start a session. If the agent begins reading files and proposing refactors from `/codebase-design` alone, it has mistaken the reference for a driver.
+人們曾提出這些建議。[Issue #180](https://github.com/mattpocock/skills/issues/180) 新增了 Parnas 的 module secrets 和 Page-Jones 的 connascence，作為*什麼*內容洩漏過 seam 的命名層，並附帶可用的 diff；[issue #303](https://github.com/mattpocock/skills/issues/303) 提出在實現內部進行 progressive disclosure，使得在公開介面上是深模組的模組，其內部也具有結構。兩者均為開啟狀態且未合併。發布的詞彙表刻意保持簡短，且該 skill 本身給出了原因：一致的語言是重點，而一個沒有人一致使用的術語比沒有術語更糟。
 
-## Where it fits
+<a id="its-working-if"></a>
 
-`codebase-design` is a **reach-for-it-anytime standalone**, and the vocabulary layer underneath the engineering skills rather than a step in any chain. Its closest neighbour is [domain-modeling](https://aihero.dev/skills-domain-modeling), the parallel reference for the *problem domain*'s words rather than the module's shape. The two are usually wanted together, since naming a deep module well needs both. [improve-codebase-architecture](https://aihero.dev/skills-improve-codebase-architecture) is the other: it surveys a codebase for deepening candidates and writes every one of them in this glossary, so it finds the module and you design it in this skill's words. When you're unsure which skill or flow fits, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.
+## 如果出現以下情況，則表示它正在運作
+
+- 設計對話不再產生「component」、「service」和「boundary」這些詞，而是開始產生「module」、「interface」和「seam」。
+- 有人可以指向一個建議的提取，並說明它是否透過刪除測試，而不需要含糊其辭。
+- 建議的 seam 會附上第二個介面卡的名稱，而不僅僅是第一個。
+- 介面的討論涵蓋不變數、順序和錯誤模式，而不僅僅是型別簽名。
+- 呼叫它不會啟動 session。如果 agent 僅從 `/codebase-design` 開始讀取檔案並提出重構，它已經將參考誤認為 driver。
+
+<a id="where-it-fits"></a>
+
+## 它適用的位置
+
+`codebase-design` 是一個**隨時可取的獨立專案**，是工程 skills 下方的詞彙層，而非任何鏈條中的一個步驟。它最接近的鄰居是 [domain-modeling](https://aihero.dev/skills-domain-modeling)，這是*問題領域*詞彙的平行參考，而非模組的形狀。兩者通常一起使用，因為良好地命名深模組需要兩者。[improve-codebase-architecture](https://aihero.dev/skills-improve-codebase-architecture) 是另一個：它調查程式碼庫以尋找深化候選者，並用這個詞彙表撰寫每一個，因此它找到模組，而你用這個 skill 的詞彙來設計它。當你不確定哪個 skill 或流程適合時，[ask-matt](https://aihero.dev/skills-ask-matt) 會為你導航。

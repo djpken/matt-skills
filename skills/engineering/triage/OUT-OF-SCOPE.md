@@ -1,11 +1,15 @@
-# Out-of-Scope Knowledge Base
+<a id="out-of-scope-knowledge-base"></a>
 
-The `.out-of-scope/` directory in a repo stores persistent records of rejected feature requests. It serves two purposes:
+# 範圍外知識庫
 
-1. **Institutional memory**: why a feature was rejected, so the reasoning isn't lost when the issue is closed
-2. **Deduplication**: when a new issue comes in that matches a prior rejection, the skill can surface the previous decision instead of re-litigating it
+儲存庫中的 `.out-of-scope/` 目錄用於儲存被拒絕的功能請求的持久化記錄。它有兩個用途：
 
-## Directory structure
+1. **機構記憶**：記錄功能被拒絕的原因，以便在問題關閉時不會遺失相關推理過程
+2. **去重**：當新的問題與先前的拒絕案例相符時，skill 可以顯示先前的決定，而不是重新爭論
+
+<a id="directory-structure"></a>
+
+## 目錄結構
 
 ```
 .out-of-scope/
@@ -14,11 +18,13 @@ The `.out-of-scope/` directory in a repo stores persistent records of rejected f
 └── graphql-api.md
 ```
 
-One file per **concept**, not per issue. Multiple issues requesting the same thing are grouped under one file.
+每個**概念**對應一個檔案，而非每個問題對應一個檔案。多個請求相同內容的問題會歸類在同一個檔案下。
 
-## File format
+<a id="file-format"></a>
 
-The file should be written in a relaxed, readable style, more like a short design document than a database entry. Use paragraphs, code samples, and examples to make the reasoning clear and useful to someone encountering it for the first time.
+## 檔案格式
+
+檔案應以輕鬆、易讀的風格撰寫，更像是一份簡短的設計檔案，而非資料庫條目。請使用段落、程式碼範例和示例，讓推理過程清晰且對初次接觸者有用。
 
 ```markdown
 # Dark Mode
@@ -39,9 +45,9 @@ project's focus on content authoring. Theming is a concern for downstream
 consumers who embed or redistribute the output.
 
 ```ts
-// The current ThemeConfig interface is not designed for runtime switching:
+// 目前的 ThemeConfig 介面並非為 runtime 切換而設計：
 interface ThemeConfig {
-  colors: ColorPalette; // single palette, resolved at build time
+  colors: ColorPalette; // 單一色盤，在 build time 解析
   fonts: FontStack;
 }
 ```
@@ -53,53 +59,63 @@ interface ThemeConfig {
 - #134: "Dark theme option"
 ```
 
-### Naming the file
+<a id="naming-the-file"></a>
 
-Use a short, descriptive kebab-case name for the concept: `dark-mode.md`, `plugin-system.md`, `graphql-api.md`. The name should be recognizable enough that someone browsing the directory understands what was rejected without opening the file.
+### 檔案命名
 
-### Writing the reason
+使用簡短且具描述性的 kebab-case 名稱來命名概念：`dark-mode.md`、`plugin-system.md`、`graphql-api.md`。名稱應足夠具辨識度，讓瀏覽目錄的人無需開啟檔案即可理解被拒絕的內容。
 
-The reason should be substantive: not "we don't want this" but why. Good reasons reference:
+<a id="writing-the-reason"></a>
 
-- Project scope or philosophy ("This project focuses on X; theming is a downstream concern")
-- Technical constraints ("Supporting this would require Y, which conflicts with our Z architecture")
-- Strategic decisions ("We chose to use A instead of B because...")
+### 撰寫原因
 
-The reason should be durable. Avoid referencing temporary circumstances ("we're too busy right now"); those aren't real rejections, they're deferrals.
+原因應具實質內容：不是「我們不想要這個」，而是為什麼。好的原因會參考：
 
-## When to check `.out-of-scope/`
+- 專案範圍或理念（「此專案專注於 X；主題設定是下游的關注點」）
+- 技術限制（「支援此功能需要 Y，這與我們的 Z 架構衝突」）
+- 策略決定（「我們選擇使用 A 而非 B，因為...」）
 
-During triage (Step 1: Gather context), read all files in `.out-of-scope/`. When evaluating a new issue:
+原因應具有永續性。避免引用暫時性的情況（「我們現在太忙了」）；這些不是真正的拒絕，而是延期。
 
-- Check if the request matches an existing out-of-scope concept
-- Matching is by concept similarity, not keyword: "night theme" matches `dark-mode.md`
-- If there's a match, surface it to the maintainer: "This is similar to `.out-of-scope/dark-mode.md`. We rejected this before because [reason]. Do you still feel the same way?"
+<a id="when-to-check-out-of-scope"></a>
 
-The maintainer may:
+## 何時檢查 `.out-of-scope/`
 
-- **Confirm**: the new issue gets added to the existing file's "Prior requests" list, then closed
-- **Reconsider**: the out-of-scope file gets deleted or updated, and the issue proceeds through normal triage
-- **Disagree**: the issues are related but distinct, proceed with normal triage
+在分診期間（步驟 1：收集背景資訊），請閱讀 `.out-of-scope/` 中的所有檔案。在評估新問題時：
 
-## When to write to `.out-of-scope/`
+- 檢查請求是否與現有的範圍外概念相符
+- 匹配是基於概念相似性，而非關鍵字：「夜間主題」與 `dark-mode.md` 相符
+- 如果有匹配，請向維護者顯示：「這與 `.out-of-scope/dark-mode.md` 類似。我們之前拒絕了此功能，因為 [原因]。您現在的看法是否相同？」
 
-Only when an **enhancement** (not a bug) is *rejected* as `wontfix`. This applies to enhancement PRs exactly as it does to issues: a rejected PR is recorded here so the same request doesn't return as fresh code.
+維護者可能會：
 
-Do **not** write here when something is closed as `wontfix` because it's **already implemented**. That's a built feature, not a rejected one; recording it would poison the dedup checks with false rejections. Instead, the closing comment points to where the feature already lives.
+- **確認**：新問題會被加入現有檔案的「先前請求」清單，然後關閉
+- **重新考慮**：範圍外檔案會被刪除或更新，問題將進入正常的分診流程
+- **不同意**：問題相關但不同，繼續進行正常的分診
 
-The flow:
+<a id="when-to-write-to-out-of-scope"></a>
 
-1. Maintainer decides a feature request is out of scope
-2. Check if a matching `.out-of-scope/` file already exists
-3. If yes: append the new issue to the "Prior requests" list
-4. If no: create a new file with the concept name, decision, reason, and first prior request
-5. Post a comment on the issue explaining the decision and mentioning the `.out-of-scope/` file
-6. Close the issue with the `wontfix` label
+## 何時寫入 `.out-of-scope/`
 
-## Updating or removing out-of-scope files
+僅當**增強功能**（非 bug）被*拒絕*為 `wontfix` 時。這同樣適用於增強功能的 PR：被拒絕的 PR 會記錄在此處，以便相同的請求不會以新的程式碼形式再次出現。
 
-If the maintainer changes their mind about a previously rejected concept:
+當某項內容因**已實作**而關閉為 `wontfix` 時，請**不要**在此處寫入。那是已建置的功能，而非被拒絕的功能；記錄它會以虛假拒絕汙染去重檢查。相反地，關閉評論應指向該功能已存在的位置。
 
-- Delete the `.out-of-scope/` file
-- The skill does not need to reopen old issues; they're historical records
-- The new issue that triggered the reconsideration proceeds through normal triage
+流程：
+
+1. 維護者決定功能請求超出範圍
+2. 檢查是否已存在匹配的 `.out-of-scope/` 檔案
+3. 如果有：將新問題附加到「先前請求」清單
+4. 如果沒有：建立新檔案，包含概念名稱、決定、原因和第一個先前請求
+5. 在問題上發布評論，解釋決定並提及 `.out-of-scope/` 檔案
+6. 使用 `wontfix` 標籤關閉問題
+
+<a id="updating-or-removing-out-of-scope-files"></a>
+
+## 更新或移除範圍外檔案
+
+如果維護者改變了對先前被拒絕概念的立場：
+
+- 刪除 `.out-of-scope/` 檔案
+- skill 不需要重新開啟舊問題；它們是歷史記錄
+- 觸發重新考慮的新問題將進入正常的分診流程

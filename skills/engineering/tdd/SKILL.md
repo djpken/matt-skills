@@ -1,38 +1,48 @@
 ---
 name: tdd
-description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+description: "測試驅動開發。當使用者希望以測試優先的方式建置功能或修復錯誤、提及「紅綠重構」，或需要整合測試時使用。"
 ---
 
-# Test-Driven Development
+<a id="test-driven-development"></a>
 
-TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle: consult them before and during the loop, not after.
+# 測試驅動開發
 
-When exploring the codebase, read `GLOSSARY.md` (if it exists) so test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
+TDD 是紅 → 綠迴圈。此技能是讓該迴圈產出值得保留之測試的參考指南：說明何為良好測試、測試應放置的位置、反模式，以及迴圈的規則。每個章節在每個迴圈中皆適用：請在迴圈開始前及進行中參閱，而非事後才看。
 
-## What a good test is
+在探索程式碼庫時，請閱讀 `GLOSSARY.md`（若存在），以確保測試名稱與介面詞彙符合專案的領域語言，並尊重您所修改區域中的 ADR。
 
-Tests verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't. A good test reads like a specification: "user can checkout with valid cart" tells you exactly what capability exists, and it survives refactors because it doesn't care about internal structure.
+<a id="what-a-good-test-is"></a>
 
-See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
+## 何為良好測試
 
-## Seams: where tests go
+測試透過公開介面驗證行為，而非實作細節。程式碼可以完全改變；測試則不應改變。良好的測試讀起來像規格說明：「使用者可以使用有效購物車結帳」明確告知存在何種功能，且由於不關註內部結構，故能存活於重構之中。
 
-A **seam** is the public boundary you test at: the interface where you observe behavior without reaching inside. Tests live at seams, never against internals.
+請參閱 [tests.md](tests.md) 以檢視範例，並參閱 [mocking.md](mocking.md) 以瞭解模擬指南。
 
-**Test only at pre-agreed seams.** Before writing any test, write down the seams under test and confirm them with the user. No test is written at an unconfirmed seam. You can't test everything, so agreeing the seams up front is how testing effort lands on the critical paths and complex logic instead of every edge case.
+<a id="seams-where-tests-go"></a>
 
-Ask: "What's the public interface, and which seams should we test?" Give each proposed seam a one-line note on what it catches and what it misses.
+## 縫合點：測試放置的位置
 
-When the shape of that interface is itself in question (how deep the module is, where the seam belongs, what the interface should expose), call the Skill tool with "codebase-design" for the vocabulary. It is the shared source of the module, interface, depth, seam, adapter, leverage and locality terms, and it is a reference to consult, not a session to run.
+**縫合點**是您進行測試的公開邊界：即在不深入內部的情況下觀察行為的介面。測試應位於縫合點，絕不針對內部實作。
 
-## Anti-patterns
+**僅在預先協定的縫合點進行測試。** 在撰寫任何測試之前，請先列出待測的縫合點並與使用者確認。不得在未經確認的縫合點撰寫測試。您無法測試所有專案，因此事先協定縫合點可確保測試精力集中在關鍵路徑與複雜邏輯上，而非每個邊緣案例。
 
-- **Implementation-coupled**: mocks internal collaborators, tests private methods, or verifies through a side channel (querying the database instead of using the interface). The tell: the test breaks when you refactor but behavior hasn't changed.
-- **Tautological**: the assertion recomputes the expected value the way the code does (`expect(add(a, b)).toBe(a + b)`, a snapshot derived by hand the same way, a constant asserted equal to itself), so it passes by construction and can never disagree with the code. Expected values must come from an independent source of truth: a known-good literal, a worked example, the spec.
-- **Horizontal slicing**: writing all tests first, then all implementation. Bulk tests verify _imagined_ behavior: you test the _shape_ of things rather than user-facing behavior, the tests go insensitive to real changes, and you commit to test structure before understanding the implementation. Work in **vertical slices** instead: one test → one implementation → repeat, each test a **tracer bullet** that responds to what the last cycle taught you.
+請詢問：「公開介面是什麼？我們應該測試哪些縫合點？」為每個建議的縫合點附上一行說明，指出它能捕捉什麼，以及會遺漏什麼。
 
-## Rules of the loop
+當該介面的形狀本身存在疑問時（例如模組的深度、縫合點應屬何處、介面應公開哪些內容），請呼叫 Skill 工具並輸入「codebase-design」以取得詞彙。它是模組、介面、深度、縫合點、介面卡、槓桿與區域性性等術語的共同來源，且是供參閱的參考資料，而非需執行的工作階段。
 
-- **Red before green.** Write the failing test first, then only enough code to pass it. Don't anticipate future tests or add speculative features.
-- **One slice at a time.** One seam, one test, one minimal implementation per cycle.
-- **Refactoring is not part of the loop.** It belongs to the review stage (see the `code-review` skill), not the red → green implementation cycle.
+<a id="anti-patterns"></a>
+
+## 反模式
+
+- **與實作耦合**：模擬內部協作者、測試私有方法，或透過旁路驗證（例如查詢資料庫而非使用介面）。特徵：當您重構但行為未變時，測試會失敗。
+- **同義反覆**：斷言以與程式碼相同的方式重新計算預期值（`expect(add(a, b)).toBe(a + b)`、以相同方式手動匯出的快照、斷言常數等於自身），因此它天生就會透過，且永遠不會與程式碼產生分歧。預期值必須來自獨立的真實來源：已知的正確字面值、演算範例、規格說明。
+- **水平切片**：先撰寫所有測試，再撰寫所有實作。批次測試驗證的是_想像中_的行為：您測試的是事物的_形狀_，而非使用者可見的行為，測試對實際變更變得不敏感，且在理解實作之前就承諾了測試結構。請改用**垂直切片**：一個測試 → 一個實作 → 重複，每個測試都是一發**曳光彈**，回應上一個迴圈所教給您的內容。
+
+<a id="rules-of-the-loop"></a>
+
+## 迴圈的規則
+
+- **先紅後綠。** 先撰寫失敗的測試，然後僅撰寫足以透過該測試的程式碼。不要預先規劃未來的測試或加入投機性功能。
+- **一次一個切片。** 每個迴圈中：一個縫合點、一個測試、一個最小實作。
+- **重構不屬於迴圈的一部分。** 它屬於審查階段（請參閱 `code-review` 技能），而非紅 → 綠實作迴圈。

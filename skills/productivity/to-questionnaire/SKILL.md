@@ -1,54 +1,64 @@
 ---
 name: to-questionnaire
-description: Turn a decision you can't fully answer into a questionnaire for someone else to fill in.
+description: "將一個你無法完全回答的決策，轉化為一份供他人填寫的問卷。"
 disable-model-invocation: true
 ---
 
-Turn something the user can't answer alone into a **questionnaire**: a Markdown document they hand to one person to fill in async, or fill out together over a meeting. The recipient holds knowledge the user lacks; the questionnaire pulls it out of them.
+將使用者無法獨自回答的事項轉化為一份**問卷**：這是一份 Markdown 檔案，使用者可交給一個人非同步填寫，或在會議中共同填寫。接收者擁有使用者缺乏的知識；問卷的目的是從他們那裡提取這些知識。
 
-**Grill the send, not the subject.** Interview the user only about the _send_, which they can always answer: who it goes to, and what they need back. The questions in the document then target the **gap** between what the recipient knows and what the user needs.
+**審問傳送物件，而非主題本身。** 僅就_傳送_一事訪談使用者，因為他們總能回答：傳送給誰，以及需要對方回饋什麼。檔案中的問題應針對接收者所知與使用者所需之間的**差距**。
 
 
-1. **Who is it going to?** Ask, in one exchange, the recipient's role, expertise, and relationship to the user. This fixes the questionnaire's tone and how much context it must carry. Done when you know who the recipient is and what they know that the user doesn't.
+1. **傳送給誰？** 在一次互動中詢問接收者的角色、專業領域以及與使用者的關係。這將決定問卷的語氣以及需要包含多少背景資訊。當你知道接收者是誰，以及他們知道哪些使用者不知道的事時，即為完成。
 
-2. **What do you need back?** Ask, in one exchange, the specific decisions or facts the user can't resolve alone and needs from this person. Done when you have a concrete list of what the user must walk away able to do or decide.
+2. **你需要什麼回饋？** 在一次互動中詢問使用者無法獨自解決、且需要從此人處獲得的具體決策或事實。當你擁有一份具體清單，列出使用者離開後必須能夠執行或決策的事項時，即為完成。
 
-3. **Write the questionnaire.** Draft questions aimed at the gap from steps 1–2, following the Document structure below. Write it to `to-questionnaire-<slug>.md` in the current directory (slug from the topic) and report the path. Done when the file exists and every item the user named in step 2 is covered by a question.
+3. **撰寫問卷。** 根據步驟 1–2 中的差距擬定問題，並遵循下方的檔案結構。將其寫入目前目錄中的 `to-questionnaire-<slug>.md`（從主題生成的 slug），並回報路徑。當檔案存在，且步驟 2 中使用者提到的每一項內容都有對應的問題時，即為完成。
 
-## Document structure
+<a id="document-structure"></a>
 
-Frame the document as a **discovery questionnaire**: the user lacks context, the recipient holds it. Order questions most-important-first, since async means you may only get one pass, and group them under `##` headings by theme once there are more than a handful. Write it using the template below.
+## 檔案結構
+
+將檔案定位為一份**探索性問卷**：使用者缺乏背景資訊，而接收者擁有這些資訊。由於非同步溝通可能只有一次機會，請將問題依重要性排序，並在問題數量超過少數幾題時，依主題分組於 `##` 標題下。請使用下方的範本進行撰寫。
 
 <questionnaire-template>
 
 # <Questionnaire title>
 
-**Purpose:** why this questionnaire exists and the decision riding on it.
+**目的：** 說明此問卷存在的原因，以及依賴此問卷做出的決策。
 
-**From:** <the user>, **To:** <the recipient>, **How your answers will be used:** <where they go>
+**寄件人：** <the user>，**收件人：** <the recipient>，**你的回答將如何使用：** <where they go>
 
-## Context
+<a id="context"></a>
 
-One paragraph orienting a recipient who wasn't in the user's head. Enough to answer well, not a page.
+## 背景
 
-## How to answer
+一段簡短的文字，讓未參與使用者思考過程的接收者能理解脈絡。內容需足以讓對方良好作答，但不必長達一頁。
 
-Deadline and rough effort. Partial answers and "I don't know" are useful: flag anything you're unsure of rather than skipping it.
+<a id="how-to-answer"></a>
+
+## 作答方式
+
+截止日期與大致所需時間。部分答案與「我不知道」都有價值：請標記任何你不確定的專案，而非直接略過。
 
 ## <Theme heading>
 
-One `##` section per theme. Under each, its questions, most-important-first. Every question is one idea, never compound, with an answer stub directly beneath, and a one-line _why this matters_ only where the question could be misread or invite a throwaway answer.
+每個主題對應一個 `##` 章節。在每個章節下，依重要性排序列出問題。每個問題只包含一個概念，絕不複合，並在問題正下方提供作答欄位。僅在問題可能被誤解或容易得到敷衍回答時，才附加一行_為何重要_的說明。
 
 <question-example>
-### What load is the system expected to handle at launch?
+<a id="what-load-is-the-system-expected-to-handle-at-launch"></a>
 
-_Why this matters: it decides whether we provision for burst traffic now or defer it._
+### 系統在啟動時預期要處理多少負載？
+
+_為何重要：這決定了我們現在是否為突發流量進行資源設定，還是延後處理。_
 
 >
 </question-example>
 
-## Anything else?
+<a id="anything-else"></a>
 
-A closing catch-all: anything we didn't ask that we should know?
+## 還有其他事項嗎？
+
+結尾的兜底問題：還有什麼我們沒問但應該知道的事嗎？
 
 </questionnaire-template>

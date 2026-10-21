@@ -1,44 +1,52 @@
 ---
 name: retro
-description: "Conduct a retrospective on a coding session."
+description: "對一次程式碼編寫工作階段進行回顧。"
 disable-model-invocation: true
 ---
 
-The user has asked for a **retrospective**. You are suggesting improvements to the coding agent's **environment** to improve future runs.
+使用者要求進行**回顧**。您正在建議改進編碼代理的**環境**，以提升未來執行的效能。
 
-## Steps
+<a id="steps"></a>
 
-1. Call the Skill tool with `writing-for-agents` for the writing style guide.
+## 步驟
 
-2. Read the primary sources for the session the user specifies. This may mean searching through session logs on this machine. If the user doesn't specify a session, default to the current one.
+1. 呼叫 Skill 工具並使用 `writing-for-agents` 來取得寫作風格指南。
 
-3. Look for candidates for improvement in these categories.
+2. 讀取使用者指定的工作階段的主要來源。這可能意味著需要搜尋本機上的工作階段記錄。如果使用者未指定工作階段，則預設為目前的工作階段。
 
-- **Navigation**: how easy was it for the agent to find the right files? Are there hidden dependencies between files? Would a **navigation pointer** make it easier? _Use when_ the session took a long time to find a piece of information.
-- **Automated checks**: are there automated checks that could catch errors the agent made? Linting, typing, tests, filesystem linters? Read the repo's own check command first (its `package.json`/build-tool `lint`/`check` scripts, its CI workflow), so a check that already exists but sits unwired or silently broken is the finding, not a reinvention. A repo with no **guardrail** (no pre-commit hook and no CI job running its lint/typecheck/test command) is itself a finding: an un-linted repo is a standing missed opportunity, not a neutral default. _Use when_ the agent made a mistake an automated check could have caught, or the repo has no guardrail at all.
-- **Coding standards**: should the **reviewer agent** be given a new rule to enforce? Should an existing rule be removed or clarified? Classify the violation first: a **mechanical** one (a fixed syntactic pattern, a banned API, an import shape, a file-location rule) gets a deterministic check, full stop: a custom rule in the repo's own linter, a new pre-commit hook, or a new CI job, whichever the repo's language and existing guardrail make cheapest. Default to building the check over writing the rule. Reserve `CODING_STANDARDS.md` for genuine **judgement calls** (cross-file consistency, "matches the surrounding style," anything no guardrail could ever substitute for). _Use when_ the reviewer agent failed to catch a mistake.
-- **Global AGENTS.md**: are there any steering instructions that should be moved to coding standards (or automated checks) instead? _Use when_ the AGENTS.md file is particularly large - in the repo OR the user's global scope.
-- **Tool economy**: did the agent make expensive tool calls that could be streamlined? Is there any custom tooling (CLI's, MCP's) that is particularly token-inefficient? _Use when_ the agent made an expensive tool call.
-- **No-ops**: look for instructions in steering files that don't modify the agent's behavior. _Use when_ the steering files are large and unwieldy.
-- **Information access**: look for opportunities to increase the agent's access to information. Teeing dev server logs, readonly access to third-party services. _Use when_ a crucial piece of information was not available to the agent.
+3. 在以下類別中尋找改進的候選專案。
 
-4. Present these candidates to the user, in order of severity.
+- **導航**：代理找到正確檔案的難度如何？檔案之間是否存在隱藏的相依性？加入**導航指標**是否會更容易？_使用時機_：當工作階段花費大量時間尋找某項資訊時。
+- **自動化檢查**：是否有自動化檢查可以捕捉代理所犯的錯誤？Linting、型別檢查、測試、檔案系統 linter？請先讀取儲存庫自有的檢查指令（其 `package.json`/build-tool `lint`/`check` 指令碼及其 CI 工作流程），因此，如果已存在但尚未連線或靜默損壞的檢查，那就是發現的問題，而非重新發明。一個沒有**護欄**（沒有 pre-commit hook，也沒有執行其 lint/typecheck/test 指令的 CI 工作）的儲存庫本身也是一個發現：未進行 linting 的儲存庫是一個持續錯失的機會，而非中性的預設值。_使用時機_：當代理犯了自動化檢查本可捕捉的錯誤，或儲存庫完全沒有護欄時。
+- **編碼標準**：是否應該為**審查代理**提供新的規則以強制執行？是否應該移除或釐清現有規則？請先對違規行為進行分類：**機械性**違規（固定的語法模式、禁止使用的 API、import 結構、檔案位置規則）應採用確定性檢查，沒有例外：在儲存庫自有的 linter 中建立自訂規則、新增 pre-commit hook，或新增 CI 工作，取決於儲存庫的語言和現有護欄何者成本最低。預設優先建立檢查，而非撰寫規則。僅將 `CODING_STANDARDS.md` 保留給真正的**判斷決策**（跨檔案一致性、「與周圍風格相符」、任何護欄永遠無法取代的事項）。_使用時機_：當審查代理未能捕捉到錯誤時。
+- **全域 AGENTS.md**：是否有任何引導指令應該移至編碼標準（或自動化檢查）中？_使用時機_：當 AGENTS.md 檔案特別大時，無論是在儲存庫中還是使用者的全域範圍內。
+- **工具經濟性**：代理是否進行了可以簡化的昂貴工具呼叫？是否有任何自訂工具（CLI、MCP）特別缺乏 token 效率？_使用時機_：當代理進行了昂貴的工具呼叫時。
+- **無效操作**：尋找引導檔案中不會改變代理行為的指令。_使用時機_：當引導檔案龐大且難以管理時。
+- **資訊存取**：尋找增加代理資訊存取機會的方法。例如 tee 開發伺服器記錄、對第三方服務進行唯讀存取。_使用時機_：當關鍵資訊對代理不可用時。
 
-## Reference
+4. 按嚴重程度順序向使用者呈現這些候選專案。
 
-### Implementation vs Review
+<a id="reference"></a>
 
-Remember that all work goes through two stages: implementation and review. The implementation agent has the most **context pressure**. They are responsible for exploration, writing code, and debugging failures.
+## 參考
 
-The review agent has the least context pressure - it receives a diff, so no exploration needed. It often does not need to write code or debug.
+<a id="implementation-vs-review"></a>
 
-This means that the review agent should be responsible for imposing coding standards, not the implementation agent.
+### 實作與審查
 
-### Files
+請記住，所有工作都經過兩個階段：實作與審查。實作代理面臨最大的**上下文壓力**。他們負責探索、撰寫程式碼以及除錯失敗。
 
-You have access to several files in the repo:
+審查代理面臨的上下文壓力最小，因為它接收的是 diff，因此不需要探索。它通常不需要撰寫程式碼或除錯。
 
-- `CLAUDE.md`/`AGENTS.md`: these files are pushed to the context window of any agent working in this repo. They should be used incredibly sparingly, usually only for **navigation pointers** to other files.
-- `CODING_STANDARDS.md`: this file is read during review, not implementation. Add **navigation pointers** to docs folders if the standards file gets more than 1,000 lines long.
-- Docs: use docs as references files, pointed to by other files. Look for existing docs before writing new ones.
-- Skills: use skills for docs (since their description goes into the agent's context window), or for user-invoked commands. Follow the advice in the `writing-for-agents` skill.
+這意味著審查代理應負責強制執行編碼標準，而非實作代理。
+
+<a id="files"></a>
+
+### 檔案
+
+您可以存取儲存庫中的多個檔案：
+
+- `CLAUDE.md`/`AGENTS.md`：這些檔案會推送到在此儲存庫中工作的任何代理的上下文視窗中。應極度節制地使用這些檔案，通常僅用於指向其他檔案的**導航指標**。
+- `CODING_STANDARDS.md`：此檔案在審查期間讀取，而非在實作期間。如果標準檔案超過 1,000 行，請在 docs 資料夾中加入**導航指標**。
+- Docs：將 docs 用作參考檔案，由其他檔案指向。在撰寫新檔案之前，請先尋找現有的檔案。
+- Skills：使用 skills 來存放檔案（因為其描述會進入代理的上下文視窗），或用於使用者呼叫的指令。請遵循 `writing-for-agents` skill 中的建議。

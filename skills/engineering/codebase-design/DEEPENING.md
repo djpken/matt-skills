@@ -1,37 +1,53 @@
-# Deepening
+<a id="deepening"></a>
 
-How to deepen a cluster of shallow modules safely, given its dependencies. Assumes the vocabulary in [SKILL.md](SKILL.md): **module**, **interface**, **seam**, **adapter**.
+# 深化
 
-## Dependency categories
+在已知相依性的情況下，如何安全地深化一組淺層模組。假設已熟悉 [SKILL.md](SKILL.md): **模組**、**介面**、**縫隙**、**介面卡** 的詞彙。
 
-When assessing a candidate for deepening, classify its dependencies. The category determines how the deepened module is tested across its seam.
+<a id="dependency-categories"></a>
 
-### 1. In-process
+## 相依性分類
 
-Pure computation, in-memory state, no I/O. Always deepenable: merge the modules and test through the new interface directly. No adapter needed.
+在評估深化候選專案時，請對其相依性進行分類。該分類決定了深化後的模組如何透過其縫隙進行測試。
 
-### 2. Local-substitutable
+<a id="1-in-process"></a>
 
-Dependencies that have local test stand-ins (PGLite for Postgres, in-memory filesystem). Deepenable if the stand-in exists. The deepened module is tested with the stand-in running in the test suite. The seam is internal; no port at the module's external interface.
+### 1. 程式內
 
-### 3. Remote but owned (Ports & Adapters)
+純計算、記憶體狀態、無 I/O。永遠可以深化：合併這些模組，並直接透過新介面進行測試。不需要介面卡。
 
-Your own services across a network boundary (microservices, internal APIs). Define a **port** (interface) at the seam. The deep module owns the logic; the transport is injected as an **adapter**. Tests use an in-memory adapter. Production uses an HTTP/gRPC/queue adapter.
+<a id="2-local-substitutable"></a>
 
-Recommendation shape: *"Define a port at the seam, implement an HTTP adapter for production and an in-memory adapter for testing, so the logic sits in one deep module even though it's deployed across a network."*
+### 2. 本地可替換
 
-### 4. True external (Mock)
+具有本地測試替代品的相依性（例如 Postgres 的 PGLite、記憶體檔案系統）。若替代品存在，則可以深化。深化後的模組會在測試套件中搭配該替代品執行來進行測試。縫隙位於內部；模組的外部介面不需要 port。
 
-Third-party services (Stripe, Twilio, etc.) you don't control. The deepened module takes the external dependency as an injected port; tests provide a mock adapter.
+<a id="3-remote-but-owned-ports--adapters"></a>
 
-## Seam discipline
+### 3. 遠端但自有（Ports & Adapters）
 
-- **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a port unless at least two adapters are justified (typically production + test). A single-adapter seam is just indirection.
-- **Internal seams vs external seams.** A deep module can have internal seams (private to its implementation, used by its own tests) as well as the external seam at its interface. Don't expose internal seams through the interface just because tests use them.
+跨越網路邊界的自有服務（微服務、內部 API）。在縫隙處定義一個 **port**（介面）。深層模組擁有邏輯；傳輸層作為 **adapter** 注入。測試使用記憶體介面卡。生產環境使用 HTTP/gRPC/佇列介面卡。
 
-## Testing strategy: replace, don't layer
+建議格式：*「在縫隙處定義一個 port，為生產環境實作 HTTP 介面卡，為測試實作記憶體介面卡，這樣即使部署跨越網路，邏輯仍位於一個深層模組中。」*
 
-- Old unit tests on shallow modules become waste once tests at the deepened module's interface exist; delete them.
-- Write new tests at the deepened module's interface. The **interface is the test surface**.
-- Tests assert on observable outcomes through the interface, not internal state.
-- Tests should survive internal refactors, since they describe behaviour, not implementation. If a test has to change when the implementation changes, it's testing past the interface.
+<a id="4-true-external-mock"></a>
+
+### 4. 真正外部（Mock）
+
+您無法控制的第三方服務（如 Stripe、Twilio 等）。深化後的模組將外部相依性作為注入的 port 接收；測試提供 mock 介面卡。
+
+<a id="seam-discipline"></a>
+
+## 縫隙紀律
+
+- **一個介面卡代表假想的縫隙。兩個介面卡代表真實的縫隙。** 除非至少兩個介面卡有正當理由（通常是生產環境 + 測試），否則不要引入 port。單一介面卡的縫隙只是間接層。
+- **內部縫隙與外部縫隙。** 深層模組可以擁有內部縫隙（私有於其實作，供其自身測試使用），也可以擁有位於其介面的外部縫隙。不要僅因為測試使用內部縫隙，就將其透過介面暴露出來。
+
+<a id="testing-strategy-replace-dont-layer"></a>
+
+## 測試策略：取代，而非堆疊
+
+- 一旦存在深化後模組介面的測試，針對淺層模組的舊單元測試就會變成浪費；請刪除它們。
+- 在深化後模組的介面處撰寫新測試。**介面即測試表面**。
+- 測試應透過介面斷言可觀察的結果，而非內部狀態。
+- 測試應能存活於內部重構，因為它們描述的是行為，而非實作。如果實作變更時測試必須跟著變更，代表它測試的是介面之外的內容。

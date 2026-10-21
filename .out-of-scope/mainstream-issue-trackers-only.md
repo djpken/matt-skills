@@ -1,23 +1,29 @@
-# Issue tracker integrations: GitHub, GitLab and local markdown only
+<a id="issue-tracker-integrations-github-gitlab-and-local-markdown-only"></a>
 
-`setup-matt-pocock-skills` offers first-class support for exactly three issue trackers, one per seed template in `skills/engineering/setup-matt-pocock-skills/`:
+# 問題追蹤器整合：僅支援 GitHub、GitLab 和本地 markdown
 
-- **GitHub** (`issue-tracker-github.md`, via `gh`)
-- **GitLab** (`issue-tracker-gitlab.md`, via `glab`)
-- **Local markdown** (`issue-tracker-local.md`, files under `.scratch/`)
+`setup-matt-pocock-skills` 為 `skills/engineering/setup-matt-pocock-skills/` 中的每個種子範本提供恰好三個問題追蹤器的一級支援：
 
-Requests to add a first-class backend for any other tracker are out of scope. That includes Jira, Linear, Azure DevOps, Trello, YouTrack, and new agent-focused trackers.
+- **GitHub**（`issue-tracker-github.md`，透過 `gh`）
+- **GitLab**（`issue-tracker-gitlab.md`，透過 `glab`）
+- **本地 markdown**（`issue-tracker-local.md`，位於 `.scratch/` 下的檔案）
 
-## Why this is out of scope
+要求為任何其他追蹤器新增一級後端的功能不在範圍內。這包括 Jira、Linear、Azure DevOps、Trello、YouTrack，以及新的以 agent 為中心的追蹤器。
 
-Every issue-tracker backend hard-codes a CLI shape into the skills (commands, flags, output parsing). Each new backend is permanent maintenance surface, because it has to keep working as the tool's CLI evolves, and it has to keep being tested against `/to-spec`, `/to-tickets`, `/triage`, and friends. I use GitHub, so that's the backend I can actually keep correct. GitLab is close enough in shape to ride along, and local markdown needs no CLI at all.
+<a id="why-this-is-out-of-scope"></a>
 
-Popularity doesn't change this. Jira is widely used and has an official CLI (`acli`), and it still isn't getting a template: it's a backend I don't run, with its own link semantics, workflow states and CLI quirks to keep tested. The cost lands on me whether or not the tool is mainstream.
+## 為何此功能不在範圍內
 
-Every other tracker goes through the **Other** option in `/setup-matt-pocock-skills`: you describe your workflow in a paragraph and the skill records it as prose in `docs/agents/issue-tracker.md`. That file is yours. If you've refined a Jira or Linear workflow that works, keep it in your own repo or publish it, and point the setup at it.
+每個問題追蹤器後端都會將 CLI 結構硬編碼到 skills 中（指令、旗標、輸出解析）。每個新後端都是永久性的維護負擔，因為它必須隨著工具的 CLI 演進而持續運作，並必須持續針對 `/to-spec`、`/to-tickets`、`/triage` 等工具進行測試。我使用 GitHub，因此那是我實際能保持正確的後端。GitLab 的結構足夠接近，可以順帶支援，而本地 markdown 則完全不需要 CLI。
 
-## Prior requests
+流行度不會改變這一點。Jira 被廣泛使用，並擁有官方 CLI（`acli`），但它仍然不會獲得範本：它是一個我不執行的後端，具有自己的連結語意、工作流程狀態和 CLI 怪癖，需要持續測試。無論該工具是否主流，成本都由我承擔。
 
-- #99: "Add dex as an issue tracker backend" (dex was ~3 months old and ~300 stars at the time of the request)
-- #258: "Add Jira as first-class issue tracker via Rovo MCP"
-- #1137: "Add Jira as a first-class issue tracker, via Atlassian's official CLI (`acli`)"
+所有其他追蹤器都透過 `/setup-matt-pocock-skills` 中的 **Other** 選項處理：你用一段文字描述你的工作流程，skill 會將其記錄為 `docs/agents/issue-tracker.md` 中的散文。該檔案屬於你。如果你已經完善了一個可行的 Jira 或 Linear 工作流程，請將其保留在你自己的儲存庫中或發布出來，並讓設定指向它。
+
+<a id="prior-requests"></a>
+
+## 先前的請求
+
+- #99：「新增 dex 作為問題追蹤器後端」（提出請求時，dex 約有 3 個月歷史，約 300 顆星）
+- #258：「透過 Rovo MCP 新增 Jira 作為一級問題追蹤器」
+- #1137：「透過 Atlassian 官方 CLI（`acli`）新增 Jira 作為一級問題追蹤器」

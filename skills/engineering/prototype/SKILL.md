@@ -1,26 +1,32 @@
 ---
 name: prototype
-description: Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.
+description: "建立一個一次性原型來回答設計問題。當使用者想要確認狀態模型或邏輯是否合理，或探索 UI 應該長什麼樣子時使用。"
 ---
 
-# Prototype
+<a id="prototype"></a>
 
-A prototype is **throwaway code that answers a question**. The question decides the shape.
+# 原型
 
-## Pick a branch
+原型是**用來回答問題的一次性程式碼**。問題決定了原型的形態。
 
-Identify which question is being answered, using the user's prompt, the surrounding code, or by asking if the user is around:
+<a id="pick-a-branch"></a>
 
-- **"Does this logic / state model feel right?"** → [LOGIC.md](LOGIC.md). Build a single shareable HTML file (free-play buttons plus tabbed guided walkthroughs) that pushes the state machine through cases that are hard to reason about on paper, and that a non-developer can drive.
-- **"What should this look like?"** → [UI.md](UI.md). Generate several radically different UI variations on a single route, switchable via a URL search param and a floating bottom bar.
+## 選擇分支
 
-The two branches produce very different artifacts, so getting this wrong wastes the whole prototype. If the question is genuinely ambiguous and the user isn't reachable, default to whichever branch better matches the surrounding code (a backend module → logic; a page or component → UI) and state the assumption at the top of the prototype.
+根據使用者的提示、周圍的程式碼，或在使用者線上時詢問，來識別正在回答的問題：
 
-## Rules that apply to both
+- **「這個邏輯 / 狀態模型感覺對嗎？」** → [LOGIC.md](LOGIC.md)。建立一個可分享的單一 HTML 檔案（包含自由操作按鈕以及分頁式引導流程），讓狀態機經過那些在紙上難以推理的案例，並讓非開發人員也能操作。
+- **「這個應該長什麼樣子？」** → [UI.md](UI.md)。在單一路由上生成幾個截然不同的 UI 變體，可透過 URL 查詢引數和浮動底欄切換。
 
-1. **Throwaway from day one, and clearly marked as such.** Locate the prototype code close to where it will actually be used (next to the module or page it's prototyping for) so context is obvious, but name it so a casual reader can see it's a prototype, not production. For throwaway UI routes, obey whatever routing convention the project already uses; don't invent a new top-level structure.
-2. **Trivial to run.** A UI prototype starts from one command in the project's task runner: `pnpm <name>`, `python <path>`, `bun <path>`, etc. A logic demo is a single HTML file the user double-clicks. Either way, no thinking required to start it.
-3. **No persistence by default.** State lives in memory. Persistence is the thing the prototype is _checking_, not something it should depend on. If the question explicitly involves a database, hit a scratch DB or a local file with a clear "PROTOTYPE, wipe me" name.
-4. **Skip the polish.** No tests, no error handling beyond what makes the prototype _runnable_, no abstractions. The point is to learn something fast.
-5. **Surface the state.** After every action (logic) or on every variant switch (UI), print or render the full relevant state so the user can see what changed.
-6. **Capture it when done.** Fold any validated decision into the real code, then capture the prototype itself as a **primary source**: commit it to a throwaway branch, out of main, and leave a context pointer to that branch on the implementation issue. Capture the answer too (the verdict and the question it settled) in the issue or a commit. The main branch keeps only the validated decision.
+這兩個分支會產生非常不同的產出，因此選錯會浪費整個原型。如果問題確實模糊且無法聯絡到使用者，請預設選擇與周圍程式碼更匹配的分支（後端模組 → 邏輯；頁面或元件 → UI），並在原型頂部說明此假設。
+
+<a id="rules-that-apply-to-both"></a>
+
+## 適用於兩者的規則
+
+1. **從第一天起就是一次性的，並明確標示如此。** 將原型程式碼放在實際使用位置附近（在它要原型的模組或頁面旁邊），以便於理解上下文，但命名方式要讓一般讀者能看出這是一次性原型，而非生產環境程式碼。對於一次性 UI 路由，請遵循專案已有的路由慣例；不要發明新的頂層結構。
+2. **極易執行。** UI 原型從專案任務執行器中的一個命令開始：`pnpm <name>`、`python <path>`、`bun <path>` 等。邏輯演示是一個使用者雙擊即可開啟的單一 HTML 檔案。無論哪種情況，啟動時都不需要思考。
+3. **預設不持久化。** 狀態存在記憶體中。持久化是原型要_檢查_的內容，而不是它應該依賴的東西。如果問題明確涉及資料庫，請使用一個名為「PROTOTYPE, wipe me」的暫存資料庫或本地檔案。
+4. **略過修飾。** 不需要測試，不需要超出讓原型_可執行_範圍的錯誤處理，也不需要抽象。重點是快速學習。
+5. **顯示狀態。** 在每個動作（邏輯）或每次變體切換（UI）之後，列印或渲染完整的相關狀態，讓使用者能看到變化。
+6. **完成時記錄下來。** 將任何已驗證的決策整合到實際程式碼中，然後將原型本身作為**主要來源**記錄下來：將其提交到一次性分支，不要放在 main 分支，並在實作問題上留下指向該分支的上下文指標。也要在問題或 commit 中記錄答案（結論及其解決的問題）。main 分支只保留已驗證的決策。

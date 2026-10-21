@@ -1,86 +1,100 @@
-## What it does
+<a id="what-it-does"></a>
 
-`implement-spec` takes a [spec](https://www.aihero.dev/ai-coding-dictionary/spec) and its [tickets](https://www.aihero.dev/ai-coding-dictionary/ticket) and lands the whole thing in one run. The orchestrating [agent](https://www.aihero.dev/ai-coding-dictionary/agent) hands each ticket to an implementer [subagent](https://www.aihero.dev/ai-coding-dictionary/subagent) working in its own git worktree, merges each finished branch into a single **integration branch**, runs [code-review](https://aihero.dev/skills-code-review) over the result, and resolves the tickets.
+## 功能說明
 
-It reads the tickets as a **task graph**, not a list. Blocking edges decide what can start, so at any moment there is a **frontier** of tickets whose blockers have all landed, and every ticket on the frontier runs at once. That is the difference from working the tickets one by one. The graph's shape sets the pace, not the tickets' order on the tracker.
+`implement-spec` 會接收 [spec](https://www.aihero.dev/ai-coding-dictionary/spec) 及其 [tickets](https://www.aihero.dev/ai-coding-dictionary/ticket)，並在單次執行中完成所有工作。負責協調的 [agent](https://www.aihero.dev/ai-coding-dictionary/agent) 會將每個 ticket 交給在各自 git worktree 中工作的 implementer [subagent](https://www.aihero.dev/ai-coding-dictionary/subagent)，將每個完成的分支合併到單一 **integration branch**，對結果執行 [code-review](https://aihero.dev/skills-code-review)，並解決這些 tickets。
 
-## When to reach for it
+它將 tickets 視為 **task graph**，而非清單。阻擋邊（blocking edges）決定哪些工作可以開始，因此在任何時刻都會有一個 **frontier**，其中包含所有阻擋條件都已滿足的 tickets，而 frontier 上的每個 ticket 都會同時執行。這與逐一處理 tickets 的方式不同。圖的形狀決定了節奏，而非 tracker 上 tickets 的順序。
 
-You invoke this by typing `/implement-spec`, and the agent won't reach for it on its own.
+<a id="when-to-reach-for-it"></a>
 
-| Your situation | Reach for |
+## 適用時機
+
+您透過輸入 `/implement-spec` 來啟動此功能，agent 不會自行主動使用它。
+
+| 您的情況 | 建議使用 |
 | --- | --- |
-| A spec, split into tickets with blocking edges, that you want landed in one run | `/implement-spec` |
-| One ticket at a time, in your own [context window](https://www.aihero.dev/ai-coding-dictionary/context-window), [clearing](https://www.aihero.dev/ai-coding-dictionary/clearing) between tickets | [implement](https://aihero.dev/skills-implement) |
-| A spec that isn't split into tickets yet | [to-tickets](https://aihero.dev/skills-to-tickets) first |
-| A small piece of work with no real graph to it | [implement](https://aihero.dev/skills-implement) directly |
+| 一個已拆分為帶有阻擋邊的 tickets 的 spec，您希望在一輪執行中完成 | `/implement-spec` |
+| 一次處理一個 ticket，在您自己的 [context window](https://www.aihero.dev/ai-coding-dictionary/context-window) 中，並在 ticket 之間 [clearing](https://www.aihero.dev/ai-coding-dictionary/clearing) | [implement](https://aihero.dev/skills-implement) |
+| 尚未拆分為 tickets 的 spec | 先使用 [to-tickets](https://aihero.dev/skills-to-tickets) |
+| 沒有實際圖結構的小型工作 | 直接使用 [implement](https://aihero.dev/skills-implement) |
 
-## Prerequisites
+<a id="prerequisites"></a>
 
-- **An issue tracker.** The skill reads the tickets from, and resolves them on, the tracker [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) configured. If none has been configured, it stops and tells you to run that first rather than guessing.
-- **Tickets with blocking edges**, as [to-tickets](https://aihero.dev/skills-to-tickets) writes them. Without edges the graph is flat and every ticket starts at once.
-- **A [harness](https://www.aihero.dev/ai-coding-dictionary/harness) that runs subagents in the background and gives each one a git worktree.** The skill exists to run tickets at the same time, so on a harness that runs subagents one at a time, it is only a slower `implement`.
+## 前置條件
 
-## The integration branch
+- **Issue tracker。** 此 skill 會從 [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) 設定的 tracker 讀取 tickets，並在其上解決這些 tickets。如果尚未設定，它會停止並提示您先執行該設定，而不是自行猜測。
+- **帶有阻擋邊的 tickets**，格式如同 [to-tickets](https://aihero.dev/skills-to-tickets) 所寫入的。如果沒有邊，圖結構將是扁平的，所有 ticket 都會同時開始。
+- **一個能在背景執行 subagents 並為每個 subagent 提供 git worktree 的 [harness](https://www.aihero.dev/ai-coding-dictionary/harness)。** 此 skill 的存在目的是同時執行 tickets，因此在一次只執行一個 subagent 的 harness 上，它只會變成較慢的 `implement`。
 
-Everything lands on one branch. Each implementer:
+<a id="the-integration-branch"></a>
 
-1. confirms its worktree is based on the integration branch before it starts,
-2. builds its ticket with [tdd](https://aihero.dev/skills-tdd), red-green one slice at a time,
-3. merges the integration branch tip into its own branch before reporting done, so landing it is a fast-forward.
+## Integration branch
 
-The tracker decides whether a pull request exists at all. If your tracker closes work through PRs, or you ask for one, the skill opens a draft PR after the first merge and marks it ready at the end. Otherwise the run stops on the integration branch with every ticket resolved the way your tracker closes work, which works fully offline against a local markdown tracker.
+所有工作都會落在同一個分支上。每個 implementer 會：
 
-Implementers talk to the orchestrator through [context pointers](https://www.aihero.dev/ai-coding-dictionary/context-pointer) (the spec, the ticket, shared exploration notes, earlier commits) rather than pasted summaries. This keeps each subagent's prompt small and leaves room in the orchestrator's window for the graph.
+1. 在開始前確認其 worktree 是基於 integration branch，
+2. 使用 [tdd](https://aihero.dev/skills-tdd) 建構其 ticket，每次進行一個切片的紅綠迴圈，
+3. 在回報完成前，將 integration branch 的最新提交合併到其自己的分支，以便後續合併為 fast-forward。
 
-## Common questions
+Tracker 決定是否要建立 pull request。如果您的 tracker 透過 PR 關閉工作，或者您要求建立 PR，此 skill 會在第一次合併後開啟一個 draft PR，並在最後將其標記為 ready。否則，執行會停在 integration branch 上，所有 tickets 都會以您的 tracker 關閉工作的方式解決，這在針對本地 markdown tracker 時可完全離線運作。
 
-**How is this different from running `/implement` on each ticket myself?**
+Implementers 透過 [context pointers](https://www.aihero.dev/ai-coding-dictionary/context-pointer)（spec、ticket、共享探索筆記、先前 commits）與 orchestrator 溝通，而非貼上摘要。這能保持每個 subagent 的 prompt 精簡，並為 orchestrator 的視窗保留空間以處理圖結構。
 
-This is the question the skill exists to answer. Before it shipped, people kept building their own versions, and one user described the need: they wanted "subagents implement the tickets" instead of having "to individually create new session and tell them to implement a ticket one by one, when a spec may contain over 5 tickets." With `implement` you are the dispatcher: one [session](https://www.aihero.dev/ai-coding-dictionary/session) per ticket, clearing in between, and keeping track yourself of which tickets are unblocked. `implement-spec` hands that job to one orchestrating session. The price is that you no longer read each ticket's work as it lands; you review the integration branch at the end. To start a run, clear the context and type `/implement-spec` with a pointer to the spec (an issue number or a file path). For a small change with no real graph, skip it and use `implement` directly.
+<a id="common-questions"></a>
 
-**Does it need GitHub? I want it to stop at the branch.**
+## 常見問題
 
-No, not any more. One user who liked the in-progress version had exactly this complaint: "it creates a PR at the end, which requires an online repository like GitHub. I wish it could do the same work offline and stop at the branch where all the work is merged." The run now ends on the integration branch. A PR opens only when the configured tracker closes work through PRs or you ask for one, so on a local markdown tracker the run ends with every ticket resolved and the work merged on the branch.
+**這與我自己對每個 ticket 執行 `/implement` 有何不同？**
 
-**Its review and fix loop ran for hours, or kept "fixing" tickets that hadn't been built yet.**
+這正是此 skill 存在要回答的問題。在發布之前，人們一直自行建立類似版本，有一位使用者描述了這種需求：他們希望「subagents 來實作 tickets」，而不是「必須個別建立新 session 並告訴它們逐一實作 ticket，而一個 spec 可能包含超過 5 個 tickets」。使用 `implement` 時，您是排程者：每個 ticket 一個 [session](https://www.aihero.dev/ai-coding-dictionary/session)，中間進行清理，並自行追蹤哪些 tickets 已解除阻擋。`implement-spec` 將此工作交給一個協調 session。代價是您不再能即時閱讀每個 ticket 的工作內容；您會在最後審查 integration branch。要開始執行，請清理 context 並輸入 `/implement-spec`，附上指向 spec 的指標（issue 編號或檔案路徑）。對於沒有實際圖結構的小型變更，請跳過此功能並直接使用 `implement`。
 
-Both happen when `code-review` runs anywhere other than the one point the skill gives it. It compares the code against the whole spec, so it only makes sense once every ticket has landed. If it runs mid-run, every unbuilt ticket reads as a failure. The agent then builds that ticket, and that triggers another review. At the end, the skill runs `code-review` once and sends every finding to one fix subagent, but it doesn't yet say when to stop after that fix. One user reported a five-ticket feature where "the review and fix loop took roughly four hours". If you see a second broad review start, tell it to run focused checks for the fixed findings and stop. Expect that first review to find real problems. The run's output is a draft that the review completes, not something to ship on its own.
+**需要 GitHub 嗎？我希望它停在分支上。**
 
-**Does it drive tdd like implement does?**
+不需要了。一位喜歡開發中版本的使用者曾有完全相同的抱怨：「它最後會建立一個 PR，這需要像 GitHub 這樣的線上儲存庫。我希望它能離線執行相同的工作，並停在所有工作已合併的分支上。」現在執行會結束於 integration branch。只有當設定的 tracker 透過 PR 關閉工作，或您要求建立 PR 時，才會開啟 PR。因此，在本地 markdown tracker 上，執行會在所有 tickets 解決且工作已合併到分支上時結束。
 
-It does now, though it didn't at first. Users running the in-progress version noticed that "the implementer subagents don't inherit the /tdd directive", so red-green stopped as soon as they scaled up from one ticket to a whole spec. Each implementer now builds its ticket with `tdd`. There is still no step where you agree seams interactively, as there is in an `implement` session, so name the seams in the spec or the tickets if you want them pinned.
+**它的審查與修復迴圈執行了數小時，或不斷「修復」尚未建構的 tickets。**
 
-**Two implementers running in parallel collided on the same file, or picked different names for the same thing.**
+當 `code-review` 在 skill 指定的唯一時點以外的地方執行時，這兩種情況都會發生。它將程式碼與整個 spec 進行比較，因此只有在所有 tickets 都完成後才有意義。如果在執行中途執行，每個未建構的 ticket 都會被視為失敗。Agent 隨後會建構該 ticket，這又會觸發另一次審查。最後，skill 會執行一次 `code-review` 並將所有發現交給一個修復 subagent，但它尚未說明在該次修復後何時停止。一位使用者報告了一個包含五個 ticket 的功能，「審查與修復迴圈大約花了四個小時」。如果您看到第二次廣泛審查開始，請告訴它針對已修復的發現執行聚焦檢查並停止。請預期第一次審查會發現實際問題。執行的輸出是一個 draft，需要審查來完成，而非可獨立發布的內容。
 
-Worktrees don't remove collisions; they postpone them to merge time. A blocking edge written from ticket text is a guess about which files each ticket will touch, and two tickets on "different parts of the codebase" still share a message catalogue, a config registry, or a type. Each implementer sees only its own ticket and the shared notes, never the other's work in progress, so one user's web and mobile tickets added the same string as `blockedSince` and `blockedOn`. When two frontier tickets touch one shared file, either add a blocking edge between them so they run one after the other, or have the exploration notes fix the exact names each ticket adds.
+**它會像 implement 那樣驅動 tdd 嗎？**
 
-**Blocked tickets never start, even after their blocker has merged.**
+現在會了，雖然最初不會。執行開發中版本的使用者注意到「implementer subagents 不會繼承 /tdd 指令」，因此當規模從一個 ticket 擴大到整個 spec 時，紅綠迴圈就停止了。現在每個 implementer 都會使用 `tdd` 建構其 ticket。目前仍沒有像 `implement` session 中那樣互動式同意 seams 的步驟，因此如果您希望固定 seams，請在 spec 或 tickets 中命名它們。
 
-This is a known problem on GitHub. The tracker's blocked-by count only drops when a blocker *closes*, and tickets typically close when the PR merges, which is the end of the run. The tracker is the right source for the starting graph but a stale one mid-run. Tell the orchestrator to track which tickets have merged into the integration branch itself and compute the frontier from that.
+**兩個並行執行的 implementers 在同一個檔案上發生衝突，或為同一事物選擇了不同的名稱。**
 
-**Does this replace Sandcastle or an AFK script?**
+Worktrees 不會消除衝突，而是將衝突延後到合併時才發生。從工單文字中寫入的封鎖邊，只是對每個工單將觸及哪些檔案的猜測，而兩個位於「程式碼庫不同部分」的工單，仍可能共用同一個訊息目錄、設定登錄檔或型別。每位實作者只能看到自己的工單與共用筆記，永遠看不到其他實作者的進行中工作，因此某位使用者的 Web 與行動端工單分別新增了相同的字串 `blockedSince` 與 `blockedOn`。當兩個前沿工單觸及同一個共用檔案時，應在它們之間新增封鎖邊，讓它們依序執行；或者讓探索筆記明確指定每個工單將新增的確切名稱。
 
-No. People ask because the skills now reach into implementation: "is Sandcastle still relevant? Your skills now seem to be able to handle implementation as well." `implement-spec` puts an agent in charge of orchestration inside one harness session, which needs no infrastructure and lets you watch and steer. For work that is truly [AFK](https://www.aihero.dev/ai-coding-dictionary/afk), a deterministic loop ([Sandcastle](https://github.com/mattpocock/sandcastle), a shell script, a CI job) is faster, cheaper, and more reliable, because no agent makes the orchestration decisions.
+**被封鎖的工單永遠不會啟動，即使其封鎖者已合併。**
 
-**A ticket's key test was skipped inside its worktree, and it reported green.**
+這是 GitHub 上的一個已知問題。追蹤器的 blocked-by 計數只有在封鎖者「關閉」時才會減少，而工單通常在 PR 合併時關閉，這正是執行結束的時刻。追蹤器是啟動圖的正確來源，但在執行中途時資訊已過時。請指示協調器自行追蹤哪些工單已合併至整合分支，並據此計算前沿。
 
-A worktree holds only what git tracks. Tests that read gitignored fixtures, local databases, or credentials can silently skip there. For a ticket whose verification depends on untracked material, tell the orchestrator to run it in the main checkout instead.
+**這是否取代 Sandcastle 或 AFK 指令碼？**
 
-## It's working if
+不會。人們會這樣問，是因為這些 skill 現在已深入實作層面：「Sandcastle 還有意義嗎？你的 skill 現在似乎也能處理實作了。」`implement-spec` 在單一 harness 會話中指派一個 agent 負責協調，這不需要任何基礎設施，且讓你能夠觀察並引導過程。對於真正 [AFK](https://www.aihero.dev/ai-coding-dictionary/afk) 的工作，確定性的迴圈（[Sandcastle](https://github.com/mattpocock/sandcastle)、shell 指令碼、CI 工作）更快、更便宜且更可靠，因為沒有 agent 來做協調決策。
 
-- Several implementers are running at once whenever the graph allows, not one after another.
-- A ticket starts as soon as its last blocker lands on the integration branch, not when the whole run ends.
-- Every ticket's trace shows `tdd` running, with a failing test before the code.
-- Merges into the integration branch are fast-forwards, not conflict resolutions.
-- The run ends on one branch with every ticket resolved, and a PR only if your tracker wanted one.
+**某工單的關鍵測試在其 worktree 中被跳過，但報告為綠色（透過）。**
 
-## Where it fits
+Worktree 只包含 git 追蹤的內容。讀取 gitignored 測試資料、本地資料庫或憑證的測試，可能會在該處靜默跳過。對於驗證依賴未追蹤內容的工單，請指示協調器改在主 checkout 中執行。
 
-`implement-spec` is the build step of the main chain, as the parallel alternative to running [implement](https://aihero.dev/skills-implement) once per ticket:
+<a id="its-working-if"></a>
+
+## 如果符合以下條件，則表示運作正常
+
+- 只要圖允許，多個實作者會同時執行，而非依序執行。
+- 當工單的最後一個封鎖者進入整合分支時，該工單立即啟動，而非等到整個執行結束。
+- 每個工單的追蹤記錄都顯示 `tdd` 正在執行，且在程式碼之前有一個失敗的測試。
+- 合併至整合分支的操作是快進（fast-forward），而非衝突解決。
+- 執行結束時，所有工單都在同一個分支上解決，且僅在你的追蹤器要求時才建立 PR。
+
+<a id="where-it-fits"></a>
+
+## 適用情境
+
+`implement-spec` 是主鏈中的建置步驟，作為對每個工單執行一次 [implement](https://aihero.dev/skills-implement) 的並行替代方案：
 
 ```txt
 grill-with-docs → to-spec → to-tickets → implement-spec → retro
 ```
 
-Its neighbours are [to-tickets](https://aihero.dev/skills-to-tickets), which declares the blocking edges it reads as a task graph, and [code-review](https://aihero.dev/skills-code-review), which it runs over the integration branch before closing out. [ask-matt](https://aihero.dev/skills-ask-matt) is the router over the whole set when you are not sure which flow you are in.
+其相鄰步驟為 [to-tickets](https://aihero.dev/skills-to-tickets)，它將封鎖邊宣告為任務圖；以及 [code-review](https://aihero.dev/skills-code-review)，它在收尾前對整合分支執行審查。[ask-matt](https://aihero.dev/skills-ask-matt) 則是當你不確定自己處於哪個流程時，對整套流程的路由器。

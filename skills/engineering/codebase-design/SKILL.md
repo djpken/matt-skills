@@ -1,35 +1,41 @@
 ---
 name: codebase-design
-description: Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.
+description: "用於設計深層模組的共用詞彙。當使用者想要設計或改善模組介面、尋找深化機會、決定接縫位置、讓程式碼更具可測試性或 AI 可導航性，或當其他 skill 需要深層模組詞彙時使用。"
 ---
 
-# Codebase Design
+<a id="codebase-design"></a>
 
-Design **deep modules**: a lot of behaviour behind a small interface, placed at a clean seam, testable through that interface. Use this language and these principles wherever code is being designed or restructured. The aim is leverage for callers, locality for maintainers, and testability for everyone.
+# 程式碼庫設計
 
-## Glossary
+設計**深層模組**：在小型介面背後隱藏大量行為，放置在乾淨的接縫處，並可透過該介面進行測試。在設計或重構程式碼時，請使用這些語言和原則。目標是為呼叫者提供槓桿效應，為維護者提供區域性性，並為所有人提供可測試性。
 
-Use these terms exactly: don't substitute "component," "service," "API," or "boundary." Consistent language is the whole point.
+<a id="glossary"></a>
 
-**Module**: anything with an interface and an implementation. Deliberately scale-agnostic: a function, class, package, or tier-spanning slice. _Avoid_: unit, component, service.
+## 詞彙表
 
-**Interface**: everything a caller must know to use the module correctly: the type signature, but also invariants, ordering constraints, error modes, required configuration, and performance characteristics. _Avoid_: API, signature (too narrow, they refer only to the type-level surface).
+請精確使用這些術語：不要替換為「元件」、「服務」、「API」或「邊界」。一致的語言正是重點所在。
 
-**Implementation**: what's inside a module, its body of code. Distinct from **Adapter**: a thing can be a small adapter with a large implementation (a Postgres repo) or a large adapter with a small implementation (an in-memory fake). Reach for "adapter" when the seam is the topic; "implementation" otherwise.
+**模組**：任何具有介面和實作的東西。刻意不區分規模：可以是函式、類別、套件，或跨層次的切片。_避免使用_：單元、元件、服務。
 
-**Depth**: leverage at the interface. The amount of behaviour a caller (or test) can exercise per unit of interface they have to learn. A module is **deep** when a large amount of behaviour sits behind a small interface, **shallow** when the interface is nearly as complex as the implementation.
+**介面**：呼叫者必須知道的所有內容才能正確使用該模組：包括型別簽名，以及不變數、順序約束、錯誤模式、必要設定和效能特性。_避免使用_：API、簽名（過於狹隘，它們僅指型別層面的表面）。
 
-**Seam** _(Michael Feathers)_: a place where you can alter behaviour without editing in that place; the *location* at which a module's interface lives. Where to put the seam is its own design decision, distinct from what goes behind it. _Avoid_: boundary (overloaded with DDD's bounded context).
+**實作**：模組內部的內容，即其程式碼主體。與**介面卡**不同：一個東西可以是具有大型實作的小型介面卡（例如 Postgres 儲存庫），也可以是具有小型實作的大型介面卡（例如記憶體偽物件）。當接縫是討論主題時，使用「介面卡」；其他情況則使用「實作」。
 
-**Adapter**: a concrete thing that satisfies an interface at a seam. Describes *role* (what slot it fills), not substance (what's inside).
+**深度**：介面上的槓桿效應。呼叫者（或測試）每學習一個單位介面所能執行的行為量。當大量行為位於小型介面背後時，模組是**深層**的；當介面幾乎與實作一樣複雜時，模組是**淺層**的。
 
-**Leverage**: what callers get from depth. More capability per unit of interface they learn. One implementation pays back across N call sites and M tests.
+**接縫** _(Michael Feathers)_：一個可以在不編輯該位置的情況下改變行為的地方；即模組介面所在的*位置*。接縫的放置位置本身是一個設計決策，與接縫背後的內容不同。_避免使用_：邊界（與 DDD 的限界上下文重疊）。
 
-**Locality**: what maintainers get from depth. Change, bugs, knowledge, and verification concentrate in one place rather than spreading across callers. Fix once, fixed everywhere.
+**介面卡**：在接縫處滿足介面的具體事物。描述的是*角色*（它填充哪個插槽），而非實質（內部是什麼）。
 
-## Deep vs shallow
+**槓桿效應**：呼叫者從深度中獲得的東西。每學習一個單位介面，獲得更多能力。一個實作在 N 個呼叫點和 M 個測試中產生回報。
 
-**Deep module** = small interface + lots of implementation:
+**區域性性**：維護者從深度中獲得的東西。變更、錯誤、知識和驗證集中在一處，而不是分散在呼叫者之間。修一次，到處都修好了。
+
+<a id="deep-vs-shallow"></a>
+
+## 深層與淺層
+
+**深層模組** = 小型介面 + 大量實作：
 
 ```
 ┌─────────────────────┐
@@ -41,7 +47,7 @@ Use these terms exactly: don't substitute "component," "service," "API," or "bou
 └─────────────────────┘
 ```
 
-**Shallow module** = large interface + little implementation (avoid):
+**淺層模組** = 大型介面 + 少量實作（避免）：
 
 ```
 ┌─────────────────────────────────┐
@@ -51,24 +57,28 @@ Use these terms exactly: don't substitute "component," "service," "API," or "bou
 └─────────────────────────────────┘
 ```
 
-When designing an interface, ask:
+設計介面時，請問：
 
-- Can I reduce the number of methods?
-- Can I simplify the parameters?
-- Can I hide more complexity inside?
+- 我能減少方法數量嗎？
+- 我能簡化引數嗎？
+- 我能隱藏更多複雜性在內部嗎？
 
-## Principles
+<a id="principles"></a>
 
-- **Depth is a property of the interface, not the implementation.** A deep module can be internally composed of small, mockable, swappable parts; they just aren't part of the interface. A module can have **internal seams** (private to its implementation, used by its own tests) as well as the **external seam** at its interface.
-- **The deletion test.** Imagine deleting the module. If complexity vanishes, it was a pass-through. If complexity reappears across N callers, it was earning its keep.
-- **The interface is the test surface.** Callers and tests cross the same seam. If you want to test *past* the interface, the module is probably the wrong shape.
-- **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a seam unless something actually varies across it.
+## 原則
 
-## Designing for testability
+- **深度是介面的屬性，而非實作的屬性。** 深層模組內部可以由小型、可模擬、可替換的部分組成；它們只是介面的一部分。模組可以具有**內部接縫**（私有於其實作，由其自身測試使用），也可以具有位於其介面上的**外部接縫**。
+- **刪除測試。** 想像刪除該模組。如果複雜性消失了，它只是透傳。如果複雜性在 N 個呼叫者中重新出現，它就在發揮作用。
+- **介面是測試表面。** 呼叫者和測試跨越相同的接縫。如果你想測試*超越*介面的部分，該模組的形狀可能不正確。
+- **一個介面卡意味著假設性的接縫。兩個介面卡意味著真實的接縫。** 除非有東西實際在接縫上變化，否則不要引入接縫。
 
-Good interfaces make testing natural:
+<a id="designing-for-testability"></a>
 
-1. **Accept dependencies, don't create them.**
+## 為可測試性設計
+
+良好的介面使測試變得自然：
+
+1. **接受依賴，不要建立它們。**
 
    ```typescript
    // Testable
@@ -80,7 +90,7 @@ Good interfaces make testing natural:
    }
    ```
 
-2. **Return results, don't produce side effects.**
+2. **回傳結果，不要產生副作用。**
 
    ```typescript
    // Testable
@@ -92,23 +102,29 @@ Good interfaces make testing natural:
    }
    ```
 
-3. **Small surface area.** Fewer methods = fewer tests needed. Fewer params = simpler test setup.
+3. **小型表面積。** 較少的方法 = 需要較少的測試。較少的引數 = 更簡單的測試設定。
 
-## Relationships
+<a id="relationships"></a>
 
-- A **Module** has exactly one **Interface** (the surface it presents to callers and tests).
-- **Depth** is a property of a **Module**, measured against its **Interface**.
-- A **Seam** is where a **Module**'s **Interface** lives.
-- An **Adapter** sits at a **Seam** and satisfies the **Interface**.
-- **Depth** produces **Leverage** for callers and **Locality** for maintainers.
+## 關係
 
-## Rejected framings
+- 一個**模組**恰好有一個**介面**（它呈現給呼叫者和測試的表面）。
+- **深度**是**模組**的屬性，根據其**介面**來衡量。
+- **接縫**是**模組**的**介面**所在之處。
+- **介面卡**位於**接縫**處並滿足**介面**。
+- **深度**為呼叫者產生**槓桿效應**，為維護者產生**區域性性**。
 
-- **Depth as ratio of implementation-lines to interface-lines** (Ousterhout): rewards padding the implementation. We use depth-as-leverage instead.
-- **"Interface" as the TypeScript `interface` keyword or a class's public methods**: too narrow: interface here includes every fact a caller must know.
-- **"Boundary"**: overloaded with DDD's bounded context. Say **seam** or **interface**.
+<a id="rejected-framings"></a>
 
-## Going deeper
+## 被拒絕的框架
 
-- **Deepening a cluster given its dependencies**, see [DEEPENING.md](DEEPENING.md): dependency categories, seam discipline, and replace-don't-layer testing.
-- **Exploring alternative interfaces**, see [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md): spin up parallel sub-agents to design the interface several radically different ways, then compare on depth, locality, and seam placement.
+- **深度作為實作行數與介面行數的比率** (Ousterhout)：獎勵填充實作。我們改用深度作為槓桿效應。
+- **「介面」作為 TypeScript `interface` 關鍵字或類別的公開方法**：過於狹隘：此處的介面包括呼叫者必須知道的每個事實。
+- **「邊界」**：與 DDD 的限界上下文重疊。請說**接縫**或**介面**。
+
+<a id="going-deeper"></a>
+
+## 深入探索
+
+- **給定依賴關係時深化一個群集**，請參閱 [DEEPENING.md](DEEPENING.md)：依賴關係類別、接縫紀律，以及取代而非分層的測試。
+- **探索替代介面**，請參閱 [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md)：啟動並行 sub-agents 以幾種截然不同的方式設計介面，然後根據深度、區域性性和接縫放置進行比較。

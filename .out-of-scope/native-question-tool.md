@@ -1,19 +1,25 @@
-# Grilling through the harness's native question tool
+<a id="grilling-through-the-harnesss-native-question-tool"></a>
 
-Grilling sessions (`/grilling`, `/grill-me`, `/grill-with-docs`, and grilling inside other skills) ask their questions as plain chat text. Requests to route them through a harness's built-in question UI (Claude Code's `AskUserQuestion`, a host "question tool", a structured or batched questionnaire mode) are out of scope.
+# 透過 harness 的原生問題工具進行 Grilling
 
-## Why this is out of scope
+Grilling 工作階段（`/grilling`、`/grill-me`、`/grill-with-docs`，以及其他 skill 內的 grilling）會以純文字聊天形式提出問題。要求將這些問題透過 harness 內建的問題 UI（例如 Claude Code 的 `AskUserQuestion`、host 的「問題工具」、結構化或批次問卷模式）進行路由，不在支援範圍內。
 
-The skills are harness-neutral text. They run in Claude Code, Codex, Copilot, Cursor and anything else skills.sh installs into, and each harness has a different question tool, or none. Naming one harness's tool in the skill means either a harness-specific branch in every grilling skill, or a skill that only works properly in one place.
+<a id="why-this-is-out-of-scope"></a>
 
-The question UI also changes the grilling itself. Structured pickers push the model towards multiple-choice questions with pre-baked answers, which is the opposite of what grilling is for: open questions you answer in your own words, one branch of the decision tree at a time. I've tried the `AskUserQuestion` UI and don't want it in these skills.
+## 為何此功能不在支援範圍內
 
-If you prefer your harness's question tool, say so in your own `CLAUDE.md` / `AGENTS.md` ("when grilling, ask via AskUserQuestion"). That's a one-line, per-user preference, and it doesn't need the shared skill to know about it.
+這些 skill 是與 harness 無關的文字。它們可在 Claude Code、Codex、Copilot、Cursor 以及 skills.sh 安裝的任何其他環境中執行，而每個 harness 都有不同問題工具，甚至可能沒有問題工具。若在 skill 中指定某個 harness 的工具，則必須在每個 grilling skill 中加入特定 harness 的分支，或者該 skill 只能在單一環境中正常運作。
 
-## Prior requests
+問題 UI 也會改變 grilling 本身的性質。結構化選擇器會引導模型提出帶有預設答案的多選題，這與 grilling 的目的背道而馳：grilling 旨在提出開放式問題，讓使用者以自己的語言回答，一次處理決策樹的一個分支。我試過 `AskUserQuestion` 的 UI，不希望這些 skill 使用它。
 
-- #19: "grill-me: not always using the question tool"
-- #643: "Proposal: Use AskQuestion for structured input during grilling sessions"
-- #840: "Use host's question tool for grilling sessions"
-- #1107: "Grilling doesn't use Agent's native QA tool OOTB"
-- #1152: "Proposal: experimental HTML questionnaire mode for batch grilling"
+如果您偏好使用您 harness 的問題工具，請在您自己的 `CLAUDE.md` / `AGENTS.md` 中說明（例如：「在 grilling 時，透過 AskUserQuestion 提問」）。這是一行針對個別使用者的偏好設定，不需要共用的 skill 知道此事。
+
+<a id="prior-requests"></a>
+
+## 先前請求
+
+- #19：「grill-me：並非總是使用問題工具」
+- #643：「提案：在 grilling 工作階段期間使用 AskQuestion 進行結構化輸入」
+- #840：「在 grilling 工作階段中使用 host 的問題工具」
+- #1107：「Grilling 預設未使用 Agent 的原生 QA 工具」
+- #1152：「提案：實驗性 HTML 問卷模式，用於批次 grilling」

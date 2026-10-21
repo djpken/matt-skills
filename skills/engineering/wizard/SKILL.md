@@ -1,44 +1,56 @@
 ---
 name: wizard
-description: Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don't invoke this for steps the agent can perform itself.
+description: "產生一個互動式 bash 精靈，引導使用者逐步完成只有他們才能執行的步驟。適用於設定基礎設施、設定憑證或 CI 機密、導覽不熟悉的第三方儀錶板，或執行一次性遷移或切換。不要用於 agent 可自行執行的步驟。"
 ---
 
-# Wizard
+<a id="wizard"></a>
 
-A **wizard** is a bash script that walks a human, step by step, through a manual procedure that's tedious to do by hand and tedious to re-explain to an AI every time. It opens each URL, says exactly what to click and copy, captures the values, writes them where they belong (`.env`, GitHub secrets), confirms at every stage, and shows how many stages are left. It might configure third-party services, run a one-off migration, or move the project from one state to another.
+# 精靈
 
-The delightful UX is already solved by [template.sh](template.sh): stage-by-stage progress, confirmation gates, cross-platform URL opening (including WSL), hidden secret entry, idempotent `.env` upserts, `gh secret`/`gh variable` writes, and a closing summary. **Your job is only to scope the procedure and author its stages.** The library above the `STAGES` marker is identical in every wizard; that consistency is the point: never hand-edit it.
+**精靈** 是一個 bash 指令碼，逐步引導使用者完成手動程式。這些程式若純靠手動執行會很繁瑣，若每次都要向 AI 重新解釋也會很繁瑣。它會開啟每個 URL，明確說明要點選和複製什麼，擷取數值，將它們寫入正確的位置（`.env`、GitHub secrets），在每個階段進行確認，並顯示還剩多少階段。它可能用於設定第三方服務、執行一次性遷移，或將專案從一種狀態轉換到另一種狀態。
 
-A wizard is ephemeral by default: built for one run, saved to a scratch or `scripts/` path, deleted when the job's done. Commit it only when the user wants a repeatable setup path that should live in the repo.
+令人愉悅的使用者體驗已由 [template.sh](template.sh) 解決：逐階段進度、確認閘門、跨平臺 URL 開啟（包括 WSL）、隱藏機密輸入、冪等 `.env` upserts、`gh secret`/`gh variable` 寫入，以及結尾摘要。**你的工作僅限於界定程式範圍並撰寫其階段。** `STAGES` 標記上方的函式庫在所有精靈中皆相同；這種一致性正是重點：切勿手動編輯它。
 
-## Process
+精靈預設為短暫存在：為單次執行而建，儲存至暫存或 `scripts/` 路徑，工作完成後刪除。僅當使用者希望保留可重複執行的設定路徑且該路徑應存在於儲存庫中時，才將其提交。
 
-### 1. Scope the procedure
+<a id="process"></a>
 
-Work out every manual step the human must take and every value that gets captured along the way. Read the repo first, don't ask cold:
+## 流程
 
-- For setup: `.env`, `.env.example`, `.env.*`, `README`, `docker-compose*`, framework config, and `.github/workflows/*` (every `secrets.*` / `vars.*` reference is a value the wizard must produce).
-- For a migration or transition: the current state, the target state, and the irreversible actions between them.
+<a id="1-scope-the-procedure"></a>
 
-Then show the user the ordered list of stages and the values each produces, and confirm: they may add, drop, or reorder.
+### 1. 界定程式範圍
 
-**Done when:** every stage is named in order, and for each captured value you know (a) where the human gets it, (b) where it's written (`.env`, a GitHub secret, both, or nowhere; some stages are pure actions), and (c) whether it's secret (hidden entry) or public.
+釐清使用者必須執行的所有手動步驟，以及過程中擷取的每個數值。先閱讀儲存庫，不要直接詢問：
 
-### 2. Map each stage's journey
+- 對於設定：`.env`、`.env.example`、`.env.*`、`README`、`docker-compose*`、框架設定，以及 `.github/workflows/*`（每個 `secrets.*` / `vars.*` 參考都是精靈必須產生的數值）。
+- 對於遷移或轉換：目前狀態、目標狀態，以及兩者之間不可逆的操作。
 
-For each stage, write the precise path a human follows: which URL to open, what to do there, where a value is shown, which variable it fills: e.g. "Dashboard → Developers → API keys → Reveal test key → copy". Where you don't actually know the current UI or the exact command, say so and ask the user or check the docs: never invent steps that may not exist.
+然後向使用者顯示階段的有序清單及各階段產生的數值，並進行確認：他們可以新增、移除或重新排序。
 
-**Done when:** every stage traces to concrete instructions a stranger could follow.
+**完成標準：** 每個階段皆依序命名，且對於每個擷取的數值，你都知道 (a) 使用者從哪裡取得它，(b) 它寫入哪裡（`.env`、GitHub secret、兩者皆有，或無處寫入；某些階段純為操作），以及 (c) 它是機密（隱藏輸入）還是公開。
 
-### 3. Author the wizard
+<a id="2-map-each-stages-journey"></a>
 
-Copy `template.sh` to the target path. Replace the example stage with one `stage` per step, in dependency order. Use the library helpers: `stage`, `say`/`step`, `open_url`, `ask`/`ask_secret`, `write_env`, `set_secret`/`set_var`, `pause`/`confirm`. Set `TOTAL_STAGES` to the number of stages you wrote.
+### 2. 對映每個階段的流程
 
-Hold the bar the template sets: open the URL before asking for its value, use `ask_secret` for anything secret, `write_env` every persisted value, `set_secret` only the values CI actually needs, and `confirm` before any irreversible action. Each `stage` clears the screen so only the current step is visible: keep a stage to one focused task so nothing the human needs scrolls away. Don't touch the library above the marker.
+對於每個階段，撰寫使用者遵循的精確路徑：開啟哪個 URL、在那裡做什麼、數值顯示在哪裡、填入哪個變數：例如「儀錶板 → 開發者 → API 金鑰 → 顯示測試金鑰 → 複製」。若你實際不知道目前的 UI 或確切指令，請說明並詢問使用者或查閱檔案：切勿捏造可能不存在的步驟。
 
-### 4. Verify and hand off
+**完成標準：** 每個階段都能追蹤到陌生人也能遵循的具體指令。
 
-- `bash -n <script>`; run `shellcheck` if available.
+<a id="3-author-the-wizard"></a>
+
+### 3. 撰寫精靈
+
+將 `template.sh` 複製到目標路徑。將範例階段替換為每個步驟一個 `stage`，依相依順序排列。使用函式庫輔助函式：`stage`、`say`/`step`、`open_url`、`ask`/`ask_secret`、`write_env`、`set_secret`/`set_var`、`pause`/`confirm`。將 `TOTAL_STAGES` 設為你撰寫的階段數。
+
+維持範本設定的標準：在要求數值前先開啟 URL，對任何機密使用 `ask_secret`，對每個持久化數值使用 `write_env`，僅對 CI 實際需要的數值使用 `set_secret`，並在任何不可逆操作前使用 `confirm`。每個 `stage` 會清除螢幕，使僅當前步驟可見：將每個階段限制為一個專注的任務，以免使用者需要的內容捲動消失。不要觸碰標記上方的函式庫。
+
+<a id="4-verify-and-hand-off"></a>
+
+### 4. 驗證並交付
+
+- `bash -n <script>`；若可用，執行 `shellcheck`。
 - `chmod +x <script>`.
-- Don't run it end-to-end yourself: it opens browsers and blocks on human input. Trace it statically instead: every value from step 1 is captured and lands where step 1 said, and every `set_secret` name exactly matches a `secrets.*` reference in CI.
-- Tell the user how to run it. If it's a repeatable setup path, commit it and link it from the README so the next person runs the script instead of asking an AI.
+- 不要自行端到端執行：它會開啟瀏覽器並阻塞等待使用者輸入。改為靜態追蹤：步驟 1 中的每個數值都被擷取並落在步驟 1 指定的位置，且每個 `set_secret` 名稱都與 CI 中的 `secrets.*` 參考完全匹配。
+- 告知使用者如何執行它。若這是可重複執行的設定路徑，請提交它並從 README 連結，以便下個人執行指令碼而非詢問 AI。

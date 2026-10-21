@@ -1,3 +1,3 @@
 # Credits
 
-The **Summary** section's menu of visuals (pseudocode, call trees, component trees, file trees, Mermaid, diffs) and its placement guidance come from [Dex Horthy](https://github.com/dexhorthy)'s [`show-me`](https://github.com/humanlayer/humanlayer) skill, reproduced almost word for word and aimed at a diff instead of a live conversation. `pr` does not depend on `show-me` as a skill (it isn't part of this repo, and a hard dependency would break standalone installs), so the content is copied in rather than pointed at; this file is the attribution a dependency would otherwise have carried.
+**Summary** 區段的視覺化選單（偽程式碼、呼叫樹、元件樹、檔案樹、Mermaid、diff）及其放置指引，取自 [Dex Horthy](https://github.com/dexhorthy) 的 [`show-me`](https://github.com/humanlayer/humanlayer) skill，內容幾乎逐字重現，且針對 diff 而非即時對話進行調整。`pr` 不依賴 `show-me` 作為 skill（它不屬於此儲存庫，且硬性依賴會導致獨立安裝失敗），因此內容是直接複製過來，而非指向來源；此檔案即為原本由依賴關係所承載的署名資訊。

@@ -1,78 +1,92 @@
-## What it does
+<a id="what-it-does"></a>
 
-`to-questionnaire` turns a decision you can't settle on your own into a **questionnaire**: a Markdown document you hand to the one person who holds what you're missing, for them to fill in async or for the two of you to work through in a meeting.
+## 功能說明
 
-It grills you about the **send**, never the subject. An interview about the topic is pointless, because not knowing the topic is why you're writing to someone else. So it asks the two things you can always answer (who this is going to, and what you need back from them) and aims every question in the document at the **gap** between the two.
+`to-questionnaire` 將你無法自行決定的事項轉化為一份**問卷**：這是一份 Markdown 檔案，交給你所缺少資訊的那位特定人員，讓他們以非同步方式填寫，或讓你們兩人在會議中共同處理。
 
-## When to reach for it
+它會就**傳送物件**進行嚴謹的提問，絕不針對主題本身。針對主題的訪談毫無意義，因為你不知道主題，正是你寫信給別人的原因。因此，它會詢問你始終能回答的兩件事（這封信要寄給誰，以及你需要對方回傳什麼），並讓檔案中的每個問題都指向這兩者之間的**缺口**。
 
-You invoke this by typing `/to-questionnaire`; the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) won't reach for it on its own.
+<a id="when-to-reach-for-it"></a>
 
-Reach for it when a decision is blocked on knowledge that lives in one other person's head: a client, a domain expert, an exec who owns the business rules, a colleague on a team you don't sit with. Which skill you want depends on where the answers are:
+## 何時使用
 
-| The answers are in… | Reach for |
+您透過輸入 `/to-questionnaire` 來呼叫此功能；[agent](https://www.aihero.dev/ai-coding-dictionary/agent) 不會自行主動使用它。
+
+當決策受阻於僅存在於另一人腦中的知識時，請使用此功能：例如客戶、領域專家、掌握商業規則的高層主管，或你不同組的同事。你需要哪種技能，取決於答案所在之處：
+
+| 答案在… | 使用 |
 | --- | --- |
-| Your own head, unsharpened | [grill-me](https://aihero.dev/skills-grill-me) |
-| The codebase | [grill-with-docs](https://aihero.dev/skills-grill-with-docs) |
-| Someone else's head | `to-questionnaire` |
-| Nobody's head yet, the question needs something to react to | [prototype](https://aihero.dev/skills-prototype) |
+| 你自己的腦中，但尚未釐清 | [grill-me](https://aihero.dev/skills-grill-me) |
+| 程式碼庫 | [grill-with-docs](https://aihero.dev/skills-grill-with-docs) |
+| 別人的腦中 | `to-questionnaire` |
+| 目前還沒有人在腦中，問題需要某些內容作為反應基礎 | [prototype](https://aihero.dev/skills-prototype) |
 
-The common case is a [grilling](https://www.aihero.dev/ai-coding-dictionary/grilling) session that stalls because some of the questions it raised aren't yours to answer. Run `/to-questionnaire` in that same conversation to take those questions offline, then bring the answers back and carry on.
+常見情況是，[grilling](https://www.aihero.dev/ai-coding-dictionary/grilling) 會話因其中一些問題並非你能回答而陷入停滯。在同一個對話中執行 `/to-questionnaire`，將這些問題移至線下處理，然後將答案帶回並繼續進行。
 
-## The send, not the subject
+<a id="the-send-not-the-subject"></a>
 
-The interview is two exchanges, and then it stops.
+## 關注傳送物件，而非主題
 
-- **Who is it going to?** Their role, their expertise, their relationship to you. This sets the tone and how much context the document has to carry. An outside client needs orienting; a teammate does not.
-- **What do you need back?** The concrete decisions or facts you can't resolve alone. This becomes the checklist for the finished document. Every item you name gets a question aimed at it.
+訪談包含兩輪交流，隨後即停止。
 
-Everything after that is drafting. The skill writes the file to `to-questionnaire-<slug>.md` in the current directory. There is no setup, no workspace, and nothing to configure.
+- **傳送物件是誰？** 對方的角色、專業領域，以及與你的關係。這決定了語氣，以及檔案需要攜帶多少背景資訊。外部客戶需要導向說明，但團隊成員則不需要。
+- **你需要對方回傳什麼？** 你無法獨自解決的具體決策或事實。這將成為完成檔案的檢查清單。你列出的每個專案都會對應一個針對該專案的問題。
 
-## The document
+此後的一切都是起草階段。該技能會將檔案寫入目前目錄中的 `to-questionnaire-<slug>.md`。無需設定、無需工作區，也沒有任何需要設定的專案。
 
-The document is a **discovery questionnaire**, because you lack the context and the recipient has it. That sets its shape:
+<a id="the-document"></a>
 
-- A purpose line naming the decision that depends on it, and a short context section for a recipient who knows none of your background.
-- Questions ordered **most-important-first** and grouped under themed headings, because async means you may only get one pass.
-- One idea per question, never compound, with an answer stub beneath it and a *why this matters* line only where a question could be misread.
-- Explicit permission to answer "I don't know", because a flagged uncertainty is useful and a confident guess that reads like a fact is not.
-- A closing catch-all: anything we didn't ask that we should know?
+## 檔案
 
-The document is deliberately not two things. It isn't **branching**. The questions are a flat, grouped list, not a tree that skips section D if you answered A. It isn't **multi-recipient** either. One run produces one document for one person.
+該檔案是一份**探索性問卷**，因為你缺乏背景資訊，而接收者擁有這些資訊。這決定了檔案的結構：
 
-## Common questions
+- 一行目的說明，指出依賴此檔案的決策，並為完全不瞭解你背景的接收者提供簡短的背景章節。
+- 問題依**最重要優先**排序，並分組在主題標題下，因為非同步溝通意味著你可能只有一次機會。
+- 每個問題只包含一個概念，絕不複合，下方附有答案欄位，僅在問題可能被誤解時，才加上*為何這很重要*的說明。
+- 明確允許回答「我不知道」，因為標記出的不確定性是有用的，而看似事實的自信猜測則沒有用。
+- 結尾的兜底問題：還有什麼我們沒問但應該知道的事嗎？
 
-**Does it read my grilling session and extract the questions from it?**
-Not as a step of its own. The skill has no ingest phase. It asks about the send, then drafts. What makes it work after a grilling session is that you run it in the **same conversation**, so the [session](https://www.aihero.dev/ai-coding-dictionary/session) is already in [context](https://www.aihero.dev/ai-coding-dictionary/context) and the drafting can draw on it. If you start it in a fresh session, it knows nothing about the grilling, and you supply the topic again yourself when you answer "what do you need back?".
+該檔案刻意避免兩種形式。它不是**分支式**的。問題是扁平的分組清單，而非一棵樹，不會因為你回答了 A 就跳過 D 部分。它也不是**多接收者**的。一次執行只為一個人產生一份檔案。
 
-**The missing answers don't all live with the same person. Can it split them by recipient?**
-No. Step one asks for *the* recipient, singular, and the skill pitches the tone and context of the whole document at them. If three people hold three parts of the answer, run it three times, once per person. People have asked for one document that routes questions by discipline or role, but that did not ship.
+<a id="common-questions"></a>
 
-**Are the questions dependent: does it skip sections based on earlier answers?**
-No. The dependent-question design was explored and did not ship. The output is a static document: themed groups, most-important-first, every question live. The objection to it is fair. A [model](https://www.aihero.dev/ai-coding-dictionary/model) that plans more than two or three questions ahead of a real answer plans badly, and a branching document has to plan all of them ahead of every answer.
+## 常見問題
 
-**What if the recipient doesn't know either?**
-The document tells them to say so. It explicitly asks for "I don't know" and partial answers. A flagged uncertainty is worth more than a guess, because a vague answer and a confidently wrong one look identical once they're back in your context.
+**它會讀取我的 grilling 會話並從中提取問題嗎？**
+不會將其作為獨立的步驟。該技能沒有匯入階段。它詢問傳送物件，然後起草檔案。之所以能在 grilling 會話後運作，是因為你在**同一個對話**中執行它，因此 [session](https://www.aihero.dev/ai-coding-dictionary/session) 已在 [context](https://www.aihero.dev/ai-coding-dictionary/context) 中，起草過程可以引用它。如果你在新的會話中啟動它，它對 grilling 一無所知，當你在回答「你需要對方回傳什麼？」時，必須自行再次提供主題。
 
-**Does it send it anywhere (Slack, an issue tracker, email)?**
-No. It writes a Markdown file in the current directory and tells you the path. Delivery is yours: paste it into a [ticket](https://www.aihero.dev/ai-coding-dictionary/ticket), drop it in a Slack thread, attach it to an email, or open it on a shared screen and work through it live. People have done all four by hand.
+**缺少的答案不全在同一個人身上。它能按接收者拆分嗎？**
+不能。第一步詢問的是*那位*接收者（單數），該技能會針對整份檔案的語氣和背景資訊向該人調整。如果三個人各自持有答案的三個部分，請執行三次，每人一次。有人曾要求一份能按專業或角色路由問題的檔案，但該功能並未發布。
 
-**Isn't this just `/grill-me` in batch mode?**
-No. `grill-me` already asks in **rounds**. It asks the whole frontier of open questions at once, then recomputes it from your answers, so it already meets the "give me all the questions at once" need. `to-questionnaire` differs on another axis. It is about whose head the answers are in, not how the questions are delivered. To answer them yourself faster, use `grill-me`. To get them out of someone else, use this.
+**問題之間有依賴關係嗎：它會根據先前的答案跳過某些章節嗎？**
+不會。依賴性問題的設計曾經過探索，但未發布。輸出是一份靜態檔案：主題分組、最重要優先、每個問題都有效。對其的反對意見是合理的。一個 [model](https://www.aihero.dev/ai-coding-dictionary/model) 若在真實答案出現前規劃超過兩三個問題，規劃效果會很差，而分支式檔案必須在每個答案出現前規劃所有問題。
 
-**Couldn't I just ask the agent for this without a skill?**
-Yes, and plenty of people did before it existed: `OPEN_QUESTIONS.md` files, spreadsheets sent to clients, a "needs more info" ticket per unanswered question. The skill buys you two things: the interview never drifts onto the subject, and the document comes out in a shape a non-technical recipient can fill in. If you already have a house format that works, you don't need this.
+**如果接收者也不知道怎麼辦？**
+檔案會告訴他們這樣說。它明確要求回答「我不知道」或部分答案。標記出的不確定性比猜測更有價值，因為模糊的答案和自信但錯誤的答案，一旦回到你的上下文中，看起來是一模一樣的。
 
-## It's working if
+**它會將檔案傳送到任何地方嗎（Slack、問題追蹤器、電子郵件）？**
+不會。它在目前目錄中寫入一個 Markdown 檔案，並告訴你路徑。交付由你負責：將其貼到 [ticket](https://www.aihero.dev/ai-coding-dictionary/ticket) 中、放入 Slack 討論串、附加在電子郵件中，或在共享螢幕上開啟並即時處理。人們已手動完成過這四種方式。
 
-- It asks about the recipient and about what you need back, then stops asking. If it asks about the subject itself, the skill has gone wrong.
-- Every item you named as "what I need back" is traceable to a question in the file.
-- The questions read as aimed at what the *recipient* knows, not as your own open questions copied down verbatim.
-- You could hand the file to someone who wasn't in the conversation and they would know why they got it and by when to reply.
-- The answers that come back are usable input for a new grilling round, rather than a fresh set of questions.
+**這不就是 `/grill-me` 的批次模式嗎？**
+不是。`grill-me` 已經以**輪次**方式提問。它一次詢問所有未解決問題的邊界，然後根據你的答案重新計算，因此它已滿足「一次給我所有問題」的需求。`to-questionnaire` 在另一個維度上有所不同。它關注的是答案在誰的腦中，而非問題如何交付。若要更快地自行回答，請使用 `grill-me`。若要從他人處獲得答案，請使用此功能。
 
-## Where it fits
+**我能不能不透過技能，直接問 agent 這件事？**
+可以，而且在它存在之前，很多人已經這樣做了：`OPEN_QUESTIONS.md` 檔案、寄給客戶的試算表、每個未回答問題對應的「需要更多資訊」工單。該技能為你帶來兩點好處：訪談不會偏離主題，且檔案以非技術接收者能填寫的形式輸出。如果你已經有運作良好的內部格式，則不需要此功能。
 
-`to-questionnaire` is a reach-for-it-anytime standalone. You use it where your own knowledge ends and the next move is to ask another person, not to run another skill. That is most often mid-flow, when planning has stalled on something that isn't yours to decide.
+<a id="its-working-if"></a>
 
-Its neighbour is [grill-me](https://aihero.dev/skills-grill-me), and the two differ on where the answers live. Grilling gets the answers from you; a questionnaire gets them from someone else. Feed what comes back into another grilling round, or into [grill-with-docs](https://aihero.dev/skills-grill-with-docs) or [to-spec](https://aihero.dev/skills-to-spec) if the work is heading for a build. When you're unsure which skill fits the moment, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.
+## 如果符合以下條件，則表示它運作正常
+
+- 它詢問接收者以及你需要對方回傳什麼，然後停止提問。如果它詢問主題本身，該技能就出錯了。
+- 你列出的每個「我需要對方回傳」專案，都能在檔案中追蹤到對應的問題。
+- 問題讀起來像是針對*接收者*所知內容的提問，而非你未解決問題的逐字複製。
+- 你可以將檔案交給未參與對話的人，他們會知道為什麼收到這份檔案，以及應在何時前回覆。
+- 回傳的答案可用於新一輪的深入追問，而非一組全新的問題。
+
+<a id="where-it-fits"></a>
+
+## 適用位置
+
+`to-questionnaire` 是一個隨時可獨立使用的工具。當你的知識達到極限，而下一步是向他人提問，而非執行另一個 skill 時，就該使用它。這通常發生在流程中途，當規劃因某些非你所能決定的事項而停滯時。
+
+它的鄰居是 [grill-me](https://aihero.dev/skills-grill-me)，兩者差異在於答案的來源。深入追問是向你取得答案；問卷則是向他人取得。將回傳的內容投入另一輪深入追問，或投入 [grill-with-docs](https://aihero.dev/skills-grill-with-docs) 或 [to-spec](https://aihero.dev/skills-to-spec)，如果工作正朝向建置方向發展。當你不確定哪個 skill 適合當下情境時，[ask-matt](https://aihero.dev/skills-ask-matt) 會為你導向。

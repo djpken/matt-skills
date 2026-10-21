@@ -1,3 +1,5 @@
+> 狀態：已由 [0004-traditional-chinese-primary-documents.md](0004-traditional-chinese-primary-documents.md) 取代。以下保留先前的雙語對應檔決策供追溯。
+
 # Bilingual skill documents use locale sibling files
 
 This fork uses `zh-TW` as its default branch. Its existing `*.zh.md` siblings represent standard written Taiwan Traditional Chinese. Keep the `.zh` suffix so existing links and translations remain valid; do not rename it to `.zh-TW`.

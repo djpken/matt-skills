@@ -1,6 +1,6 @@
 ---
 name: pr
-description: "Use when writing a PR body."
+description: "撰寫 PR 內容時使用。"
 metadata:
   credits:
     skill: show-me
@@ -9,7 +9,7 @@ metadata:
     url: "https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md"
 ---
 
-Use this template for writing the PR body:
+撰寫 PR 內容時，請使用此範本：
 
 ```markdown
 ## Summary
@@ -32,15 +32,19 @@ Use this template for writing the PR body:
 <optional: potential ramifications of merge>
 ```
 
-## Sections
+<a id="sections"></a>
 
-Skip all preambles and keep prose brief. Use the user's domain language from `GLOSSARY.md`.
+## 章節
 
-### Summary
+略過所有前言，保持文字簡潔。使用 `GLOSSARY.md` 中使用者的領域語言。
 
-Pick the smallest view that makes the key point clear.
+<a id="summary"></a>
 
-- Show logic or an algorithm as pseudocode:
+### 摘要
+
+選擇能清楚說明重點的最小視角。
+
+- 以偽程式碼顯示邏輯或演演算法：
 
 ```text
 on(save)
@@ -50,7 +54,7 @@ on(save)
   return fresh result
 ```
 
-- Show runtime control flow as a call tree:
+- 以呼叫樹顯示執行期控制流程：
 
 ```text
 submitForm
@@ -60,7 +64,7 @@ submitForm
   navigateToSession
 ```
 
-- Show UI structure as a component tree, including state and module boundaries that matter:
+- 以元件樹顯示 UI 結構，包含重要的狀態與模組邊界：
 
 ```text
 <SessionPage> (apps/example/src/routes/session.tsx)
@@ -69,7 +73,7 @@ submitForm
     <RunSkillButton> (packages/ui)
 ```
 
-- Show file responsibility or a broad refactor as a shallow file tree:
+- 以淺層檔案樹顯示檔案職責或廣泛的重構：
 
 ```text
 src/
@@ -78,7 +82,7 @@ src/
 └── transport/      # sends API requests
 ```
 
-- Show component interaction, control flow, or data flow with Mermaid:
+- 使用 Mermaid 顯示元件互動、控制流程或資料流：
 
 ```mermaid
 sequenceDiagram
@@ -90,9 +94,9 @@ sequenceDiagram
     Daemon-->>UI: stream result
 ```
 
-- Use `diff` when the point is what changes and the surrounding shape already exists. Match the diff shape to the topic.
+- 當重點在於變更內容，且周圍結構已存在時，使用 `diff`。讓 diff 的形狀與主題相符。
 
-For a component change:
+針對元件變更：
 
 ```diff
  <SessionPage>
@@ -103,7 +107,7 @@ For a component change:
 +    <SkillResultCard />
 ```
 
-For a file-layout change:
+針對檔案結構變更：
 
 ```diff
  src/
@@ -116,7 +120,7 @@ For a file-layout change:
 +    └── stream.ts
 ```
 
-For a call-tree or call-stack change:
+針對呼叫樹或呼叫堆疊變更：
 
 ```diff
  submitForm
@@ -129,7 +133,7 @@ For a call-tree or call-stack change:
 +    subscribeToEvents
 ```
 
-For a state or control-flow change:
+針對狀態或控制流程變更：
 
 ```diff
  on(save)
@@ -140,7 +144,7 @@ For a state or control-flow change:
 +  invalidate cache
 ```
 
-- Show the whole block when most of it is new, when omitted context would hide ownership or order, or when the user needs a copyable target shape:
+- 在以下情況下顯示整個區塊：大部分內容是新的、省略的上下文會隱藏所有權或順序、或使用者需要可複製的目標形狀：
 
 ```ts
 function expandSkill(command: string): string {
@@ -149,22 +153,28 @@ function expandSkill(command: string): string {
 }
 ```
 
-#### Guidance
+<a id="guidance"></a>
 
-Place each visual next to the short text it supports. Keep only the calls, files, props, states, and boundaries needed to answer the user's current question or the options to resolve the current discussion point.
+#### 指引
 
-You may use one of these, you may use several, it is unlikely you will use all of them. Use your judgement and don't overwhelm the user.
+將每個視覺元素放在其支援的簡短文字旁邊。僅保留回答使用者目前問題或解決目前討論點所需的呼叫、檔案、props、狀態與邊界。
 
-### Evidence
+你可以使用其中一個，也可以使用多個，但不太可能全部使用。請運用判斷力，不要讓使用者感到資訊過載。
 
-Concrete evidence that the change works. Show a before and after.
+<a id="evidence"></a>
 
-Screenshots are S-tier - when the environment is set up for it and the change is visual.
+### 證據
 
-Execution-based evidence is A-tier. Test results, console output. Show the exact test that now fails and passes, using pseudocode.
+證明變更有效的具體證據。顯示變更前後的對比。
 
-### Merge Danger
+螢幕截圖屬於 S 級，適用於環境已設定好且變更涉及視覺效果的情況。
 
-Describe whether it's a one-way or two-way door. You can walk back through two-way doors, but not one-way doors. A PR that is cheap to roll back is lower risk. Changes that involve destructive actions or hard-to-reverse decisions are one-way doors.
+基於執行的證據屬於 A 級。例如測試結果、主控臺輸出。使用偽程式碼顯示現在失敗並透過的具體測試。
 
-The blast radius is the potential impact or scope of the changes introduced by this PR. Consider all possibilities. Examples are layout shift, breakages for consumers, mobile responsiveness, etc.
+<a id="merge-danger"></a>
+
+### 合併風險
+
+描述這是單向門還是雙向門。你可以走回雙向門，但無法走回單向門。容易回滾的 PR 風險較低。涉及破壞性操作或難以反轉決策的變更屬於單向門。
+
+影響範圍是指此 PR 引入的變更可能造成的影響或範圍。請考慮所有可能性。範例包括版面設定位移、對使用者的破壞、行動裝置響應式設計等。

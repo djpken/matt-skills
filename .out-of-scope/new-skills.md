@@ -1,21 +1,27 @@
-# New skill proposals and contributions
+<a id="new-skill-proposals-and-contributions"></a>
 
-This repo does not take proposals or contributions for new skills, including ones that arrive with a ready branch or a fork.
+# 新的 skill 提案與貢獻
 
-## Why this is out of scope
+此儲存庫不接受新的 skill 提案或貢獻，包括附有就緒分支或 fork 的提案。
 
-The catalog is the set of skills I use myself every day, and it's deliberately small. Every skill is permanent maintenance surface: it has to stay in step with the others, with the docs pages, with `ask-matt`'s routing map, and with the plugin manifest. The shorter and fewer the skills, the cheaper they are to keep correct.
+<a id="why-this-is-out-of-scope"></a>
 
-The rule I apply to my own ideas applies here too: if you can compose the behaviour from existing skills, it doesn't get a new skill. Most proposals are a specific workflow built out of grilling, `to-spec`, `to-tickets`, `implement` and friends, and that composition belongs in your own prompts or your own skills.
+## 為何此類內容不在範圍內
 
-You're very welcome to publish a skill yourself. skills.sh makes that straightforward, and nothing here needs to know about it.
+目錄是我每天自己使用的 skill 集合，且刻意保持精簡。每個 skill 都是永久性的維護面：它必須與其他 skill、檔案頁面、`ask-matt` 的路由圖以及 plugin manifest 保持同步。skill 越短、數量越少，維持其正確性的成本就越低。
 
-This covers *new* skills only. A concrete failure in an existing skill is judged against the bar in [`SCOPE.md`](../SCOPE.md) like any other issue.
+我應用於自己點子上的規則在此同樣適用：如果你能透過組合現有的 skill 來實現該行為，就不會新增一個 skill。大多數提案都是由 grilling、`to-spec`、`to-tickets`、`implement` 及其相關工具組成的特定工作流程，而這種組合應屬於你自己的 prompts 或你自己的 skill。
 
-## Prior requests
+你非常歡迎自行發布 skill。skills.sh 讓這件事變得簡單，且此處無需得知相關資訊。
 
-- #101: "Any skill to iteratively build CONTEXT.md (and ADRs) for a brownfield codebase?"
-- #414: "Add a `handoff-to-pro` skill for generating one-shot prompts for external frontier chat models"
-- #727: "new skill - teach pr"
-- #1051: "Contribution ready: /red-team, the optional pre-implementation spec review from #633"
-- #1166: "Skill proposal: agent-chat-ux for productivity (branch ready on fork)"
+這僅涵蓋*新的* skill。現有 skill 中的具體失敗案例，將依據 [`SCOPE.md`](../SCOPE.md) 中的標準進行判斷，與其他 issue 相同。
+
+<a id="prior-requests"></a>
+
+## 先前的請求
+
+- #101:「是否有 skill 可針對 brownfield 程式碼庫迭代建立 CONTEXT.md（以及 ADR）？」
+- #414:「新增一個 `handoff-to-pro` skill，用於為外部前沿聊天模型生成一次性 prompts」
+- #727:「新 skill - teach pr」
+- #1051:「貢獻就緒：/red-team，來自 #633 的選配實作前規格審查」
+- #1166:「Skill 提案：agent-chat-ux 用於生產力（fork 上分支已就緒）」

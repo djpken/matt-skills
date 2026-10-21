@@ -1,15 +1,17 @@
-# Triage Labels
+<a id="triage-labels"></a>
 
-The skills speak in terms of five canonical triage roles. This file maps those roles to the actual label strings used in this repo's issue tracker.
+# 分類標籤
 
-| Label in mattpocock/skills | Label in our tracker | Meaning                                  |
+這些 skill 使用五種標準分類角色來描述。此檔案將這些角色對應到此儲存庫問題追蹤器中實際使用的標籤字串。
+
+| mattpocock/skills 中的標籤 | 我們追蹤器中的標籤 | 意義 |
 | -------------------------- | -------------------- | ---------------------------------------- |
-| `needs-triage`             | `needs-triage`       | Maintainer needs to evaluate this issue  |
-| `needs-info`               | `needs-info`         | Waiting on reporter for more information |
-| `ready-for-agent`          | `ready-for-agent`    | Fully specified, ready for an AFK agent  |
-| `ready-for-human`          | `ready-for-human`    | Requires human implementation            |
-| `wontfix`                  | `wontfix`            | Will not be actioned                     |
+| `needs-triage` | `needs-triage` | 維護者需要評估此問題 |
+| `needs-info` | `needs-info` | 等待報告者提供更多資訊 |
+| `ready-for-agent` | `ready-for-agent` | 已完整規格化，可供 AFK agent 處理 |
+| `ready-for-human` | `ready-for-human` | 需要人工實作 |
+| `wontfix` | `wontfix` | 不會採取行動 |
 
-When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
+當 skill 提及某個角色（例如「套用 AFK-ready 分類標籤」）時，請使用此表格中對應的標籤字串。
 
-Judge every issue against [`SCOPE.md`](../../SCOPE.md) before picking a state. Rejections close as "not planned".
+在選擇狀態之前，請依據 [`SCOPE.md`](../../SCOPE.md) 評估每個問題。拒絕的問題將以「不計畫處理」關閉。

@@ -1,6 +1,10 @@
-# GLOSSARY.md Format
+<a id="glossarymd-format"></a>
 
-## Structure
+# GLOSSARY.md 格式
+
+<a id="structure"></a>
+
+## 結構
 
 ```md
 # {Context Name}
@@ -22,18 +26,22 @@ A person or organization that places orders.
 _Avoid_: Client, buyer, account
 ```
 
-## Rules
+<a id="rules"></a>
 
-- **Be opinionated.** When multiple words exist for the same concept, pick the best one and list the others under `_Avoid_`.
-- **Keep definitions tight.** One or two sentences max. Define what it IS, not what it does.
-- **Only include terms specific to this project's context.** General programming concepts (timeouts, error types, utility patterns) don't belong even if the project uses them extensively. Before adding a term, ask: is this a concept unique to this context, or a general programming concept? Only the former belongs.
-- **Group terms under subheadings** when natural clusters emerge. If all terms belong to a single cohesive area, a flat list is fine.
+## 規則
 
-## Single vs multi-context repos
+- **要有明確立場。** 當同一概念有多個詞彙時，選取最合適的一個，並將其他詞彙列於 `_Avoid_` 之下。
+- **定義要精簡。** 最多一到兩句話。定義它「是什麼」，而不是它「做什麼」。
+- **僅納入特定於此專案脈絡的詞彙。** 即使專案大量使用，一般程式設計概念（逾時、錯誤型別、工具模式）也不應納入。在新增詞彙前，請自問：這是此脈絡獨有的概念，還是一般程式設計概念？只有前者才屬於此處。
+- **在自然群組出現時，將詞彙歸類於副標題之下。** 如果所有詞彙都屬於單一連貫領域，使用平鋪清單即可。
 
-**Single context (most repos):** One `GLOSSARY.md` at the repo root.
+<a id="single-vs-multi-context-repos"></a>
 
-**Multiple contexts:** A `GLOSSARY-MAP.md` at the repo root lists the contexts, where they live, and how they relate to each other:
+## 單一脈絡與多脈絡儲存庫
+
+**單一脈絡（大多數儲存庫）：** 在儲存庫根目錄放置一個 `GLOSSARY.md`。
+
+**多個脈絡：** 在儲存庫根目錄的 `GLOSSARY-MAP.md` 中列出各脈絡、其位置以及它們之間的關係：
 
 ```md
 # Glossary Map
@@ -51,10 +59,10 @@ _Avoid_: Client, buyer, account
 - **Ordering ↔ Billing**: Shared types for `CustomerId` and `Money`
 ```
 
-The skill infers which structure applies:
+此 skill 會推斷適用哪種結構：
 
-- If `GLOSSARY-MAP.md` exists, read it to find contexts
-- If only a root `GLOSSARY.md` exists, single context
-- If neither exists, create a root `GLOSSARY.md` lazily when the first term is resolved
+- 如果 `GLOSSARY-MAP.md` 存在，讀取它以尋找脈絡
+- 如果只有根目錄的 `GLOSSARY.md` 存在，則為單一脈絡
+- 如果兩者都不存在，在解析第一個詞彙時，延遲建立根目錄的 `GLOSSARY.md`
 
-When multiple contexts exist, infer which one the current topic relates to. If unclear, ask.
+當存在多個脈絡時，推斷目前主題與哪一個相關。如果不清楚，請詢問。

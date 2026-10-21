@@ -1,109 +1,127 @@
-## What it does
+<a id="what-it-does"></a>
 
-`triage` works through the issues on your project's tracker. It moves each one through a small state machine of **triage roles** (a category role and a state role). Each issue ends as an agent-ready brief, a specific question for the reporter, or a closed issue with a recorded reason.
+## 功能說明
 
-It is only for issues **you didn't create**. That means raw bug reports, incoming feature requests, or an external pull request that arrived unannounced: work that came into the tracker from outside, in whatever shape the reporter left it. [Tickets](https://www.aihero.dev/ai-coding-dictionary/ticket) from [to-tickets](https://aihero.dev/skills-to-tickets) are already agent-ready, so if you run `triage` over them, you waste the work. The rule is simple: `/triage` is only for incoming issues, not for issues you created yourself.
+`triage` 會處理專案追蹤器上的問題。它會將每個問題透過一個小型狀態機，依序經過**分診角色**（一個類別角色與一個狀態角色）。每個問題最終會成為一份可供 agent 執行的簡報、一個提問給回報者的具體問題，或是一個已關閉且記錄了原因的問題。
 
-It also differs from labelling by hand because it recommends and then waits. It gives you its category and state call with reasoning, plus what it found in the codebase, and applies nothing until you tell it to.
+這僅適用於**非您建立**的問題。這意味著原始的錯誤回報、新進的功能請求，或是未經預告而到達的外部 pull request：這些是從外部進入追蹤器的工作，無論回報者留下的是什麼樣貌。[Tickets](https://www.aihero.dev/ai-coding-dictionary/ticket) 來自 [to-tickets](https://aihero.dev/skills-to-tickets) 已經是可供 agent 執行的狀態，因此如果您對它們執行 `triage`，就會浪費工作。規則很簡單：`/triage` 僅適用於新進的問題，不適用於您自己建立的問題。
 
-## When to reach for it
+它與手動貼標籤也不同，因為它會提出建議然後等待。它會給出類別與狀態的判斷及理由，加上它在程式碼庫中發現的內容，並在您指示之前不會套用任何變更。
 
-You invoke this by typing `/triage` and then describing what you want in plain language. The [agent](https://www.aihero.dev/ai-coding-dictionary/agent) won't reach for it on its own. Examples: "Show me anything that needs my attention", "let's look at #42", "move #42 to ready-for-agent".
+<a id="when-to-reach-for-it"></a>
 
-| What you have | Where to go |
+## 何時使用
+
+您透過輸入 `/triage` 並用自然語言描述您的需求來呼叫此功能。[agent](https://www.aihero.dev/ai-coding-dictionary/agent) 不會自行使用它。範例：「顯示任何需要我注意的事項」、「我們來看看 #42」、「將 #42 移至 ready-for-agent」。
+
+| 您擁有的情況 | 應前往的工具 |
 | --- | --- |
-| A tracker full of raw reports from other people | `/triage` |
-| A rough idea of your own, nothing written down | [grill-with-docs](https://aihero.dev/skills-grill-with-docs) |
-| A settled conversation to turn into a [spec](https://www.aihero.dev/ai-coding-dictionary/spec) | [to-spec](https://aihero.dev/skills-to-spec) |
-| A spec to split into agent-ready tickets | [to-tickets](https://aihero.dev/skills-to-tickets) |
-| A confirmed bug that needs a root cause, not a label | [diagnosing-bugs](https://aihero.dev/skills-diagnosing-bugs) |
+| 追蹤器中充滿來自他人的原始回報 | `/triage` |
+| 您自己的一個粗略想法，尚未寫下來 | [grill-with-docs](https://aihero.dev/skills-grill-with-docs) |
+| 一個已確定的對話，要轉為 [spec](https://www.aihero.dev/ai-coding-dictionary/spec) | [to-spec](https://aihero.dev/skills-to-spec) |
+| 一份要拆分為可供 agent 執行工單的 spec | [to-tickets](https://aihero.dev/skills-to-tickets) |
+| 一個已確認的錯誤，需要根本原因分析而非標籤 | [diagnosing-bugs](https://aihero.dev/skills-diagnosing-bugs) |
 
-## Prerequisites
+<a id="prerequisites"></a>
 
-`triage` reads and writes your issue tracker, so [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) must first configure that tracker and its label vocabulary. The role names below are **canonical**. The label strings in your tracker may differ, and setup provides the mapping. If your tracker already uses the canonical names exactly, you have nothing to map and nothing to set up.
+## 先決條件
 
-The tracker config also decides whether external pull requests count as a request surface, and who counts as external. That flag is off by default, and setup no longer asks about it. To bring PRs into scope, turn it on in `docs/agents/issue-tracker.md`.
+`triage` 會讀取和寫入您的問題追蹤器，因此 [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) 必須先設定該追蹤器及其標籤詞彙。以下角色名稱是**標準**的。您追蹤器中的標籤字串可能不同，而設定會提供對應關係。如果您的追蹤器已經精確使用標準名稱，則您無需對應也無需設定。
 
-## The state machine
+追蹤器設定也決定外部 pull request 是否算作請求介面，以及誰算作外部人員。該旗標預設為關閉，且設定不再詢問此項。若要將 PR 納入範圍，請在 `docs/agents/issue-tracker.md` 中開啟它。
 
-Every triaged item ends with exactly one category role and one state role. There are two categories: `bug` (something is broken) and `enhancement` (new feature or improvement). There are five states:
+<a id="the-state-machine"></a>
 
-| State | Means |
+## 狀態機
+
+每個已分診的專案最終都恰好擁有一個類別角色和一個狀態角色。有兩個類別：`bug`（某處壞掉了）和 `enhancement`（新功能或改進）。有五個狀態：
+
+| 狀態 | 含義 |
 | --- | --- |
-| `needs-triage` | You need to evaluate it. An unlabelled issue normally lands here first. |
-| `needs-info` | Waiting on the reporter. Returns to `needs-triage` when they reply. |
-| `ready-for-agent` | Fully specified, with an agent brief attached. An [AFK](https://www.aihero.dev/ai-coding-dictionary/afk) agent can take it. |
-| `ready-for-human` | The same brief, plus why an agent can't do it: judgment, external access, manual testing. |
-| `wontfix` | Closed, with the reason recorded. |
+| `needs-triage` | 您需要評估它。未貼標籤的問題通常會先落在這裡。 |
+| `needs-info` | 等待回報者。當他們回覆時，會返回 `needs-triage`。 |
+| `ready-for-agent` | 已完全規格化，並附有 agent 簡報。[AFK](https://www.aihero.dev/ai-coding-dictionary/afk) agent 可以接手。 |
+| `ready-for-human` | 相同的簡報，加上為什麼 agent 無法執行：需要判斷、外部存取或手動測試。 |
+| `wontfix` | 已關閉，並記錄了原因。 |
 
-That is the whole vocabulary. The rule of exactly one state role per item keeps the queries simple. The states are also the most-requested area of the [skill](https://www.aihero.dev/ai-coding-dictionary/skill). Users have asked for a state for work that is specified but blocked on another issue, a `deferred` state for work that waits on a future trigger, and a terminal `implemented` state. None of those has shipped. See the questions below.
+這就是完整的詞彙。每個專案恰好一個狀態角色的規則讓查詢保持簡單。這些狀態也是 [skill](https://www.aihero.dev/ai-coding-dictionary/skill) 最受歡迎的領域。使用者曾要求一個用於已規格化但被其他問題阻擋的工作的狀態、一個 `deferred` 狀態用於等待未來觸發的工作，以及一個終止 `implemented` 狀態。這些都尚未發布。請參閱下方的問題。
 
-`wontfix` has three cases. The difference matters because only one of them writes to the knowledge base:
+`wontfix` 有三種情況。差異很重要，因為只有一種會寫入知識庫：
 
-| Why you're closing it | What happens |
+| 關閉原因 | 發生什麼事 |
 | --- | --- |
-| Already implemented | A comment that points to where the feature already lives. Nothing goes into `.out-of-scope/`, because it's a built feature, not a rejected one, and a file there would break the dedup checks. |
-| Rejected bug | Polite explanation, then close. |
-| Rejected enhancement | A file in `.out-of-scope/`, linked from the closing comment, then close. |
+| 已實作 | 一條指向該功能已存在位置的註解。不會放入 `.out-of-scope/`，因為這是已建置的功能，而非被拒絕的功能，且在那裡的檔案會破壞去重檢查。 |
+| 被拒絕的錯誤 | 禮貌的解釋，然後關閉。 |
+| 被拒絕的增強 | `.out-of-scope/` 中的一個檔案，從關閉註解中連結，然後關閉。 |
 
-`.out-of-scope/` holds one markdown file per rejected **concept**, not per issue. Each file is a short design document, not a database row. It says what was rejected, why, and lists every issue that asked for it. `triage` reads the whole directory before it evaluates anything. It matches by concept, not keyword, so "night theme" matches `dark-mode.md`. When it finds a match, it shows you the old decision and asks if you still agree with it, instead of arguing the request again from the start.
+`.out-of-scope/` 每個被拒絕的**概念**持有一個 markdown 檔案，而非每個問題。每個檔案都是一份簡短的設計檔案，而非資料庫列。它說明被拒絕的內容、原因，並列出所有要求該概念的問題。`triage` 在評估任何內容之前會讀取整個目錄。它依概念而非關鍵字進行匹配，因此「night theme」會匹配 `dark-mode.md`。當它找到匹配時，會向您顯示舊的決定並詢問您是否仍然同意，而不是從頭開始再次辯論該請求。
 
-## Verify before you brief
+<a id="verify-before-you-brief"></a>
 
-Before any [grilling](https://www.aihero.dev/ai-coding-dictionary/grilling), `triage` checks that the claim holds. For a bug, it reproduces it from the reporter's steps. For a PR, it checks out the branch and runs the relevant tests. Then it reports one of three results:
+## 簡報前先驗證
 
-- Confirmed, with the code path.
-- Failed to reproduce.
-- Not enough detail to try. This is the strongest `needs-info` signal there is.
+在任何 [grilling](https://www.aihero.dev/ai-coding-dictionary/grilling) 之前，`triage` 會檢查該宣告是否成立。對於錯誤，它會從回報者的步驟中重現它。對於 PR，它會簽出分支並執行相關的測試。然後它會報告三種結果之一：
 
-In the same pass, it runs two more checks against the codebase. The **redundancy** check asks if the feature is already implemented, and searches by domain concept, not by the reporter's wording. The **prior rejection** check asks if `.out-of-scope/` already says no. Both checks are cheap, and a hit on either produces a `wontfix`.
+- 已確認，並附上程式碼路徑。
+- 無法重現。
+- 細節不足以嘗試。這是最強的 `needs-info` 訊號。
 
-All of this work makes one artifact good: the **agent brief**. This is the structured comment that `triage` posts when an issue moves to `ready-for-agent`. After `triage` posts it, the brief is the contract and the original report is only context. Briefs are **durable** rather than precise, because an issue can sit in `ready-for-agent` for weeks while the code changes. So a brief names types, signatures and behavioural contracts, and never file paths or line numbers. A confirmed reproduction makes a much stronger brief than a guess.
+在同一遍中，它會對程式碼庫執行另外兩項檢查。**冗餘**檢查詢問該功能是否已實作，並依領域概念而非回報者的措辭進行搜尋。**先前拒絕**檢查詢問 `.out-of-scope/` 是否已經說不。兩項檢查都很輕量，且任一項命中都會產生 `wontfix`。
 
-## A PR is an issue with attached code
+所有這些工作都為了讓一個產物變得好：**agent 簡報**。這是 `triage` 在問題移至 `ready-for-agent` 時發布的結構化註解。在 `triage` 發布後，簡報即為合約，而原始回報僅為背景資訊。簡報是**持久**而非精確的，因為問題可能在 `ready-for-agent` 中停留數週，而程式碼會改變。因此簡報會命名型別、簽名和行為合約，絕不使用檔案路徑或行號。已確認的重現比猜測能產生強得多的簡報。
 
-If the tracker treats external pull requests as a request surface, they go through the same machine, with the same categories, states and transitions. The states apply to the diff. `ready-for-agent` means a brief is attached and an agent should take the next step on the code. `ready-for-human` means a person can merge it. A brief on a PR describes what is left to do to the existing diff, not how to build the thing from nothing.
+<a id="a-pr-is-an-issue-with-attached-code"></a>
 
-Discovery shows only *external* PRs, because a collaborator's in-progress branch is not triage work. That filter applies only to discovery. If you name a PR explicitly, `triage` handles it, whoever wrote it.
+## PR 是附有程式碼的問題
 
-## Common questions
+如果追蹤器將外部 pull request 視為請求介面，它們會經過相同的機器，具有相同的類別、狀態和轉換。狀態適用於 diff。`ready-for-agent` 表示已附上簡報，且 agent 應對程式碼採取下一步。`ready-for-human` 表示人員可以合併它。PR 上的簡報描述對現有 diff 還剩什麼要做，而非如何從無到有建置該事物。
 
-**I ran `/to-spec` and `/to-tickets`, and now those tickets are sitting there untriaged. Do I run `/triage` over them?**
-No. They are already agent-ready. `to-tickets` applies the `ready-for-agent` label when it publishes them, so an AFK runner picks them up without another pass. The user who hit this had run the spec flow and seen `needs-triage` on the output, and their AFK runner ignored everything. `triage` is the on-ramp for work that arrives from outside. The spec flow is the lane for work you start yourself. The two meet at `ready-for-agent`, not before.
+發現功能僅顯示*外部* PR，因為協作者的進行中分支不是分診工作。該過濾器僅適用於發現功能。如果您明確指定一個 PR，`triage` 會處理它，無論是由誰撰寫。
 
-**Is `triage` still relevant now that there's a `to-spec` → `to-tickets` → `implement` flow?**
-Only if you have inbound work. `triage` is older than that flow and does a different job: it handles reports other people filed. If everything in your tracker came from your own planning, you will rarely use it. If you maintain anything public, or your team files bugs to you, it is where that work starts. The main use is open-source repos that take issues from external contributors.
+<a id="common-questions"></a>
 
-**The agent tried to apply `ready-for-agent` and `gh` said the label doesn't exist.**
-This is a known open bug ([#616](https://github.com/mattpocock/skills/issues/616)). `setup-matt-pocock-skills` writes the label vocabulary into `docs/agents/triage-labels.md`, but does not create the labels in your tracker. Create the five state labels and two category labels yourself, once, with `gh label create` or the tracker's UI, and the error stops. The issue links to a community fix branch that has not been merged.
+## 常見問題
 
-**Five states aren't enough. What about blocked, or deferred, or implemented?**
-This is the most-filed gap on the skill. It comes in three forms:
+**我執行了 `/to-spec` 和 `/to-tickets`，現在那些工單就在那裡未分診。我要對它們執行 `/triage` 嗎？**
+不會。它們已經處於 agent-ready 狀態。`to-tickets` 在發布時會套用 `ready-for-agent` 標籤，因此 AFK runner 可以直接接手，無需再次處理。遇到這個問題的使用者先前執行過 spec flow，並在輸出中看到 `needs-triage`，但他們的 AFK runner 忽略了所有內容。`triage` 是處理來自外部工作的入口。spec flow 是處理你自己啟動的工作的通道。兩者會在 `ready-for-agent` 匯合，在此之前則各自獨立。
 
-- An issue that is fully specified but waits on another issue to close ([#139](https://github.com/mattpocock/skills/issues/139)). The reporter said `ready-for-agent` is "technically true" there but misleading, so an agent picks it up and gets stuck.
-- Future work that is intended but waits on a trigger, so it is not actionable yet ([#297](https://github.com/mattpocock/skills/issues/297)).
-- A terminal state for "implemented, awaiting verification". Without it, an AFK runner can queue finished tickets again.
+**既然現在有 `to-spec` → `to-tickets` → `implement` 的流程，`triage` 還有意義嗎？**
+只有在你有進站工作時才有。`triage` 比該流程更早出現，且執行不同的任務：它處理其他人提交的報告。如果你追蹤器中的所有內容都來自你自己的規劃，你很少會使用它。如果你維護任何公開專案，或你的團隊向你提交 bug，那就是這些工作的起點。主要用途是接收外部貢獻者 issue 的開源儲存庫。
 
-The blocked case is accepted as real, but the name is undecided (`blocked` versus `paused`). None of it has shipped. As a workaround, people add a repo-local extra label next to the category. The state slot then holds an accurate value, but the skill does not know about the extra label. One community fork goes further and adds `needs-slicing`, `tracking` and effort labels. That works, but it belongs to that fork, not to the skill.
+**Agent 嘗試套用 `ready-for-agent`，但 `gh` 顯示標籤不存在。**
+這是一個已知的未修復 bug（[#616](https://github.com/mattpocock/skills/issues/616)）。`setup-matt-pocock-skills` 會將標籤詞彙寫入 `docs/agents/triage-labels.md`，但不會在你的追蹤器中建立這些標籤。請自行使用 `gh label create` 或追蹤器的 UI，一次性建立五個狀態標籤和兩個類別標籤，錯誤就會停止。該 issue 連結到一個尚未合併的社群修復分支。
 
-**How is this different from `/diagnosing-bugs`?**
-The verification step here is shallow on purpose. It answers "is this real, and roughly where does it live", and does not look for a root cause. If a bug does not reproduce from the reporter's steps in a few minutes, use `needs-info`, or use [diagnosing-bugs](https://aihero.dev/skills-diagnosing-bugs) if you want to investigate it now. Neither skill's text mentions the other yet. A user reported that gap, and it is still open.
+**五個狀態不夠。那 blocked、deferred 或 implemented 怎麼辦？**
+這是該 skill 被回報最多的缺失。它有三種形式：
 
-**Can I point it at my whole backlog and let it run?**
-You can ask, but watch what it reads. The "show what needs attention" pass is a cheap listing for *selection*. You pick one issue, and then `triage` gathers full [context](https://www.aihero.dev/ai-coding-dictionary/context) on that issue. If you run it across twenty issues at once, the agent can use that cheap listing as its only evidence without telling you. The listing returns issue bodies but not comments. One user hit exactly this. Three issues already had a comment that said "already fixed, recommend closing", and all three got new agent briefs instead. For a bulk pass, say explicitly that it must read the comments on each issue.
+- 一個已完全規範化但需等待另一個 issue 關閉的 issue（[#139](https://github.com/mattpocock/skills/issues/139)）。回報者表示在那裡 `ready-for-agent` 是「技術上正確」但具有誤導性，導致 agent 接手後卡住。
+- 預定的未來工作，需等待觸發條件，因此目前尚不可執行（[#297](https://github.com/mattpocock/skills/issues/297)）。
+- 一個用於「已實作，等待驗證」的終止狀態。沒有它，AFK runner 可能會再次排隊已完成的工單。
 
-**Does it work with Linear, or anything other than GitHub Issues?**
-Yes. The tracker is config, not a hard-coded assumption. People run it against Linear (through the `linear` CLI), GitLab, and plain markdown files under `.scratch/`. A common split is Linear for issues and planning, and GitHub for code and PRs. Skills that say "issue tracker" then map to Linear, and skills that say "PR" map to GitHub. The local-markdown tracker has an open template bug: the generated file can contain the acceptance criteria twice, once at the top level and once inside the agent brief ([#200](https://github.com/mattpocock/skills/issues/200)).
+blocked 情況被認為是真實存在的，但名稱尚未決定（`blocked` 對 `paused`）。這些都尚未發布。作為變通方法，人們會在類別旁邊新增一個儲存庫本地的額外標籤。這樣狀態列位就能持有準確的值，但 skill 不知道這個額外標籤。某個社群 fork 走得更遠，新增了 `needs-slicing`、`tracking` 和 effort 標籤。這可行，但它屬於該 fork，而非 skill 本身。
 
-## It's working if
+**這與 `/diagnosing-bugs` 有何不同？**
+此處的驗證步驟刻意保持淺層。它回答「這是否真實，以及大致位於哪裡」，而不尋找根本原因。如果 bug 無法在幾分鐘內根據回報者的步驟重現，請使用 `needs-info`，或如果你現在想調查，請使用 [diagnosing-bugs](https://aihero.dev/skills-diagnosing-bugs)。目前兩個 skill 的文字都未提及對方。有使用者回報了這個缺口，且該 issue 仍未關閉。
 
-- Every item it touches ends with exactly one category role and one state role, never zero, and never two conflicting states.
-- It gives you a recommendation with reasoning and stops. It does not relabel the issue and move on.
-- It reproduced the bug, or checked out and ran the PR, before anything reached `ready-for-agent`.
-- The briefs it writes name types and behaviours, and contain no file paths and no line numbers.
-- When a request you rejected six months ago comes back, it tells you and quotes the old reason instead of triaging it again.
-- Every comment it posts starts with `> *This was generated by AI during triage.*`
+**我可以將它指向我的整個 backlog 並讓它執行嗎？**
+你可以要求，但請注意它讀取的內容。「顯示需要關注的內容」這一步是針對*選擇*的低成本列表。你選擇一個 issue，然後 `triage` 會收集該 issue 的完整 [context](https://www.aihero.dev/ai-coding-dictionary/context)。如果你一次對二十個 issue 執行，agent 可能會將該低成本列表作為唯一證據使用，而不告知你。該列表返回 issue 主體但不包含評論。有一位使用者正好遇到這個問題。三個 issue 已有評論說「已修復，建議關閉」，但這三個都獲得了新的 agent brief。對於批次處理，請明確說明它必須讀取每個 issue 的評論。
 
-## Where it fits
+**它能與 Linear 或其他非 GitHub Issues 的工具配合使用嗎？**
+可以。追蹤器是設定，而非硬編碼的假設。人們透過 `linear` CLI 對 Linear、GitLab 以及 `.scratch/` 下的純 markdown 檔案執行它。常見的分工是：Linear 用於 issue 和規劃，GitHub 用於程式碼和 PR。說「issue tracker」的 skill 會對應到 Linear，說「PR」的 skill 會對應到 GitHub。本地 markdown 追蹤器有一個未修復的範本 bug：產生的檔案可能包含兩次驗收標準，一次在頂層，一次在 agent brief 內（[#200](https://github.com/mattpocock/skills/issues/200)）。
 
-`triage` is an **on-ramp**, not a step in the main chain. The main flow starts from an idea you had (grill, spec, tickets, implement, review). `triage` is the parallel lane for work that came from someone else. Both lanes end at the same place: an issue labelled `ready-for-agent` with a brief on it. [implement](https://aihero.dev/skills-implement) picks that up the same way it picks up a ticket from [to-tickets](https://aihero.dev/skills-to-tickets). When a request needs more detail before `triage` can brief it, `triage` runs [grilling](https://aihero.dev/skills-grilling) and [domain-modeling](https://aihero.dev/skills-domain-modeling) together, one round of questions at a time, so it records decisions in `GLOSSARY.md` and the ADRs as you make them. When you're not sure which lane you are in, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.
+<a id="its-working-if"></a>
+
+## 如果符合以下條件，則表示它運作正常
+
+- 它處理的每個專案最終都恰好具有一個類別角色和一個狀態角色，絕非零個，也絕非兩個衝突的狀態。
+- 它提供帶有推理的建議並停止。它不會重新標記 issue 然後繼續。
+- 在內容到達 `ready-for-agent` 之前，它已重現 bug，或簽出並執行了 PR。
+- 它撰寫的 brief 會指明型別和行為，且不包含任何檔案路徑或行號。
+- 當你六個月前拒絕的請求再次出現時，它會告知你並引用舊原因，而不是再次進行 triage。
+- 它發布的每則評論都以 `> *This was generated by AI during triage.*` 開頭
+
+<a id="where-it-fits"></a>
+
+## 適用位置
+
+`triage` 是一個**入口**，而非主鏈中的一個步驟。主流程從你的一個想法開始（grill、spec、tickets、implement、review）。`triage` 是處理來自他人工作的平行通道。兩條通道最終都到達同一個地方：一個標有 `ready-for-agent` 標籤並附有 brief 的 issue。[implement](https://aihero.dev/skills-implement) 以與它從 [to-tickets](https://aihero.dev/skills-to-tickets) 接手工單相同的方式接手該 issue。當請求在 `triage` 能撰寫 brief 之前需要更多細節時，`triage` 會同時執行 [grilling](https://aihero.dev/skills-grilling) 和 [domain-modeling](https://aihero.dev/skills-domain-modeling)，一次一輪問題，以便在你做出決定時將決策記錄在 `GLOSSARY.md` 和 ADR 中。當你不確定自己處於哪條通道時，[ask-matt](https://aihero.dev/skills-ask-matt) 會為你導航。

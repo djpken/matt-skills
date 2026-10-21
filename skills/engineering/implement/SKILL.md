@@ -1,17 +1,17 @@
 ---
 name: implement
-description: "Implement a piece of work based on a spec or set of tickets."
+description: "根據規格說明或一組工單來實作一項工作。"
 disable-model-invocation: true
 ---
 
-Implement the work described by the user in the spec or tickets.
+實作使用者在規格說明或工單中描述的工作。
 
-If the user passes a ticket reference, fetch it from the issue tracker and state its title before starting. If the reference is ambiguous, ask.
+如果使用者提供了工單參考，請從問題追蹤系統中擷取該工單，並在開始前陳述其標題。如果參考資訊不明確，請提出詢問。
 
-Call the Skill tool with "tdd" where possible, at pre-agreed seams.
+在可能的情況下，於預先協定的接縫處呼叫 Skill 工具並傳入 "tdd"。
 
-Run typechecking regularly, single test files regularly, and the full test suite once at the end.
+定期執行型別檢查，定期執行單一測試檔案，並在最後執行一次完整的測試套件。
 
-Once done, call the Skill tool with "code-review" to review the work.
+完成後，呼叫 Skill 工具並傳入 "code-review" 以審查該工作。
 
-Commit your work to the current branch.
+將您的工作提交至目前分支。

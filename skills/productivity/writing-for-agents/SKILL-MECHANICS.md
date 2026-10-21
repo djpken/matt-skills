@@ -1,22 +1,28 @@
-# Skill mechanics
+<a id="skill-mechanics"></a>
 
-The skill-specific branch of [`writing-for-agents`](SKILL.md): what changes when the document is a skill (frontmatter, the invocation choice, and router skills). Everything else about writing it is the universal reference in `SKILL.md`.
+# Skill 機制
 
-## Invocation
+針對 skill 的特定分支 [`writing-for-agents`](SKILL.md): 當檔案是 skill 時有何變化（frontmatter、呼叫選擇，以及 router skills）。關於撰寫的其他所有內容，請參閱 `SKILL.md` 中的通用參考。
 
-Two choices, trading the two loads:
+<a id="invocation"></a>
 
-- A **model-invoked** skill keeps a `description`, so the agent can fire it autonomously, and other skills can reach it. You can still type its name: model-invocation always _includes_ user reach; a description only ever adds agent discovery, never removes the human's. The description is the skill's top-level context pointer, forced to stay loaded at all times: permanent context load in exchange for discoverability. A model-invoked skill whose content is all reference is also one home for shared reference: another skill can invoke it, so reference needed by several skills lives in one place. Mechanics: omit `disable-model-invocation`, and write a model-facing description carrying the trigger branches (the pointer-writing rules in `SKILL.md` apply in full).
-- A **user-invoked** skill strips the description from the agent's reach: only the human typing its name can invoke it, and no other skill can. Zero context load, but it spends cognitive load: you are the index that must remember it exists. Mechanics: set `disable-model-invocation: true`; the `description` becomes human-facing: a one-line summary, trigger lists stripped.
+## 呼叫
 
-Pick model-invocation only when the agent must reach the skill on its own, or another skill must. If it only ever fires by hand, make it user-invoked and pay no context load.
+兩種選擇，取捨兩種負載：
 
-Shared reference that two user-invoked skills both need can live in neither: with no descriptions, neither can fire the other. Push it to a plain file outside the skill system: external reference any skill can point at.
+- **model-invoked** skill 保留 `description`，因此 agent 可以自主觸發它，其他 skill 也能夠存取它。您仍然可以輸入其名稱：model-invocation 永遠_包含_使用者存取；描述只會增加 agent 的發現能力，絕不會移除人類的存取許可權。描述是 skill 的頂層上下文指標，強制在所有時間保持載入：以永久上下文負載換取可發現性。如果 model-invoked skill 的內容全是參考資料，它也可以作為共享參考的存放處：另一個 skill 可以呼叫它，因此多個 skill 所需的參考資料可以集中在一個地方。機制：省略 `disable-model-invocation`，並撰寫面向 model 的描述，其中包含觸發分支（`SKILL.md` 中的指標撰寫規則完全適用）。
+- **user-invoked** skill 會將描述從 agent 的存取範圍中移除：只有輸入其名稱的人類才能呼叫它，其他 skill 無法呼叫。零上下文負載，但會消耗認知負載：您就是必須記住其存在的索引。機制：設定 `disable-model-invocation: true`；`description` 變為面向人類：一行摘要，移除觸發清單。
 
-## Splitting by invocation
+僅當 agent 必須自行存取該 skill，或另一個 skill 必須存取它時，才選擇 model-invocation。如果它永遠只由手動觸發，請將其設為 user-invoked，以節省上下文負載。
 
-The invocation cut of splitting (the sequence cut lives in `SKILL.md`): split off a model-invoked skill when you have a distinct leading word that should trigger it on its own (a trigger word you actually use in your prompts), or another skill must reach it. You pay context load for the new always-loaded description, so that independent reach has to be worth it.
+兩個 user-invoked skills 都需要的共享參考資料無法存放在任何一個之中：由於沒有描述，兩者都無法觸發對方。將其移至 skill 系統之外的普通檔案：任何 skill 都可以指向的外部參考。
+
+<a id="splitting-by-invocation"></a>
+
+## 依呼叫方式拆分
+
+拆分的呼叫切分（序列切分位於 `SKILL.md`）：當您擁有一個獨特的開頭詞，應該單獨觸發該 skill（一個您在提示詞中實際使用的觸發詞），或另一個 skill 必須存取它時，請拆分出一個 model-invoked skill。您必須為新的永遠載入的描述支付上下文負載，因此這種獨立存取必須值得。
 
 ## Router skills
 
-When user-invoked skills multiply past what you can remember, that piled-up cognitive load is cured by a **router skill**: one user-invoked skill that names the others and when to reach for each, so the human has one skill to remember instead of many. It can only hint, never fire them: user-invoked skills have no description, so nothing but the human can reach them.
+當 user-invoked skills 多到超出您的記憶範圍時，這種累積的認知負載可以透過 **router skill** 來緩解：一個 user-invoked skill，列出其他 skill 的名稱以及何時應使用每個 skill，使人類只需記住一個 skill 而非多個。它只能提供提示，永遠無法觸發它們：user-invoked skills 沒有描述，因此除了人類之外，沒有人能存取它們。

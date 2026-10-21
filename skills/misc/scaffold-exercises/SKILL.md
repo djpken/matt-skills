@@ -1,37 +1,45 @@
 ---
 name: scaffold-exercises
-description: Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.
+description: "建立包含章節、問題、解答與說明檔案的練習目錄結構，並確保透過 lint 檢查。當使用者想要建立練習框架、建立練習存根或設定新的課程章節時使用。"
 ---
 
-# Scaffold Exercises
+<a id="scaffold-exercises"></a>
 
-Create exercise directory structures that pass `pnpm ai-hero-cli internal lint`, then commit with `git commit`.
+# 建立練習框架
 
-## Directory naming
+建立透過 `pnpm ai-hero-cli internal lint` 的練習目錄結構，然後使用 `git commit` 進行 commit。
 
-- **Sections**: `XX-section-name/` inside `exercises/` (e.g., `01-retrieval-skill-building`)
-- **Exercises**: `XX.YY-exercise-name/` inside a section (e.g., `01.03-retrieval-with-bm25`)
-- Section number = `XX`, exercise number = `XX.YY`
-- Names are dash-case (lowercase, hyphens)
+<a id="directory-naming"></a>
 
-## Exercise variants
+## 目錄命名
 
-Each exercise needs at least one of these subfolders:
+- **章節**：位於 `exercises/` 內的 `XX-section-name/`（例如：`01-retrieval-skill-building`）
+- **練習**：位於章節內的 `XX.YY-exercise-name/`（例如：`01.03-retrieval-with-bm25`）
+- 章節編號 = `XX`，練習編號 = `XX.YY`
+- 名稱使用 dash-case（小寫，連字號）
 
-- `problem/` - student workspace with TODOs
-- `solution/` - reference implementation
-- `explainer/` - conceptual material, no TODOs
+<a id="exercise-variants"></a>
 
-When stubbing, default to `explainer/` unless the plan specifies otherwise.
+## 練習變體
 
-## Required files
+每個練習至少需要以下其中一個子資料夾：
 
-Each subfolder (`problem/`, `solution/`, `explainer/`) needs a `readme.md` that:
+- `problem/` - 包含 TODO 的學生工作區
+- `solution/` - 參考實作
+- `explainer/` - 概念性教材，不含 TODO
 
-- Is **not empty** (must have real content, even a single title line works)
-- Has no broken links
+建立存根時，除非計畫另有規定，否則預設使用 `explainer/`。
 
-When stubbing, create a minimal readme with a title and a description:
+<a id="required-files"></a>
+
+## 必要檔案
+
+每個子資料夾（`problem/`、`solution/`、`explainer/`）都需要一個 `readme.md`，該檔案必須：
+
+- **不可為空**（必須有實際內容，即使只有一行標題也可以）
+- 沒有損壞的連結
+
+建立存根時，建立一個包含標題和描述的最小 readme：
 
 ```md
 # Exercise Title
@@ -39,46 +47,54 @@ When stubbing, create a minimal readme with a title and a description:
 Description here
 ```
 
-If the subfolder has code, it also needs a `main.ts` (>1 line). But for stubs, a readme-only exercise is fine.
+如果子資料夾包含程式碼，還需要一個 `main.ts`（超過 1 行）。但對於存根而言，僅包含 readme 的練習是可以接受的。
 
-## Workflow
+<a id="workflow"></a>
 
-1. **Parse the plan** - extract section names, exercise names, and variant types
-2. **Create directories** - `mkdir -p` for each path
-3. **Create stub readmes** - one `readme.md` per variant folder with a title
-4. **Run lint** - `pnpm ai-hero-cli internal lint` to validate
-5. **Fix any errors** - iterate until lint passes
+## 工作流程
 
-## Lint rules summary
+1. **解析計畫** - 提取章節名稱、練習名稱和變體型別
+2. **建立目錄** - 為每個路徑執行 `mkdir -p`
+3. **建立存根 readme** - 為每個變體資料夾建立一個包含標題的 `readme.md`
+4. **執行 lint** - 使用 `pnpm ai-hero-cli internal lint` 進行驗證
+5. **修正任何錯誤** - 反覆執行直到 lint 透過
 
-The linter (`pnpm ai-hero-cli internal lint`) checks:
+<a id="lint-rules-summary"></a>
 
-- Each exercise has subfolders (`problem/`, `solution/`, `explainer/`)
-- At least one of `problem/`, `explainer/`, or `explainer.1/` exists
-- `readme.md` exists and is non-empty in the primary subfolder
-- No `.gitkeep` files
-- No `speaker-notes.md` files
-- No broken links in readmes
-- No `pnpm run exercise` commands in readmes
-- `main.ts` required per subfolder unless it's readme-only
+## Lint 規則摘要
 
-## Moving/renaming exercises
+Linter（`pnpm ai-hero-cli internal lint`）會檢查：
 
-When renumbering or moving exercises:
+- 每個練習都有子資料夾（`problem/`、`solution/`、`explainer/`）
+- 至少存在 `problem/`、`explainer/` 或 `explainer.1/` 其中一個
+- 主要子資料夾中存在 `readme.md` 且非空
+- 沒有 `.gitkeep` 檔案
+- 沒有 `speaker-notes.md` 檔案
+- Readme 中沒有損壞的連結
+- Readme 中沒有 `pnpm run exercise` 指令
+- 除非僅包含 readme，否則每個子資料夾都需要 `main.ts`
 
-1. Use `git mv` (not `mv`) to rename directories - preserves git history
-2. Update the numeric prefix to maintain order
-3. Re-run lint after moves
+<a id="movingrenaming-exercises"></a>
 
-Example:
+## 移動或重新命名練習
+
+重新編號或移動練習時：
+
+1. 使用 `git mv`（而非 `mv`）來重新命名目錄，以保留 git 歷史記錄
+2. 更新數字字首以維持順序
+3. 移動後重新執行 lint
+
+範例：
 
 ```bash
 git mv exercises/01-retrieval/01.03-embeddings exercises/01-retrieval/01.04-embeddings
 ```
 
-## Example: stubbing from a plan
+<a id="example-stubbing-from-a-plan"></a>
 
-Given a plan like:
+## 範例：根據計畫建立存根
+
+假設計畫如下：
 
 ```
 Section 05: Memory Skill Building
@@ -87,7 +103,7 @@ Section 05: Memory Skill Building
 - 05.03 Long-term Memory
 ```
 
-Create:
+建立：
 
 ```bash
 mkdir -p exercises/05-memory-skill-building/05.01-introduction-to-memory/explainer
@@ -95,7 +111,7 @@ mkdir -p exercises/05-memory-skill-building/05.02-short-term-memory/{explainer,p
 mkdir -p exercises/05-memory-skill-building/05.03-long-term-memory/explainer
 ```
 
-Then create readme stubs:
+然後建立 readme 存根：
 
 ```
 exercises/05-memory-skill-building/05.01-introduction-to-memory/explainer/readme.md -> "# Introduction to Memory"

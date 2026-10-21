@@ -1,15 +1,19 @@
 ---
 name: domain-modeling
-description: Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a GLOSSARY.md, or recording or editing an ADR.
+description: "建立並精煉專案的領域模型。在討論程式碼庫術語、撰寫或編輯 GLOSSARY.md，或記錄或編輯 ADR 時使用。"
 ---
 
-# Domain Modeling
+<a id="domain-modeling"></a>
 
-Actively build and sharpen the project's domain model as you design. This is the *active* discipline: challenging terms, inventing edge-case scenarios, and writing the glossary and decisions down the moment they crystallise. (Merely *reading* `GLOSSARY.md` for vocabulary is not this skill: that's a one-line habit any skill can do. This skill is for when you're changing the model, not just consuming it.)
+# 領域建模
 
-## File structure
+在設計過程中，積極建立並精煉專案的領域模型。這是一項*主動*的紀律：挑戰術語、構思邊界情境，並在概念成形的那一刻立即撰寫詞彙表與決策記錄。（單純*閱讀* `GLOSSARY.md` 以獲取詞彙並不屬於此技能：那是任何技能都能做到的一行習慣。此技能適用於你正在變更模型，而非僅消費模型的情況。）
 
-Most repos have a single context:
+<a id="file-structure"></a>
+
+## 檔案結構
+
+大多數儲存庫只有一個上下文：
 
 ```
 /
@@ -21,7 +25,7 @@ Most repos have a single context:
 └── src/
 ```
 
-If a `GLOSSARY-MAP.md` exists at the root, the repo has multiple contexts. The map points to where each one lives:
+如果根目錄存在 `GLOSSARY-MAP.md`，則該儲存庫有多個上下文。地圖指向每個上下文的存放位置：
 
 ```
 /
@@ -37,38 +41,52 @@ If a `GLOSSARY-MAP.md` exists at the root, the repo has multiple contexts. The m
 │       └── docs/adr/
 ```
 
-Create files lazily: only when you have something to write. If no `GLOSSARY.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
+延遲建立檔案：僅在你有內容要寫入時才建立。如果 `GLOSSARY.md` 不存在，請在第一個術語解決時建立它。如果 `docs/adr/` 不存在，請在需要第一個 ADR 時建立它。
 
-## During the session
+<a id="during-the-session"></a>
 
-### Challenge against the glossary
+## 會話期間
 
-When the user uses a term that conflicts with the existing language in `GLOSSARY.md`, call it out immediately. "Your glossary defines 'cancellation' as X, but you seem to mean Y. Which is it?"
+<a id="challenge-against-the-glossary"></a>
 
-### Sharpen fuzzy language
+### 與詞彙表進行對照挑戰
 
-When the user uses vague or overloaded terms, propose a precise canonical term. "You're saying 'account': do you mean the Customer or the User? Those are different things."
+當使用者使用的術語與 `GLOSSARY.md` 中現有的語言衝突時，立即指出。「你的詞彙表將『取消』定義為 X，但你似乎指的是 Y。到底是哪一個？」
 
-### Discuss concrete scenarios
+<a id="sharpen-fuzzy-language"></a>
 
-When domain relationships are being discussed, stress-test them with specific scenarios. Invent scenarios that probe edge cases and force the user to be precise about the boundaries between concepts.
+### 精煉模糊的語言
 
-### Cross-reference with code
+當使用者使用模糊或過度載入的術語時，提出精確的標準術語。「你說的是『帳戶』：你指的是 Customer 還是 User？這些是不同的東西。」
 
-When the user states how something works, check whether the code agrees. If you find a contradiction, surface it: "Your code cancels entire Orders, but you just said partial cancellation is possible. Which is right?"
+<a id="discuss-concrete-scenarios"></a>
 
-### Update GLOSSARY.md inline
+### 討論具體情境
 
-When a term is resolved, update `GLOSSARY.md` right there. Don't batch these up: capture them as they happen. Use the format in [GLOSSARY-FORMAT.md](./GLOSSARY-FORMAT.md).
+當討論領域關係時，使用具體情境進行壓力測試。構思能探查邊界案例並迫使使用者精確界定概念之間邊界的情境。
 
-`GLOSSARY.md` should be totally devoid of implementation details. Do not treat `GLOSSARY.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
+<a id="cross-reference-with-code"></a>
 
-### Offer ADRs sparingly
+### 與程式碼交叉參考
 
-Only offer to create an ADR when all three are true:
+當使用者說明某項功能如何運作時，檢查程式碼是否一致。如果你發現矛盾，請提出來：「你的程式碼會取消整個 Order，但你剛才說部分取消是可能的。哪一個是對的？」
 
-1. **Hard to reverse**: the cost of changing your mind later is meaningful
-2. **Surprising without context**: a future reader will wonder "why did they do it this way?"
-3. **The result of a real trade-off**: there were genuine alternatives and you picked one for specific reasons
+<a id="update-glossarymd-inline"></a>
 
-If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).
+### 即時更新 GLOSSARY.md
+
+當術語解決時，立即更新 `GLOSSARY.md`。不要批次處理這些更新：在發生時即時記錄。使用 [GLOSSARY-FORMAT.md](./GLOSSARY-FORMAT.md) 中的格式。
+
+`GLOSSARY.md` 應完全不含實作細節。不要將 `GLOSSARY.md` 視為規格、草稿本或實作決策的儲存庫。它是一個詞彙表，且僅限於此。
+
+<a id="offer-adrs-sparingly"></a>
+
+### 謹慎提供 ADR
+
+僅當以下三點全部為真時，才提供建立 ADR 的選項：
+
+1. **難以反轉**：稍後改變主意的代價是顯著的
+2. **缺乏上下文時令人驚訝**：未來的讀者會疑惑「他們為什麼這樣做？」
+3. **真實權衡的結果**：存在真正的替代方案，且你基於特定原因選擇了其中一個
+
+如果缺少三點中的任何一點，請跳過 ADR。使用 [ADR-FORMAT.md](./ADR-FORMAT.md) 中的格式。

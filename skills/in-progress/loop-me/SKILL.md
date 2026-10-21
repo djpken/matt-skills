@@ -1,32 +1,40 @@
 ---
 name: loop-me
-description: Grill me about specs for the workflows I want to build, within this workspace.
+description: "針對我想在這個工作區中建立的 workflow，就其規格向我提出嚴格的追問。"
 disable-model-invocation: true
 argument-hint: "A workflow to design, or nothing to go find one"
 ---
 
-Run a stateful `/grilling` session whose only output is **workflow** specs. Use the grilling discipline (relentless, a round of questions at a time, a recommended answer attached to each) aimed at the vocabulary and goal below. Create, edit, and delete specs as the grilling resolves things.
+執行一個有狀態的 `/grilling` 工作階段，其唯一輸出為 **workflow** 規格。運用嚴格的追問紀律（毫不妥協、一次只問一輪問題、每個問題都附上建議答案），針對下方的詞彙與目標進行追問。隨著追問逐步釐清，建立、編輯並刪除規格。
 
-## The loop lens
+<a id="the-loop-lens"></a>
 
-A **loop** is a recurring pattern in the user's life: their career, their week, their morning, a single repeated activity. Picturing a life as loops within loops reveals how predictable its activities really are, which is what makes them worth **delegating**. Use the lens to find loops worth specifying, and propose ones the user hasn't noticed.
+## 迴圈透鏡
 
-A **workflow** is the spec of one loop, made real. You run a workflow on a loop: the loop is its running instantiation. Workflows live in `workflows/*.md` and are the source of truth.
+**迴圈** 是使用者生活中反覆出現的模式：他們的職業生涯、每週行程、早晨例程，或單一重複的活動。將生活想像為迴圈中的迴圈，能揭示其活動究竟有多可預測，這正是它們值得 **委派** 的原因。使用此透鏡找出值得規範化的迴圈，並提出使用者尚未察覺的迴圈。
 
-## Vocabulary
+**Workflow** 是單一迴圈的規格，使其具體化。你在迴圈上執行 workflow：該迴圈即為其執行中的例項。Workflow 存放於 `workflows/*.md`，並為唯一事實來源。
 
-A shared language, reached for only when a workflow calls for it: never a checklist. **Mandate nothing structural**: a workflow needs no AI, no checkpoint, and no schedule unless the grilling shows it does.
+<a id="vocabulary"></a>
 
-- **Trigger**: what fires each run, an **event** (a new email, a new issue) or a **schedule** (every morning). Event-triggering is usually the more efficient.
-- **Checkpoint**: a human-in-the-loop point where the user is asked to verify or decide. Some workflows have none and run autonomously; some use no AI at all.
-- **Push right**: defer the checkpoint as far as it will go. Do maximal work before involving the human, so they are asked once, late, with everything prepared.
-- **Brief**: what a checkpoint presents, a tight, decision-ready summary (what was produced, why, and a link down to the asset itself), never the raw output. The user reads a brief, not a draft. Speed of review is imperative.
+## 詞彙
 
-## Definition of done
+一套共享語言，僅在 workflow 需要時才使用：絕非檢查清單。 **不強制任何結構性要求**：除非追問顯示確有需求，否則 workflow 不需要 AI、不需要檢查點，也不需要排程。
 
-A workflow spec is done when an implementer agent could build it without asking a single question. Grill until then; nothing is done while a question remains.
+- **觸發器**：每次執行時觸發的條件，可以是 **事件**（新郵件、新問題）或 **排程**（每天早上）。事件觸發通常效率更高。
+- **檢查點**：人機協作的節點，在此處要求使用者驗證或做出決定。某些 workflow 沒有檢查點，可自主執行；某些 workflow 則完全不使用 AI。
+- **盡力延後**：將檢查點延後到最遠的可行位置。在涉及人類之前完成最大量的工作，讓使用者只需在最後階段被詢問一次，且所有準備工作均已就緒。
+- **簡報**：檢查點所呈現的內容，一份緊湊、可直接決策的摘要（產出了什麼、為什麼、以及指向資產本身的連結），絕非原始輸出。使用者閱讀的是簡報，而非草稿。審查速度至關重要。
 
-## The workspace
+<a id="definition-of-done"></a>
 
-- `workflows/*.md`: one spec per workflow.
-- `NOTES.md`: raw notes on the user's world, the tools they use, the channels they process, and their own terminology for both. When it is empty or thin, interview them about their world before specifying anything. Sharpen fuzzy terms into canonical ones as they surface, and record them here.
+## 完成定義
+
+當實作 agent 能夠在不提出任何問題的情況下建立該 workflow 時，其規格即告完成。持續追問直到達到此狀態；只要還有問題存在，就尚未完成。
+
+<a id="the-workspace"></a>
+
+## 工作區
+
+- `workflows/*.md`：每個 workflow 對應一份規格。
+- `NOTES.md`：關於使用者世界的原始筆記，包括他們使用的工具、處理的管道，以及他們對這兩者的自訂術語。當此處內容為空或稀疏時，在規範化任何內容之前，先就其世界進行訪談。當模糊術語出現時，將其精確化為標準術語，並記錄於此。

@@ -1,25 +1,33 @@
-# Scope
+<a id="scope"></a>
 
-This repo is the set of skills I use every day. It is curated: ideas are welcome, and each one is judged against the bar below. Issues are for tracking changes to the skills. Questions and discussion go to [GitHub Discussions](https://github.com/mattpocock/skills/discussions).
+# 範圍
 
-## The bar
+此儲存庫是我每天使用的 skill 集合。它經過精心挑選：歡迎提出想法，每個想法都會根據以下標準進行評估。Issues 用於追蹤 skill 的變更。問題與討論請至 [GitHub Discussions](https://github.com/mattpocock/skills/discussions)。
 
-An idea or feedback issue stays open only if it clears **both** parts:
+<a id="the-bar"></a>
 
-1. **Observed failure.** It describes something that went wrong in a real session: what you ran, what the skill did, what you expected. A hypothetical improvement ("it would be better if...") does not clear this part.
-2. **Fits the philosophy.** It does not match anything in [`.out-of-scope/`](./.out-of-scope/) or a past rejection, and it is not a config option, a harness-specific branch, or a tweak to suit one person's workflow. Those belong in your own `CLAUDE.md` / `AGENTS.md`, or in a fork (skills.sh gives you an editable copy).
+## 標準
 
-Size is irrelevant: a one-word fix and a rewrite face the same bar. Reactions and +1 comments do not count towards it.
+一個想法或回饋 issue 只有在同時滿足以下**兩部分**時才會保持開啟：
 
-## By bucket
+1. **觀察到的失敗。** 它描述了真實 session 中發生的錯誤：你執行了什麼、skill 做了什麼、你預期什麼。假設性的改進（「如果……會更好」）無法滿足此部分。
+2. **符合哲學。** 它不與 [`.out-of-scope/`](./.out-of-scope/) 或過去被拒絕的內容相符，也不是設定選項、特定 harness 的分支，或為了迎合個人工作流程而做的調整。這些屬於你自己的 `CLAUDE.md` / `AGENTS.md`，或屬於 fork（skills.sh 會提供可編輯的副本）。
 
-- **`engineering/`, `productivity/`, `in-progress/`**: the bar above.
-- **`misc/`**: frozen and unmaintained. Every issue is closed. See [`frozen-misc-skills.md`](./.out-of-scope/frozen-misc-skills.md).
-- **New skills**: proposals and contributions are closed. If the behaviour composes from existing skills, it does not get a new one. See [`new-skills.md`](./.out-of-scope/new-skills.md).
+規模無關緊要：一個字的修正與重寫面臨相同的標準。反應與 +1 留言不計入其中。
 
-## Already decided
+<a id="by-bucket"></a>
 
-Each file in [`.out-of-scope/`](./.out-of-scope/) records one rejected concept and why. Read them before filing:
+## 依分類
+
+- **`engineering/`, `productivity/`, `in-progress/`**：上述標準。
+- **`misc/`**：已凍結且不再維護。所有 issue 均已關閉。請參閱 [`frozen-misc-skills.md`](./.out-of-scope/frozen-misc-skills.md)。
+- **新 skill**：提案與貢獻已關閉。如果行為可以由現有 skill 組合而成，則不會建立新的 skill。請參閱 [`new-skills.md`](./.out-of-scope/new-skills.md)。
+
+<a id="already-decided"></a>
+
+## 已決定
+
+[`.out-of-scope/`](./.out-of-scope/) 中的每個檔案記錄了一個被拒絕的概念及其原因。提交前請先閱讀：
 
 - [`frozen-misc-skills.md`](./.out-of-scope/frozen-misc-skills.md)
 - [`harness-name-collisions.md`](./.out-of-scope/harness-name-collisions.md)
@@ -30,6 +38,8 @@ Each file in [`.out-of-scope/`](./.out-of-scope/) records one rejected concept a
 - [`setup-skill-verify-mode.md`](./.out-of-scope/setup-skill-verify-mode.md)
 - [`subagent-recursion.md`](./.out-of-scope/subagent-recursion.md)
 
-## Unclear issues
+<a id="unclear-issues"></a>
 
-An issue that can't be judged against the bar gets one round of questions and the `needs-info` label. With no reply from the reporter in 14 days, it is closed. Rejections close as "not planned".
+## 不清楚的 issue
+
+無法根據標準判斷的 issue 會獲得一輪提問並加上 `needs-info` 標籤。若報告者在 14 天內未回覆，該 issue 將被關閉。拒絕的 issue 將以「不計畫處理」關閉。

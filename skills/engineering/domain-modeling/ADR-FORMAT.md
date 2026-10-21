@@ -1,10 +1,14 @@
-# ADR Format
+<a id="adr-format"></a>
 
-ADRs live in `docs/adr/` and use sequential numbering: `0001-slug.md`, `0002-slug.md`, etc.
+# ADR 格式
 
-Create the `docs/adr/` directory lazily: only when the first ADR is needed.
+ADR 存放於 `docs/adr/`，並使用連續編號：`0001-slug.md`、`0002-slug.md` 等。
 
-## Template
+延遲建立 `docs/adr/` 資料夾：僅在需要第一個 ADR 時才建立。
+
+<a id="template"></a>
+
+## 範本
 
 ```md
 # {Short title of the decision}
@@ -12,36 +16,44 @@ Create the `docs/adr/` directory lazily: only when the first ADR is needed.
 {1-3 sentences: what's the context, what did we decide, and why.}
 ```
 
-That's it. An ADR can be a single paragraph. The value is in recording *that* a decision was made and *why*, not in filling out sections.
+就這樣。一個 ADR 可以只有一段文字。其價值在於記錄「做了」某項決定以及「為什麼」，而不在於填寫各個章節。
 
-## Optional sections
+<a id="optional-sections"></a>
 
-Only include these when they add genuine value. Most ADRs won't need them.
+## 選填章節
 
-- **Status** frontmatter (`proposed | accepted | deprecated | superseded by ADR-NNNN`): useful when decisions are revisited
-- **Considered Options**: only when the rejected alternatives are worth remembering
-- **Consequences**: only when non-obvious downstream effects need to be called out
+僅在這些章節能帶來真正價值時才包含它們。大多數 ADR 不需要這些章節。
 
-## Numbering
+- **Status** frontmatter (`proposed | accepted | deprecated | superseded by ADR-NNNN`)：當決定需要重新審視時有用
+- **Considered Options**：僅在被拒絕的替代方案值得記住時才包含
+- **Consequences**：僅在需要指出非顯而易見的下游影響時才包含
 
-Scan `docs/adr/` for the highest existing number and increment by one.
+<a id="numbering"></a>
 
-## When to offer an ADR
+## 編號
 
-All three of these must be true:
+掃描 `docs/adr/` 以找到最高的現有編號，然後加一。
 
-1. **Hard to reverse**: the cost of changing your mind later is meaningful
-2. **Surprising without context**: a future reader will look at the code and wonder "why on earth did they do it this way?"
-3. **The result of a real trade-off**: there were genuine alternatives and you picked one for specific reasons
+<a id="when-to-offer-an-adr"></a>
 
-If a decision is easy to reverse, skip it: you'll just reverse it. If it's not surprising, nobody will wonder why. If there was no real alternative, there's nothing to record beyond "we did the obvious thing."
+## 何時建議建立 ADR
 
-### What qualifies
+以下三點必須同時成立：
 
-- **Architectural shape.** "We're using a monorepo." "The write model is event-sourced, the read model is projected into Postgres."
-- **Integration patterns between contexts.** "Ordering and Billing communicate via domain events, not synchronous HTTP."
-- **Technology choices that carry lock-in.** Database, message bus, auth provider, deployment target. Not every library: just the ones that would take a quarter to swap out.
-- **Boundary and scope decisions.** "Customer data is owned by the Customer context; other contexts reference it by ID only." The explicit no-s are as valuable as the yes-s.
-- **Deliberate deviations from the obvious path.** "We're using manual SQL instead of an ORM because X." Anything where a reasonable reader would assume the opposite. These stop the next engineer from "fixing" something that was deliberate.
-- **Constraints not visible in the code.** "We can't use AWS because of compliance requirements." "Response times must be under 200ms because of the partner API contract."
-- **Rejected alternatives when the rejection is non-obvious.** If you considered GraphQL and picked REST for subtle reasons, record it; otherwise someone will suggest GraphQL again in six months.
+1. **難以反轉**：日後改變主意的代價是顯著的
+2. **缺乏背景時令人驚訝**：未來的讀者看到程式碼時會疑惑「他們到底為什麼這樣做？」
+3. **真實取捨的結果**：存在真正的替代方案，且你基於特定原因選擇了其中一個
+
+如果決定容易反轉，就跳過它：你之後只會反轉它。如果它不令人驚訝，沒有人會疑惑原因。如果沒有真正的替代方案，除了「我們做了顯而易見的事」之外，沒有其他值得記錄的內容。
+
+<a id="what-qualifies"></a>
+
+### 符合條件的情況
+
+- **架構形態。**「我們使用 monorepo。」「寫入模型採用事件溯源，讀取模型則投影至 Postgres。」
+- **上下文之間的整合模式。**「訂單與計費透過領域事件通訊，而非同步 HTTP。」
+- **帶有鎖定效應的技術選擇。**資料庫、訊息匯流排、驗證提供者、部署目標。不是每個函式庫：僅指那些更換需要一個季度時間的函式庫。
+- **邊界與範圍決定。**「客戶資料由 Customer 上下文擁有；其他上下文僅透過 ID 引用它。」明確的「否」與「是」同樣具有價值。
+- **刻意偏離顯而易見的路徑。**「我們使用手動 SQL 而非 ORM，因為 X。」任何讓合理讀者會假設相反情況的情況。這些記錄可防止下一位工程師「修正」那些是刻意為之的設計。
+- **程式碼中不可見的約束。**「我們因合規要求無法使用 AWS。」「由於合作夥伴 API 合約，回應時間必須低於 200ms。」
+- **當拒絕原因非顯而易見時的被拒替代方案。**如果你考慮過 GraphQL 但基於微妙原因選擇了 REST，請記錄下來；否則六個月後又有人會建議使用 GraphQL。

@@ -1,8 +1,12 @@
-# GLOSSARY.md Format
+<a id="glossarymd-format"></a>
 
-`GLOSSARY.md` is the canonical language for this teaching workspace. All explainers, exercises, and learning records should adhere to its terminology. Building it is itself part of learning: compressing a concept into a tight definition is evidence the user understands it.
+# GLOSSARY.md 格式
 
-## Structure
+`GLOSSARY.md` 是此教學工作區的正規語言。所有說明、練習與學習記錄都應遵循其術語。建立它本身就是學習的一部分：將概念壓縮成精簡的定義，是使用者理解該概念的證據。
+
+<a id="structure"></a>
+
+## 結構
 
 ```md
 # {Topic} Glossary
@@ -24,12 +28,14 @@ A 1–10 self-rating of how hard a set felt, where 10 is failure and 8 means two
 _Avoid_: Effort score, intensity rating
 ```
 
-## Rules
+<a id="rules"></a>
 
-- **Add a term only when the user understands it.** The glossary is a record of compressed knowledge, not a dictionary the user reads to learn. If the user has just been introduced to a concept, wait until they can use it correctly before promoting it here.
-- **Be opinionated.** When several words exist for the same concept, pick the best one and list the rest as aliases to avoid. This is how language compresses.
-- **Keep definitions tight.** One or two sentences. Define what the term IS, not what it does or how to do it.
-- **Use the glossary's own terms inside definitions.** Once a term is in the glossary, prefer it everywhere, including inside other definitions. This is what makes complex terms easier to grasp later.
-- **Group under subheadings** when natural clusters emerge (e.g. `## Anatomy`, `## Programming`). A flat list is fine when terms cohere.
-- **Flag ambiguities explicitly.** If a term is used loosely in the wider field, note the resolution: "In this workspace, 'set' always means a working set; warm-ups are tracked separately."
-- **Revise as understanding deepens.** A definition the user wrote in week one may be wrong by week six. Update in place; do not leave stale entries.
+## 規則
+
+- **僅在使用者理解某個術語時才新增它。** 詞彙表是壓縮後知識的記錄，而非使用者用來學習的字典。如果使用者剛接觸某個概念，請等到他們能正確使用該術語後，再將其提升到詞彙表中。
+- **要有明確的立場。** 當同一概念有多個詞彙時，選擇最佳的一個，並將其餘的列為應避免的同義詞。這就是語言壓縮的方式。
+- **保持定義精簡。** 一到兩句話。定義該術語「是什麼」，而不是它「做什麼」或「如何做」。
+- **在定義內部使用詞彙表自身的術語。** 一旦某個術語進入詞彙表，請在所有地方優先使用它，包括在其他定義內部。這能讓複雜的術語在日後更容易被理解。
+- **在出現自然群組時，使用小標題進行分組**（例如 `## Anatomy`、`## Programming`）。如果術語之間具有凝聚力，使用平面清單也可以。
+- **明確標記歧義。** 如果某個術語在更廣泛的領域中被鬆散使用，請註明解決方案：「在此工作區中，'set' 始終指工作集；熱身活動會單獨追蹤。」
+- **隨著理解的加深而修訂。** 使用者在第一週撰寫的定義，到第六週時可能已經錯誤。請就地更新，不要留下過時的條目。

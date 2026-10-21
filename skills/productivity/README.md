@@ -1,20 +1,26 @@
-# Productivity
+<a id="productivity"></a>
 
-General workflow tools, not code-specific.
+# 生產力
 
-## User-invoked
+一般工作流程工具，非特定於程式碼。
 
-Reachable only when you type them (Claude Code: `disable-model-invocation: true`; Codex: `policy.allow_implicit_invocation: false` in `agents/openai.yaml`).
+<a id="user-invoked"></a>
 
-- **[grill-me](./grill-me/SKILL.md)**: Get relentlessly interviewed about a plan or design until every branch of the design tree is resolved.
-- **[handoff](./handoff/SKILL.md)**: Compact the current conversation into a handoff document so another agent can continue the work.
-- **[teach](./teach/SKILL.md)**: Teach the user a new skill or concept over multiple sessions, using the current directory as a stateful teaching workspace.
-- **[to-questionnaire](./to-questionnaire/SKILL.md)**: Turn a decision you can't answer alone into a Markdown questionnaire for the one person who can (filled in async, or together over a meeting).
-- **[wait-what](./wait-what/SKILL.md)**: Fire this the moment a message doesn't land. The agent re-pitches it with the context you're missing, in plain English, using your `GLOSSARY.md` vocabulary.
+## 使用者呼叫
 
-## Model-invoked
+僅在您輸入時可觸及（Claude Code：`disable-model-invocation: true`；Codex：`agents/openai.yaml` 中的 `policy.allow_implicit_invocation: false`）。
 
-Model- or user-reachable (rich trigger phrasing so the model can reach for them).
+- **[grill-me](./grill-me/SKILL.md)**：針對計畫或設計進行嚴格的訪談，直到設計樹的每個分支都得到解決為止。
+- **[handoff](./handoff/SKILL.md)**：將目前的對話濃縮為一份交接檔案，讓另一個 agent 能夠繼續進行工作。
+- **[teach](./teach/SKILL.md)**：透過多個階段向使用者教授新的技能或概念，並使用目前目錄作為有狀態的教學工作區。
+- **[to-questionnaire](./to-questionnaire/SKILL.md)**：將您無法獨自回答的決策轉換為 Markdown 問卷，交給唯一能回答的人（可非同步填寫，或在會議中共同完成）。
+- **[wait-what](./wait-what/SKILL.md)**：當訊息未能傳達時立即觸發此指令。agent 會使用您缺少的脈絡，以簡潔的英文重新說明，並使用您的 `GLOSSARY.md` 詞彙。
 
-- **[grilling](./grilling/SKILL.md)**: Interview the user relentlessly about a plan, decision, or idea until every branch of the design tree is resolved.
-- **[writing-for-agents](./writing-for-agents/SKILL.md)**: Writing documents for agents: skills, AGENTS.md/CLAUDE.md, and any doc an agent reaches by a pointer.
+<a id="model-invoked"></a>
+
+## 模型呼叫
+
+模型或使用者可觸及（使用豐富的觸發措辭，以便模型能使用它們）。
+
+- **[grilling](./grilling/SKILL.md)**：針對計畫、決策或想法對使用者進行嚴格的訪談，直到設計樹的每個分支都得到解決為止。
+- **[writing-for-agents](./writing-for-agents/SKILL.md)**：為 agent 撰寫檔案：skill、AGENTS.md/CLAUDE.md，以及 agent 透過指標可達到的任何檔案。
